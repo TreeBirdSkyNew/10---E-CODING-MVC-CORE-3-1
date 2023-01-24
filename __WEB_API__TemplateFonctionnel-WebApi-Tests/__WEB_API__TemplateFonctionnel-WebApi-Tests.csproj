@@ -9,6 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="_TemplateFonctionnel\UnitTest\MoqTest\**" />
+    <EmbeddedResource Remove="_TemplateFonctionnel\UnitTest\MoqTest\**" />
+    <None Remove="_TemplateFonctionnel\UnitTest\MoqTest\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
     <PackageReference Include="Moq" Version="4.16.1" />
     <PackageReference Include="xunit" Version="2.4.1" />
@@ -28,7 +34,6 @@
 
   <ItemGroup>
     <Folder Include="_TemplateFonctionnel\UnitTest\FakeTest\" />
-    <Folder Include="_TemplateFonctionnel\UnitTest\MoqTest\" />
   </ItemGroup>
 
 </Project>
