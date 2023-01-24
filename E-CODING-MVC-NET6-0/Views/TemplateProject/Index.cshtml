@@ -1,0 +1,89 @@
+﻿@model IEnumerable<E_CODING_MVC_NET6_0.Models.TemplateProjectVM>
+
+<div class="row">
+    <div class="col-md-12">
+        <a asp-controller="TemplateProject" asp-action="Create">
+            <input type="button" value="Create TemplateProject" class="btn btn-primary" />
+        </a>
+    </div>
+    <div class="col-md-12">
+        <table class="table table-responsive table-striped table-bordered table-hover"
+               id="TableTemplateProject"
+               cellspacing="0"
+               align="center"
+               width="100%">
+            <tr>
+                <th><h2>Project</h2></th>
+                <th><h2>Title</h2></th>
+                <th><h2>TemplateTechnique</h2></th>
+                <th><h2>TemplateFonctionnel</h2></th>
+                <th><h2>TemplateResult</h2></th>
+            </tr>
+            @foreach (var item in Model)
+            {
+        <tr>
+            <td><img src="~/Images/software/soft2.jpg" /></td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TemplateProjectTitle)
+                <div>
+                    <a asp-controller="TemplateProject" asp-action="Details" asp-route-id="@item.TemplateProjectId">
+                        <input type="button" value="Details" class="btn btn-success" />
+                    </a>
+                    <a asp-controller="TemplateProject" asp-action="Edit" asp-route-id="@item.TemplateProjectId">
+                        <input type="button" value="Edit" class="btn btn-primary" />
+                    </a>
+                    <a asp-controller="TemplateProject" asp-action="Delete" asp-route-id="@item.TemplateProjectId">
+                        <input type="button" value="Delete" class="btn btn-danger" />
+                    </a>
+                </div>
+            </td>
+            <td>
+                @if(@item.TemplateTechniquesVM!=null)
+                { 
+                    <div>
+                        <a asp-controller="TemplateTechnique" asp-action="TemplateTechniqueByProject" asp-route-id="@item.TemplateProjectId">
+                            <input type="button" value="TemplateTechnique" class="btn btn-success" />
+                        </a>
+                    </div>
+                }
+            </td>
+            <td>
+                @if (@item.TemplateFonctionnelVM != null)
+                {
+                    <div>
+                        <a asp-controller="TemplateFonctionnel" asp-action="TemplateFonctionnelByProject" asp-route-id="@item.TemplateProjectId">
+                            <input type="button" value="TemplateFonctionnel" class="btn btn-primary" />
+                        </a>
+                    </div>
+                }
+            </td>
+            </tr>
+            }
+        </table>
+    </div>
+</div>
+
+@section scripts {
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            
+
+
+        });
+
+    </script>
+
+}
+
+
+
+
+
+
+
+
+
+
