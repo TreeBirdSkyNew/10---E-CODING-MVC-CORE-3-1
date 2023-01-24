@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <Folder Include="_TemplateFonctionnel\UnitTest\FakeTest\" />
+    <Folder Include="_TemplateFonctionnel\UnitTest\MoqTest\" />
   </ItemGroup>
 
 </Project>
