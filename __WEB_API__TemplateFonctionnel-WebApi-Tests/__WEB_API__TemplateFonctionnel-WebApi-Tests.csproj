@@ -32,8 +32,4 @@
     <ProjectReference Include="..\TemplateFonctionnel-WebApi\TemplateFonctionnel-WebApi.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="_TemplateFonctionnel\UnitTest\FakeTest\" />
-  </ItemGroup>
-
 </Project>
