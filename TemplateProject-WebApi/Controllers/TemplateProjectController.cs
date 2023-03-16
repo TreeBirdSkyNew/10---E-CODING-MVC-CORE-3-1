@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace __WEB_API__TemplateProject_WebApi.Controllers
 {
     [Route("api/TemplateProject")]
-    public class TemplateProjectController : Controller
+    public class TemplateProjectController : ControllerBase
     {
         private readonly ITemplateProjectService _templateProjectService;
         private IMapper _mapper;
@@ -105,14 +105,14 @@ namespace __WEB_API__TemplateProject_WebApi.Controllers
         [Route("Create")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> TemplateProjectCreate()
         {
             try
             {                
                     TemplateProject templateProject = await _templateProjectService.CreateTemplateProject();
                     TemplateProjectVM templateProjectVM = _mapper.Map<TemplateProjectVM>(templateProject);
-                    return Ok(templateProjectVM);
-                
+                    return CreatedAtAction("templateProjectVM", new { id = templateProjectVM.TemplateProjectId }, templateProjectVM);
             }
             catch (Exception ex)
             {
@@ -124,14 +124,18 @@ namespace __WEB_API__TemplateProject_WebApi.Controllers
         [Route("Create")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> TemplateProjectCreate([FromBody] TemplateProject templateProject)
         {
             try
             {   
+                if(!ModelState.IsValid)
+                {
                     TemplateProject _templateProject = await _templateProjectService.CreateTemplateProject(templateProject);
                     TemplateProjectVM _templateProjectVM = _mapper.Map<TemplateProjectVM>(_templateProject);
-                    return Ok(_templateProjectVM);
-                
+                    return CreatedAtAction("templateProjectVM", new { id = _templateProjectVM.TemplateProjectId }, _templateProjectVM);
+                }
+                return BadRequest("TemplateProjectCreate error: ");
             }
             catch (Exception ex)
             {
@@ -140,30 +144,28 @@ namespace __WEB_API__TemplateProject_WebApi.Controllers
         }
         [HttpGet]
         [Route("Edit")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditTemplateProject(int id)
         {
             try
             {
-                if (ModelState.IsValid)
-                {
-                    TemplateProject templateProject = await this._templateProjectService.EditTemplateProject(id);
-                    TemplateProjectVM templateProjectVM = _mapper.Map<TemplateProjectVM>(templateProject);
-                    return Ok(templateProjectVM);
-                }
+                TemplateProject templateProject = await this._templateProjectService.EditTemplateProject(id);
+                TemplateProjectVM templateProjectVM = _mapper.Map<TemplateProjectVM>(templateProject);
+                return NoContent();
             }
             catch (Exception ex)
             {
                 return BadRequest("EditTemplateFonctionnelEntity error: " + ex.Message);
             }
-            return BadRequest("EditTemplateFonctionnelEntity error: ");
         }
 
         [HttpPost]
         [Route("Edit")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditTemplateProject([FromBody] TemplateProject templateProject)
         {
             try
@@ -172,14 +174,15 @@ namespace __WEB_API__TemplateProject_WebApi.Controllers
                 {
                     TemplateProject _templateFonctionnel = await this._templateProjectService.EditTemplateProject(templateProject);
                     TemplateProjectVM templateFonctionnelVM = _mapper.Map<TemplateProjectVM>(_templateFonctionnel);
-                    return Ok(templateFonctionnelVM);
+                    return NoContent();
                 }
+                else
+                    return BadRequest("EditTemplateFonctionnelEntity error: ");
             }
             catch (Exception ex)
             {
                 return BadRequest("EditTemplateFonctionnelEntity error: " + ex.Message);
             }
-            return BadRequest("EditTemplateFonctionnelEntity error: ");
         }
 
         [Route("Delete")]

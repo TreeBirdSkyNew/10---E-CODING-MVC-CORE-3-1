@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 namespace __WEB_API__TemplateResult_WebApi
 {
     [Route("api/TemplateResult")]
-    public class TemplateResultController : Controller
+    public class TemplateResultController : ControllerBase
     {
         private readonly ITemplateResultService _itemplateResultService;
         private IMapper _mapper;
@@ -124,6 +124,7 @@ namespace __WEB_API__TemplateResult_WebApi
         [Route("Create")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> TemplateResultCreate()
         {
             try
@@ -146,6 +147,7 @@ namespace __WEB_API__TemplateResult_WebApi
         [Route("Create")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> TemplateResultCreate([FromBody] TemplateResult templateResult)
         {
             try
@@ -169,6 +171,7 @@ namespace __WEB_API__TemplateResult_WebApi
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("CreateItem")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> TemplateResultItemCreate([FromBody]  TemplateResultItem templateResultItem)
         {
             try
@@ -193,6 +196,7 @@ namespace __WEB_API__TemplateResult_WebApi
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("Edit")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> TemplateResultEdit([FromBody] TemplateResult templateResult)
         {
             try
@@ -216,6 +220,7 @@ namespace __WEB_API__TemplateResult_WebApi
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("EditItem")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditTemplateResultItem([FromBody] TemplateResultItem templateResultItem)
         {
             try
@@ -234,12 +239,6 @@ namespace __WEB_API__TemplateResult_WebApi
                 return BadRequest("EditTemplateResultItem error: " + ex.Message);
             }
         }
-
-        
-
-
-        
-
        
         [Route("Delete")]
         public ActionResult DeleteTemplateResult(int id)

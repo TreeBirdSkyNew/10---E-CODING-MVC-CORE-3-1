@@ -26,8 +26,9 @@ builder.Services.AddScoped<ITemplateProjectService, TemplateProjectService>();
 
 var app = builder.Build();
 
-//app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }

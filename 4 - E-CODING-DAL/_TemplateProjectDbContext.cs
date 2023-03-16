@@ -152,6 +152,7 @@ namespace _4___E_CODING_DAL
             });
 
 
+
             modelBuilder.Entity<TemplateProject>()
             .HasData(new TemplateProject()
             {

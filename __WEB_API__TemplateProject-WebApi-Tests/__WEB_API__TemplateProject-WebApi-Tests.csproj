@@ -30,4 +30,8 @@
     <ProjectReference Include="..\TemplateProject-WebApi\TemplateProject-WebApi.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="_TemplateProject\IntegrationTest\" />
+  </ItemGroup>
+
 </Project>

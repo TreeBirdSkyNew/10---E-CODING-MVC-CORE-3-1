@@ -20,7 +20,7 @@ namespace TemplateTechnique_WebApi
 {
     [Route("api/TemplateTechnique")]
     [ApiController]
-    public class TemplateTechniqueController : Controller
+    public class TemplateTechniqueController : ControllerBase
     {
         private readonly ITemplateTechniqueService _ServiceTechnique;
         private IMapper _mapper;
@@ -131,13 +131,14 @@ namespace TemplateTechnique_WebApi
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("Create")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> TemplateTechniqueCreate()
         {            
             try
             {
                 TemplateTechnique templateTechnique = await _ServiceTechnique.CreateTemplateTechnique();
                 TemplateTechniqueVM templateTechniqueVM = _mapper.Map<TemplateTechniqueVM>(templateTechnique);
-                return Ok(templateTechniqueVM);
+                return CreatedAtAction("templateTechniqueVM", new { id = templateTechniqueVM.TemplateTechniqueId }, templateTechniqueVM);
             }
             catch (Exception ex)
             {
@@ -150,6 +151,7 @@ namespace TemplateTechnique_WebApi
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("Create")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> TemplateTechniqueCreate(TemplateTechnique templateTechnique)
         {
             try
@@ -158,10 +160,9 @@ namespace TemplateTechnique_WebApi
                 {
                     TemplateTechnique _templateTechnique = await _ServiceTechnique.CreateTemplateTechnique(templateTechnique);
                     TemplateTechniqueVM templateTechniqueVM = _mapper.Map<TemplateTechniqueVM>(templateTechnique);
-                    return Ok(templateTechniqueVM);
-                    //return CreatedAtAction("TemplateTechniqueDetail", new { id = templateTechniqueVM.TemplateTechniqueId }, templateTechniqueVM);
+                    return CreatedAtAction("templateTechniqueVM", new { id = templateTechniqueVM.TemplateTechniqueId }, templateTechniqueVM);
                 }
-                else return BadRequest("TemplateTechniqueCreate IsValid=false");
+                else return BadRequest("TemplateTechniqueCreate ModelState.IsValid=false");
             }
             catch (Exception ex)
             {
@@ -172,18 +173,15 @@ namespace TemplateTechnique_WebApi
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ValidateAntiForgeryToken]
         [Route("Edit")]
         public async Task<IActionResult> TemplateTechniqueEdit(int id)
         {
             try
             {
-                if (ModelState.IsValid)
-                {
-                    TemplateTechnique templateTechnique = await this._ServiceTechnique.EditTemplateTechnique(id);
-                    TemplateTechniqueVM templateTechniqueVM = _mapper.Map<TemplateTechniqueVM>(templateTechnique);
-                    return Ok(templateTechniqueVM);
-                }
-                return BadRequest("TemplateTechniqueEdit error: ");
+                TemplateTechnique templateTechnique = await this._ServiceTechnique.EditTemplateTechnique(id);
+                TemplateTechniqueVM templateTechniqueVM = _mapper.Map<TemplateTechniqueVM>(templateTechnique);
+                return Ok(templateTechniqueVM);
             }
             catch (Exception ex)
             {
@@ -193,16 +191,20 @@ namespace TemplateTechnique_WebApi
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("Edit")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> TemplateTechniqueEdit(TemplateTechnique templateTechnique)
         {            
             try
             {
-                TemplateTechnique _templateTechnique =  await this._ServiceTechnique.EditTemplateTechnique(templateTechnique);
-                TemplateTechniqueVM templateTechniqueVM = _mapper.Map<TemplateTechniqueVM>(_templateTechnique);
-                return Ok(templateTechniqueVM);
+                if(ModelState.IsValid)
+                {
+                    TemplateTechnique _templateTechnique =  await this._ServiceTechnique.EditTemplateTechnique(templateTechnique);
+                    return NoContent();
+                }
+                else return BadRequest("TemplateTechniqueEdit ModelState.IsValid=false");
             }
             catch (Exception ex)
             {
@@ -216,6 +218,7 @@ namespace TemplateTechnique_WebApi
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("CreateItem")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateTemplateTechniqueItem()
         {
             try
@@ -235,6 +238,7 @@ namespace TemplateTechnique_WebApi
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("CreateItem")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateTemplateTechniqueItem([FromBody] TemplateTechniqueItem templateTechniqueItem)
         {
             try
@@ -243,7 +247,8 @@ namespace TemplateTechnique_WebApi
                 {
                     TemplateTechniqueItem _templateTechniqueItem = await _ServiceTechnique.CreateTemplateTechniqueItem(templateTechniqueItem);
                     TemplateTechniqueItemVM _templateTechniqueItemVM = _mapper.Map<TemplateTechniqueItemVM>(_templateTechniqueItem);
-                    return Ok(_templateTechniqueItemVM);
+                    return CreatedAtAction("_templateTechniqueItem", new { id = _templateTechniqueItemVM.TemplateTechniqueItemId }, _templateTechniqueItemVM);
+
                 }
                 else return BadRequest("CreateTemplateTechniqueItem IsValid=false");
             }
@@ -257,6 +262,7 @@ namespace TemplateTechnique_WebApi
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("EditTemplateTechniqueItem")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditTemplateTechniqueItem(int id)
         {            
             try
@@ -275,6 +281,7 @@ namespace TemplateTechnique_WebApi
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("EditTemplateTechniqueItem")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditTemplateTechniqueItem([FromBody] TemplateTechniqueItem templateTechniqueItem)
         {
             try

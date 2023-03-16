@@ -29,9 +29,7 @@ namespace TemplateFonctionnel_WebApi
         public TemplateFonctionnelController(IMapper mapper, ITemplateFonctionnelService templateFonctionnelService)
         {
             _mapper = mapper;
-            _templateFonctionnelRepository = new TemplateFonctionnelRepository();
             _itemplateFonctionnelService = templateFonctionnelService;
-            _itemplateFonctionnelService = new TemplateFonctionnelService(_templateFonctionnelRepository);
         }
 
         [HttpGet]
@@ -89,9 +87,6 @@ namespace TemplateFonctionnel_WebApi
                 return BadRequest("TemplateFonctionnelDetail error: " + ex.Message);
             }
         }
-
-        
-
 
         [HttpGet]
         [Route("DetailsEntities")]
@@ -209,6 +204,7 @@ namespace TemplateFonctionnel_WebApi
         [Route("Create")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> TemplateFonctionnelCreate()
         {            
             try
@@ -217,8 +213,7 @@ namespace TemplateFonctionnel_WebApi
                 {
                     TemplateFonctionnel templateFonctionnel = await _itemplateFonctionnelService.CreateTemplateFonctionnel();
                     TemplateFonctionnelVM templateFonctionnelVM = _mapper.Map<TemplateFonctionnelVM>(templateFonctionnel);
-                    //return Ok(templateFonctionnelVM);
-                    return CreatedAtAction("Get", new { id = templateFonctionnelVM.TemplateFonctionnelId }, templateFonctionnelVM);
+                    return CreatedAtAction("templateFonctionnelVM", new { id = templateFonctionnelVM.TemplateFonctionnelId }, templateFonctionnelVM);
                 }
                 else return BadRequest("TemplateFonctionnelCreate IsValid=false");
             }
@@ -232,17 +227,16 @@ namespace TemplateFonctionnel_WebApi
         [Route("Create")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> TemplateFonctionnelCreate([FromBody] TemplateFonctionnelVM templateFonctionnelVM)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> TemplateFonctionnelCreate([FromBody] TemplateFonctionnel templateFonctionnel)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    TemplateFonctionnel _templateFonctionnel = _mapper.Map<TemplateFonctionnel>(templateFonctionnelVM);
-                    TemplateFonctionnel templateFonctionnel = await _itemplateFonctionnelService.CreateTemplateFonctionnel(_templateFonctionnel);
-                    TemplateFonctionnelVM _templateFonctionnelVM = _mapper.Map<TemplateFonctionnelVM>(templateFonctionnel);
-                    return CreatedAtAction("Get", new { id = templateFonctionnelVM.TemplateFonctionnelId }, templateFonctionnelVM);
-                    //return Ok(_templateFonctionnelVM);
+                    TemplateFonctionnel _templateFonctionnel = await _itemplateFonctionnelService.CreateTemplateFonctionnel(templateFonctionnel);
+                    TemplateFonctionnelVM _templateFonctionnelVM = _mapper.Map<TemplateFonctionnelVM>(_templateFonctionnel);
+                    return CreatedAtAction("templateFonctionnelVM", new { id = _templateFonctionnelVM.TemplateFonctionnelId }, _templateFonctionnelVM);
                 }
                 else return BadRequest("TemplateFonctionnelCreate IsValid=false");
             }
@@ -256,6 +250,7 @@ namespace TemplateFonctionnel_WebApi
         [Route("CreateFonctionnelEntity")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> TemplateFonctionnelEntityCreate()
         {
             try
@@ -264,8 +259,7 @@ namespace TemplateFonctionnel_WebApi
                 {
                     TemplateFonctionnelEntity templateFonctionnelEntity = await _itemplateFonctionnelService.CreateTemplateFonctionnelEntity();
                     TemplateFonctionnelEntityVM templateFonctionnelEntityVM = _mapper.Map<TemplateFonctionnelEntityVM>(templateFonctionnelEntity);
-                    //return Ok(templateFonctionnelEntityVM);
-                    return CreatedAtAction("Get", new { id = templateFonctionnelEntityVM.TemplateFonctionnelEntityId }, templateFonctionnelEntityVM);
+                    return CreatedAtAction("templateFonctionnelEntityVM", new { id = templateFonctionnelEntityVM.TemplateFonctionnelEntityId }, templateFonctionnelEntityVM);
                 }
                 else return BadRequest("TemplateFonctionnelEntityCreate IsValid=false");
             }
@@ -279,6 +273,7 @@ namespace TemplateFonctionnel_WebApi
         [Route("CreateFonctionnelEntity")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> TemplateFonctionnelEntityCreate([FromBody] TemplateFonctionnelEntity templateFonctionnelEntity)
         {
             try
@@ -287,9 +282,7 @@ namespace TemplateFonctionnel_WebApi
                 {
                     TemplateFonctionnelEntity _templateFonctionnelEntity = await _itemplateFonctionnelService.CreateTemplateFonctionnelEntity(templateFonctionnelEntity);
                     TemplateFonctionnelEntityVM templateFonctionnelEntityVM = _mapper.Map<TemplateFonctionnelEntityVM>(_templateFonctionnelEntity);
-                    //return Ok(templateFonctionnelEntityVM);
-                    return CreatedAtAction("Get", new { id = templateFonctionnelEntityVM.TemplateFonctionnelEntityId }, templateFonctionnelEntityVM);
-
+                    return CreatedAtAction("templateFonctionnelEntityVM", new { id = templateFonctionnelEntityVM.TemplateFonctionnelEntityId }, templateFonctionnelEntityVM);
                 }
                 else return BadRequest("TemplateFonctionnelEntityCreate IsValid=false");
             }
@@ -303,6 +296,7 @@ namespace TemplateFonctionnel_WebApi
         [Route("CreateFonctionnelProperty")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> TemplateFonctionnelPropertyCreate()
         {
             try
@@ -311,8 +305,7 @@ namespace TemplateFonctionnel_WebApi
                 {
                     TemplateFonctionnelProperty templateFonctionnelProperty = await _itemplateFonctionnelService.CreateTemplateFonctionnelProperty();
                     TemplateFonctionnelPropertyVM templateFonctionnelPropertyVM = _mapper.Map<TemplateFonctionnelPropertyVM>(templateFonctionnelProperty);
-                    return CreatedAtAction("Get", new { id = templateFonctionnelPropertyVM.TemplateFonctionnelPropertyId }, templateFonctionnelPropertyVM);
-                    //return Ok(templateFonctionnelPropertyVM);
+                    return CreatedAtAction("templateFonctionnelPropertyVM", new { id = templateFonctionnelPropertyVM.TemplateFonctionnelPropertyId }, templateFonctionnelPropertyVM);
                 }
                 else return BadRequest("TemplateFonctionnelPropertyCreate IsValid=false");
             }
@@ -326,6 +319,7 @@ namespace TemplateFonctionnel_WebApi
         [Route("CreateFonctionnelProperty")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> TemplateFonctionnelPropertyCreate([FromBody] TemplateFonctionnelProperty templateFonctionnelProperty)
         {
             try
@@ -334,8 +328,7 @@ namespace TemplateFonctionnel_WebApi
                 {
                     TemplateFonctionnelProperty _templateFonctionnelProperty = await _itemplateFonctionnelService.CreateTemplateFonctionnelProperty(templateFonctionnelProperty);
                     TemplateFonctionnelPropertyVM templateFonctionnelPropertyVM = _mapper.Map<TemplateFonctionnelPropertyVM>(templateFonctionnelProperty);
-                    //return Ok(templateFonctionnelPropertyVM);
-                    return CreatedAtAction("Get", new { id = templateFonctionnelPropertyVM.TemplateFonctionnelPropertyId }, templateFonctionnelPropertyVM);
+                    return CreatedAtAction("templateFonctionnelPropertyVM", new { id = templateFonctionnelPropertyVM.TemplateFonctionnelPropertyId }, templateFonctionnelPropertyVM);
                 }
                 else return BadRequest("TemplateFonctionnelPropertyCreate IsValid=false");
             }
@@ -349,6 +342,7 @@ namespace TemplateFonctionnel_WebApi
         [Route("Edit")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditTemplateFonctionnel([FromBody] TemplateFonctionnel templateFonctionnel)
         {
             try
@@ -357,21 +351,22 @@ namespace TemplateFonctionnel_WebApi
                 {
                    TemplateFonctionnel _templateFonctionnel = await this._itemplateFonctionnelService.EditTemplateFonctionnel(templateFonctionnel);
                    TemplateFonctionnelVM templateFonctionnelVM = _mapper.Map<TemplateFonctionnelVM>(_templateFonctionnel);
-                   //return Ok(templateFonctionnelVM);
-                   return CreatedAtAction("Get", new { id = templateFonctionnelVM.TemplateFonctionnelId }, templateFonctionnelVM);
+                   return CreatedAtAction("templateFonctionnelVM", new { id = templateFonctionnelVM.TemplateFonctionnelId }, templateFonctionnelVM);
                 }
+                else
+                    return BadRequest("EditTemplateFonctionnelEntity error: ");
             }
             catch (Exception ex)
             {
                 return BadRequest("EditTemplateFonctionnelEntity error: " + ex.Message);
             }
-            return BadRequest("EditTemplateFonctionnelEntity error: ");
         }
 
         [HttpPost]
         [Route("EditTemplateFonctionnelEntity")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditTemplateFonctionnelEntity([FromBody] TemplateFonctionnelEntity templateFonctionnelEntity)
         {
             try 
@@ -380,15 +375,15 @@ namespace TemplateFonctionnel_WebApi
                 {
                     TemplateFonctionnelEntity _templateFonctionnelEntity = await this._itemplateFonctionnelService.EditTemplateFonctionnelEntity(templateFonctionnelEntity);
                     TemplateFonctionnelEntityVM templateFonctionnelEntityVM = _mapper.Map<TemplateFonctionnelEntityVM>(_templateFonctionnelEntity);
-                    //return Ok(templateFonctionnelEntityVM);
-                    return CreatedAtAction("Get", new { id = templateFonctionnelEntityVM.TemplateFonctionnelEntityId }, templateFonctionnelEntityVM);
+                    return CreatedAtAction("templateFonctionnelEntityVM", new { id = templateFonctionnelEntityVM.TemplateFonctionnelEntityId }, templateFonctionnelEntityVM);
                 }
+                else
+                    return BadRequest("EditTemplateFonctionnelEntity error: ");
             }
             catch (Exception ex)
             {
                 return BadRequest("EditTemplateFonctionnelEntity error: " + ex.Message);
             }
-            return BadRequest("EditTemplateFonctionnelEntity error: ");
         }
 
         [Route("Delete")]
@@ -396,8 +391,5 @@ namespace TemplateFonctionnel_WebApi
         {
             this._itemplateFonctionnelService.DeleteTemplateFonctionnel(id);
         }
-
-        
-        
     }
 }
