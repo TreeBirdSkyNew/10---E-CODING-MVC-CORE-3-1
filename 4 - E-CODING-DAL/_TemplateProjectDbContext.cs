@@ -1,15 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using _4___E_CODING_DAL.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace _4___E_CODING_DAL
 {
-    
+
     public class TemplateProjectDbContext : DbContext
     {
-        public TemplateProjectDbContext()
-        {}
 
         public TemplateProjectDbContext(DbContextOptions<TemplateProjectDbContext> options)
             : base(options)
@@ -106,7 +105,7 @@ namespace _4___E_CODING_DAL
                     .WithMany(p => p.TemplateTechniqueItem)
                     .HasForeignKey(d => d.TemplateTechniqueId);
             });
-
+            /*
             modelBuilder.Entity<TemplateParameter>(entity =>
             {
                 entity.HasKey(e => e.TemplateParameterId);
@@ -116,7 +115,7 @@ namespace _4___E_CODING_DAL
                 entity.HasOne(d => d.TemplateTechniqueItem)
                     .WithMany(p => p.TemplateParameter)
                     .HasForeignKey(d => d.TemplateTechniqueItemId);
-            });
+            });*/
 
             modelBuilder.Entity<TemplateResult>(entity =>
             {
@@ -136,9 +135,7 @@ namespace _4___E_CODING_DAL
             modelBuilder.Entity<ProjectResult>()
                 .HasOne<TemplateResult>(sc => sc.TemplateResult)
                 .WithMany(s => s.ProjectResult)
-                .HasForeignKey(sc => sc.TemplateResultId);
-
-           
+                .HasForeignKey(sc => sc.TemplateResultId);           
 
             modelBuilder.Entity<TemplateResultItem>(entity =>
             {
@@ -150,8 +147,6 @@ namespace _4___E_CODING_DAL
                     .WithMany(p => p.TemplateResultItem)
                     .HasForeignKey(d => d.TemplateResultId);
             });
-
-
 
             modelBuilder.Entity<TemplateProject>()
             .HasData(new TemplateProject()

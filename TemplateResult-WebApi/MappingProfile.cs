@@ -1,4 +1,4 @@
-﻿using _4___E_CODING_DAL;
+﻿using _4___E_CODING_DAL.Models;
 using AutoMapper;
 using E_CODING_MVC_NET6_0;
 using E_CODING_MVC_NET6_0.Models;
@@ -35,8 +35,8 @@ namespace __WEB_API__TemplateResult_WebApi
             CreateMap<TemplateResult, TemplateResultVM>();
             CreateMap<TemplateResultVM, TemplateResult>();
 
-            CreateMap<TemplateResultItem, TemplateResulItemVM>();
-            CreateMap<TemplateResulItemVM, TemplateResultItem>();
+            CreateMap<TemplateResultItem, TemplateResultItemVM>();
+            CreateMap<TemplateResultItemVM, TemplateResultItem>();
 
 
 

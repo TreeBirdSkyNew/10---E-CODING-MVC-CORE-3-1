@@ -1,9 +1,10 @@
-﻿using _4___E_CODING_DAL;
+﻿using _4___E_CODING_DAL.Models;
 using AutoMapper;
 using E_CODING_MVC_NET6_0;
 using E_CODING_MVC_NET6_0.Models;
 using E_CODING_Service_Abstraction;
 using E_CODING_Services;
+using E_CODING_Services.Project;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,373 +24,370 @@ namespace TemplateFonctionnel_WebApi
     [Route("api/TemplateFonctionnel")]
     public class TemplateFonctionnelController : ControllerBase
     {
-        private readonly ITemplateFonctionnelService _itemplateFonctionnelService;
-        private readonly ITemplateFonctionnelRepository _templateFonctionnelRepository;
-        private IMapper _mapper;
-        public TemplateFonctionnelController(IMapper mapper, ITemplateFonctionnelService templateFonctionnelService)
+        private readonly IFonctionnelRepositoryWrapper _fonctionnelRepositoryWrapper;
+        private readonly IMapper _mapper;
+        private readonly ILoggerManager _logger;
+        public TemplateFonctionnelController(
+            IFonctionnelRepositoryWrapper fonctionnelRepositoryWrapper,
+            IMapper mapper,
+            ILoggerManager logger
+            )
         {
+            _fonctionnelRepositoryWrapper = fonctionnelRepositoryWrapper;
             _mapper = mapper;
-            _itemplateFonctionnelService = templateFonctionnelService;
+            _logger = logger;
         }
 
         [HttpGet]
         [Route("Index")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Index()
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TemplateFonctionnelVM>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult Index()
         {
             try
             {
-                List<TemplateFonctionnel> templateFonctionnels = await _itemplateFonctionnelService.GetAllTemplateFonctionnel();
-                List<TemplateFonctionnelVM> templateFonctionnelsVM = _mapper.Map<List<TemplateFonctionnelVM>>(templateFonctionnels);
-                return Ok(templateFonctionnelsVM);
+                IEnumerable<TemplateFonctionnel> templateFonctionnels = _fonctionnelRepositoryWrapper.FonctionnelRepository.GetAllTemplateFonctionnel();
+                _logger.LogInfo($"Returned all templateFonctionnels from database.");
+                IEnumerable<TemplateProjectVM> templateProjectsVM = _mapper.Map<IEnumerable<TemplateProjectVM>>(templateFonctionnels);
+                return Ok(templateProjectsVM);
             }
             catch (Exception ex)
             {
-                return BadRequest("TemplateProject Index error: " + ex.Message);
+                _logger.LogError($"Something went wrong inside TemplateProject/Index action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
             }
         }
 
         [HttpGet]
-        [Route("Details")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TemplateProject))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Route("FonctionnelDetails")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TemplateFonctionnelVM))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> TemplateFonctionnelDetail(int id)
         {            
             try
             {
-                TemplateFonctionnel templateFonctionnel = await _itemplateFonctionnelService.DetailTemplateFonctionnel(id);
-                TemplateFonctionnelVM templateFonctionnelVM = _mapper.Map<TemplateFonctionnelVM> (templateFonctionnel);
-                return Ok(templateFonctionnelVM);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("TemplateFonctionnelDetail error: " + ex.Message);
-            }
-        }
-
-        [HttpGet]
-        [Route("TemplateFonctionnelByProject")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TemplateFonctionnel))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> TemplateFonctionnelByProject(int id)
-        {
-            try
-            {
-                TemplateFonctionnel templateFonctionnel = await _itemplateFonctionnelService.TemplateFonctionnelByProject(id);
+                TemplateFonctionnel templateFonctionnel = _fonctionnelRepositoryWrapper.FonctionnelRepository.FindByCondition(id);
                 TemplateFonctionnelVM templateFonctionnelVM = _mapper.Map<TemplateFonctionnelVM>(templateFonctionnel);
-                if (templateFonctionnelVM == null)
-                    templateFonctionnelVM = new TemplateFonctionnelVM();
+                IEnumerable<TemplateFonctionnelEntity> templateFonctionnelEntities =
+                    _fonctionnelRepositoryWrapper.FonctionnelEntityRepository.GetAllTemplateFonctionnelEntity(id);
+                IEnumerable<TemplateFonctionnelEntityVM> templateFonctionnelEntitiesVM = _mapper.Map<IEnumerable<TemplateFonctionnelEntityVM>>(templateFonctionnelEntities);
+                IEnumerable<TemplateFonctionnelProperty> templateFonctionnelProperties =
+                    _fonctionnelRepositoryWrapper.FonctionnelPropertyRepository.GetAllTemplateFonctionnelProperty(id);
+                IEnumerable<TemplateFonctionnelPropertyVM> templateFonctionnelPropertiesVM = _mapper.Map<IEnumerable<TemplateFonctionnelPropertyVM>>(templateFonctionnelProperties);
+                if(templateFonctionnelEntitiesVM!=null)
+                    templateFonctionnelVM.TemplateFonctionnelEntity = templateFonctionnelEntitiesVM.ToList();
+                if (templateFonctionnelPropertiesVM != null)
+                    templateFonctionnelVM.TemplateFonctionnelProperty = templateFonctionnelPropertiesVM.ToList();
                 return Ok(templateFonctionnelVM);
             }
             catch (Exception ex)
             {
-                return BadRequest("TemplateFonctionnelDetail error: " + ex.Message);
+                _logger.LogError($"Something went wrong inside TemplateFonctionnel/Details action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
             }
-        }
+        }       
 
         [HttpGet]
-        [Route("DetailsEntities")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> TemplateFonctionnelDetailsEntities(int id)
-        {
-            try
-            {
-                List<TemplateFonctionnelEntity> templateFonctionnelEntities = await _itemplateFonctionnelService.DetailTemplateFonctionnelEntities(id);
-                List<TemplateFonctionnelEntityVM> templateFonctionnelEntitiesVM = _mapper.Map<List<TemplateFonctionnelEntityVM>>(templateFonctionnelEntities);
-                return Ok(templateFonctionnelEntitiesVM);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("TemplateFonctionnelDetailsEntities Index error: " + ex.Message);
-            }
-        }
-
-        [HttpGet]
-        [Route("TemplateFonctionnelEntities")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Produces(MediaTypeNames.Application.Json)]
-        public async Task<IActionResult> TemplateFonctionnelEntities(int id)
-        {            
-            try
-            {
-               List<TemplateFonctionnelEntity> templateFonctionnelEntities = await _itemplateFonctionnelService.DetailTemplateFonctionnelEntities(id);
-               List<TemplateFonctionnelEntityVM> templateFonctionnelEntitiesVM = _mapper.Map<List<TemplateFonctionnelEntityVM>>(templateFonctionnelEntities);
-               return Ok(templateFonctionnelEntitiesVM);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("TemplateFonctionnelEntities Index error: " + ex.Message);
-            }
-        }
-
-        
-
-        [HttpGet]
-        [Route("TemplateFonctionnelEntity")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> TemplateFonctionnelEntity(int id)
-        {            
-            try
-            {
-                TemplateFonctionnelEntity templateFonctionnelEntity = await _itemplateFonctionnelService.DetailTemplateFonctionnelEntity(id);
-                TemplateFonctionnelEntityVM templateFonctionnelEntityVM = _mapper.Map<TemplateFonctionnelEntityVM>(templateFonctionnelEntity);
-                return Ok(templateFonctionnelEntityVM);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("TemplateFonctionnelEntity Index error: " + ex.Message);
-            }
-        }
-
-        [HttpGet]
-        [Route("DetailsProperties")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> TemplateFonctionnelDetailsProperties(int id)
-        {            
-            try
-            {
-                List<TemplateFonctionnelProperty> templateFonctionnelProperties = await _itemplateFonctionnelService.DetailTemplateFonctionnelProperties(id);
-                List<TemplateFonctionnelPropertyVM> templateFonctionnelPropertiesVM = _mapper.Map<List<TemplateFonctionnelPropertyVM>>(templateFonctionnelProperties);
-                return Ok(templateFonctionnelPropertiesVM);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("TemplateFonctionnelDetailsProperties Index error: " + ex.Message);
-            }
-        }
-
-        [HttpGet]
-        [Route("TemplateFonctionnelProperties")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Produces(MediaTypeNames.Application.Json)]
-        public async Task<IActionResult> TemplateFonctionnelProperties(int id)
-        {
-            try
-            {
-                List<TemplateFonctionnelProperty> templateFonctionnelProperties = await _itemplateFonctionnelService.DetailTemplateFonctionnelProperties(id);
-                List<TemplateFonctionnelPropertyVM> templateFonctionnelPropertiesVM = _mapper.Map<List<TemplateFonctionnelPropertyVM>>(templateFonctionnelProperties);
-                return Ok(templateFonctionnelPropertiesVM);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("TemplateFonctionnelProperties Index error: " + ex.Message);
-            }
-        }
-
-        [HttpGet]
-        [Route("TemplateFonctionnelProperty")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> TemplateFonctionnelProperty(int id)
-        {            
-            try
-            {
-                TemplateFonctionnelProperty templateFonctionnelProperties = await _itemplateFonctionnelService.DetailTemplateFonctionnelProperty(id);
-                TemplateFonctionnelPropertyVM templateFonctionnelPropertiesVM = _mapper.Map<TemplateFonctionnelPropertyVM>(templateFonctionnelProperties);
-                return Ok(templateFonctionnelPropertiesVM);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("TemplateFonctionnelProperty Index error: " + ex.Message);
-            }
-        }
-
-        [HttpGet]
-        [Route("Create")]
+        [Route("CreateFonctionnel")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> TemplateFonctionnelCreate()
         {            
             try
             {
-                if (ModelState.IsValid)
-                {
-                    TemplateFonctionnel templateFonctionnel = await _itemplateFonctionnelService.CreateTemplateFonctionnel();
-                    TemplateFonctionnelVM templateFonctionnelVM = _mapper.Map<TemplateFonctionnelVM>(templateFonctionnel);
-                    return CreatedAtAction("templateFonctionnelVM", new { id = templateFonctionnelVM.TemplateFonctionnelId }, templateFonctionnelVM);
-                }
-                else return BadRequest("TemplateFonctionnelCreate IsValid=false");
+                TemplateFonctionnel templateFonctionnel = new ();
+                TemplateFonctionnelVM templateFonctionnelVM = _mapper.Map<TemplateFonctionnelVM>(templateFonctionnel);
+                return CreatedAtAction("templateFonctionnelVM", new { id = templateFonctionnelVM.TemplateFonctionnelId }, templateFonctionnelVM);
             }
             catch (Exception ex)
             {
-                return BadRequest("TemplateFonctionnelCreate error: " + ex.Message);
+                _logger.LogError($"Something went wrong inside TemplateFonctionnel/Create action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
             }
         }
 
         [HttpPost]
-        [Route("Create")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Route("CreateFonctionnel")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> TemplateFonctionnelCreate([FromBody] TemplateFonctionnel templateFonctionnel)
+        public IActionResult TemplateFonctionnelCreate([FromBody] TemplateFonctionnelVM templateFonctionnelVM)
         {
             try
             {
-                if (ModelState.IsValid)
+                if (templateFonctionnelVM is null)
                 {
-                    TemplateFonctionnel _templateFonctionnel = await _itemplateFonctionnelService.CreateTemplateFonctionnel(templateFonctionnel);
-                    TemplateFonctionnelVM _templateFonctionnelVM = _mapper.Map<TemplateFonctionnelVM>(_templateFonctionnel);
-                    return CreatedAtAction("templateFonctionnelVM", new { id = _templateFonctionnelVM.TemplateFonctionnelId }, _templateFonctionnelVM);
+                    _logger.LogError("templateFonctionnel object sent from client is null.");
+                    return BadRequest("templateFonctionnel object is null");
                 }
-                else return BadRequest("TemplateFonctionnelCreate IsValid=false");
+                if (!ModelState.IsValid)
+                {
+                    _logger.LogError("Invalid templateFonctionnel object sent from client.");
+                    return BadRequest("Invalid model object");
+                }
+                TemplateFonctionnel TemplateFonctionnelEntity = _mapper.Map<TemplateFonctionnel>(templateFonctionnelVM);
+                _fonctionnelRepositoryWrapper.FonctionnelRepository.CreateTemplateFonctionnel(TemplateFonctionnelEntity);
+                _fonctionnelRepositoryWrapper.Save();
+                var templateFonctionnel = _mapper.Map<TemplateFonctionnelVM>(TemplateFonctionnelEntity);
+                return CreatedAtAction("templateFonctionnelVM", new { id = templateFonctionnel.TemplateFonctionnelId }, templateFonctionnel);
             }
             catch (Exception ex)
             {
-                return BadRequest("TemplateFonctionnelCreate error: " + ex.Message);
+                _logger.LogError($"Something went wrong inside TemplateTechniqueCreate action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ValidateAntiForgeryToken]
+        [Route("EditFonctionnel")]
+        public IActionResult TemplateFonctionnelEdit(int id, [FromBody] TemplateFonctionnelVM templateFonctionnelVM)
+        {
+            try
+            {
+                if (templateFonctionnelVM is null)
+                {
+                    _logger.LogError("templateFonctionnel object sent from client is null.");
+                    return BadRequest("templateFonctionnel object is null");
+                }
+                if (!ModelState.IsValid)
+                {
+                    _logger.LogError("Invalid templateFonctionnel object sent from client.");
+                    return BadRequest("Invalid model object");
+                }
+                var templateFonctionnelEntity = _fonctionnelRepositoryWrapper.FonctionnelRepository.FindByCondition(id);
+                if (templateFonctionnelEntity is null)
+                {
+                    _logger.LogError($"TemplateFonctionnel with id: {id}, hasn't been found in db.");
+                    return NotFound();
+                }
+                _mapper.Map(templateFonctionnelVM, templateFonctionnelEntity);
+                _fonctionnelRepositoryWrapper.FonctionnelRepository.UpdateTemplateFonctionnel(templateFonctionnelEntity);
+                _fonctionnelRepositoryWrapper.Save();
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside TemplateProject action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [Route("DeleteFonctionnel")]
+        [HttpDelete("{id}")]
+        public void DeleteTemplateFonctionnel(int id)
+        {
+            try
+            {
+                var templateProject = _fonctionnelRepositoryWrapper.FonctionnelRepository.FindByCondition(id);
+                if (templateProject == null)
+                {
+                    _logger.LogError($"TemplateResult with id: {id}, hasn't been found in db.");
+                }
+                if (_fonctionnelRepositoryWrapper.FonctionnelEntityRepository.GetAllTemplateFonctionnelEntity(id).Any())
+                {
+                    _logger.LogError($"Cannot delete owner with id: {id}. It has related entities. Delete those accounts first");
+                }
+                if (_fonctionnelRepositoryWrapper.FonctionnelPropertyRepository.GetAllTemplateFonctionnelProperty(id).Any())
+                {
+                    _logger.LogError($"Cannot delete owner with id: {id}. It has related properties. Delete those accounts first");
+                }
+                _fonctionnelRepositoryWrapper.FonctionnelRepository.DeleteTemplateFonctionnel(templateProject);
+                _fonctionnelRepositoryWrapper.Save();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside DeleteTemplateFonctionnel action: {ex.Message}");
+            }
+        }
+
+        [HttpGet]
+        [Route("FonctionnelEntityDetails")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> TemplateFonctionnelDetailsEntity(int id)
+        {
+            try
+            {
+                TemplateFonctionnelEntity templateFonctionnelEntity =
+                    _fonctionnelRepositoryWrapper.FonctionnelEntityRepository.FindByCondition(id);
+                TemplateFonctionnelEntityVM templateFonctionnelEntityVM = _mapper.Map<TemplateFonctionnelEntityVM>(templateFonctionnelEntity);
+                return Ok(templateFonctionnelEntityVM);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside TemplateFonctionnelEntity/DetailsEntity action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
             }
         }
 
         [HttpGet]
         [Route("CreateFonctionnelEntity")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> TemplateFonctionnelEntityCreate()
         {
             try
             {
-                if (ModelState.IsValid)
-                {
-                    TemplateFonctionnelEntity templateFonctionnelEntity = await _itemplateFonctionnelService.CreateTemplateFonctionnelEntity();
-                    TemplateFonctionnelEntityVM templateFonctionnelEntityVM = _mapper.Map<TemplateFonctionnelEntityVM>(templateFonctionnelEntity);
-                    return CreatedAtAction("templateFonctionnelEntityVM", new { id = templateFonctionnelEntityVM.TemplateFonctionnelEntityId }, templateFonctionnelEntityVM);
-                }
-                else return BadRequest("TemplateFonctionnelEntityCreate IsValid=false");
+                TemplateFonctionnelEntity templateFonctionnelEntity = new ();
+                TemplateFonctionnelEntityVM templateFonctionnelEntityVM = _mapper.Map<TemplateFonctionnelEntityVM>(templateFonctionnelEntity);
+                return Ok(templateFonctionnelEntityVM);
             }
             catch (Exception ex)
             {
-                return BadRequest("TemplateFonctionnelEntityCreate error: " + ex.Message);
+                _logger.LogError($"Something went wrong inside TemplateFonctionnelEntityCreate action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
             }
         }
 
         [HttpPost]
-        [Route("CreateFonctionnelEntity")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Route("CreateFonctionnelEntity")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> TemplateFonctionnelEntityCreate([FromBody] TemplateFonctionnelEntity templateFonctionnelEntity)
+        public IActionResult TemplateFonctionnelEntityCreate([FromBody] TemplateFonctionnelEntityVM templateFonctionnelEntityVM)
         {
             try
             {
-                if (ModelState.IsValid)
+                if (templateFonctionnelEntityVM is null)
                 {
-                    TemplateFonctionnelEntity _templateFonctionnelEntity = await _itemplateFonctionnelService.CreateTemplateFonctionnelEntity(templateFonctionnelEntity);
-                    TemplateFonctionnelEntityVM templateFonctionnelEntityVM = _mapper.Map<TemplateFonctionnelEntityVM>(_templateFonctionnelEntity);
-                    return CreatedAtAction("templateFonctionnelEntityVM", new { id = templateFonctionnelEntityVM.TemplateFonctionnelEntityId }, templateFonctionnelEntityVM);
+                    _logger.LogError("TemplateFonctionnelEntity object sent from client is null.");
+                    return BadRequest("TemplateFonctionnelEntity object is null");
                 }
-                else return BadRequest("TemplateFonctionnelEntityCreate IsValid=false");
+                if (!ModelState.IsValid)
+                {
+                    _logger.LogError("Invalid TemplateFonctionnelEntity object sent from client.");
+                    return BadRequest("Invalid model object");
+                }
+                TemplateFonctionnelEntity templateFonctionnelEntity = _mapper.Map<TemplateFonctionnelEntity>(templateFonctionnelEntityVM);
+                _fonctionnelRepositoryWrapper.FonctionnelEntityRepository.Create(templateFonctionnelEntity);
+                _fonctionnelRepositoryWrapper.Save();
+                var templateFonctionnel = _mapper.Map<TemplateFonctionnelEntityVM>(templateFonctionnelEntity);
+                return CreatedAtAction("templateFonctionnelEntity", new { id = templateFonctionnel.TemplateFonctionnelId }, templateFonctionnel);
             }
             catch (Exception ex)
             {
-                return BadRequest("TemplateFonctionnelEntityCreate error: " + ex.Message);
+                _logger.LogError($"Something went wrong inside TemplateFonctionnelEntityCreate action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpGet]
+        [Route("FonctionnelPropertyDetails")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> TemplateFonctionnelDetailsProperty(int id)
+        {
+            try
+            {
+                TemplateFonctionnelProperty templateFonctionnelProperty =
+                    _fonctionnelRepositoryWrapper.FonctionnelPropertyRepository.FindByCondition(id);
+                TemplateFonctionnelPropertyVM templateFonctionnelPropertyVM = _mapper.Map<TemplateFonctionnelPropertyVM>(templateFonctionnelProperty);
+                return Ok(templateFonctionnelPropertyVM);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside TemplateFonctionnelEntity/DetailsEntity action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
             }
         }
 
         [HttpGet]
         [Route("CreateFonctionnelProperty")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> TemplateFonctionnelPropertyCreate()
         {
             try
             {
-                if (ModelState.IsValid)
-                {
-                    TemplateFonctionnelProperty templateFonctionnelProperty = await _itemplateFonctionnelService.CreateTemplateFonctionnelProperty();
-                    TemplateFonctionnelPropertyVM templateFonctionnelPropertyVM = _mapper.Map<TemplateFonctionnelPropertyVM>(templateFonctionnelProperty);
-                    return CreatedAtAction("templateFonctionnelPropertyVM", new { id = templateFonctionnelPropertyVM.TemplateFonctionnelPropertyId }, templateFonctionnelPropertyVM);
-                }
-                else return BadRequest("TemplateFonctionnelPropertyCreate IsValid=false");
+                TemplateFonctionnelProperty templateFonctionnelProperty = new ();
+                TemplateFonctionnelPropertyVM templateFonctionnelPropertyVM = _mapper.Map<TemplateFonctionnelPropertyVM>(templateFonctionnelProperty);
+                return CreatedAtAction("templateFonctionnelPropertyVM", new { id = templateFonctionnelPropertyVM.TemplateFonctionnelPropertyId }, templateFonctionnelPropertyVM);
             }
             catch (Exception ex)
             {
-                return BadRequest("TemplateFonctionnelPropertyCreate error: " + ex.Message);
+                _logger.LogError($"Something went wrong inside TemplateFonctionnelEntityCreate action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
             }
         }
 
         [HttpPost]
-        [Route("CreateFonctionnelProperty")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Route("CreateFonctionnelProperty")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> TemplateFonctionnelPropertyCreate([FromBody] TemplateFonctionnelProperty templateFonctionnelProperty)
+        public IActionResult TemplateFonctionnelPropertyCreate([FromBody] TemplateFonctionnelPropertyVM templateFonctionnelPropertyVM)
         {
             try
             {
-                if (ModelState.IsValid)
+                if (templateFonctionnelPropertyVM is null)
                 {
-                    TemplateFonctionnelProperty _templateFonctionnelProperty = await _itemplateFonctionnelService.CreateTemplateFonctionnelProperty(templateFonctionnelProperty);
-                    TemplateFonctionnelPropertyVM templateFonctionnelPropertyVM = _mapper.Map<TemplateFonctionnelPropertyVM>(templateFonctionnelProperty);
-                    return CreatedAtAction("templateFonctionnelPropertyVM", new { id = templateFonctionnelPropertyVM.TemplateFonctionnelPropertyId }, templateFonctionnelPropertyVM);
+                    _logger.LogError("templateFonctionnelProperty object sent from client is null.");
+                    return BadRequest("templateFonctionnelProperty object is null");
                 }
-                else return BadRequest("TemplateFonctionnelPropertyCreate IsValid=false");
+                if (!ModelState.IsValid)
+                {
+                    _logger.LogError("Invalid templateFonctionnelProperty object sent from client.");
+                    return BadRequest("Invalid model object");
+                }
+                TemplateFonctionnelProperty templateFonctionnelPropertyEntity = _mapper.Map<TemplateFonctionnelProperty>(templateFonctionnelPropertyVM);
+                _fonctionnelRepositoryWrapper.FonctionnelPropertyRepository.Create(templateFonctionnelPropertyEntity);
+                _fonctionnelRepositoryWrapper.Save();
+                var templateFonctionnelProperty = _mapper.Map<TemplateFonctionnelPropertyVM>(templateFonctionnelPropertyEntity);
+                return CreatedAtAction("templateFonctionnelProperty", new { id = templateFonctionnelProperty.TemplateFonctionnelId }, templateFonctionnelProperty);
             }
             catch (Exception ex)
             {
-                return BadRequest("TemplateFonctionnelPropertyCreate error: " + ex.Message);
+                _logger.LogError($"Something went wrong inside templateFonctionnelProperty action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
             }
         }
 
-        [HttpPost]
-        [Route("Edit")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditTemplateFonctionnel([FromBody] TemplateFonctionnel templateFonctionnel)
+        [Route("DeleteFonctionnelEntity")]
+        [HttpDelete("{id}")]
+        public void DeleteTemplateFonctionnelEntity(int id)
         {
             try
             {
-                if (ModelState.IsValid)
+                var templateFonctionnelEntity = _fonctionnelRepositoryWrapper.FonctionnelEntityRepository.FindByCondition(id);
+                if (templateFonctionnelEntity == null)
                 {
-                   TemplateFonctionnel _templateFonctionnel = await this._itemplateFonctionnelService.EditTemplateFonctionnel(templateFonctionnel);
-                   TemplateFonctionnelVM templateFonctionnelVM = _mapper.Map<TemplateFonctionnelVM>(_templateFonctionnel);
-                   return CreatedAtAction("templateFonctionnelVM", new { id = templateFonctionnelVM.TemplateFonctionnelId }, templateFonctionnelVM);
+                    _logger.LogError($"templateFonctionnelEntity with id: {id}, hasn't been found in db.");
                 }
-                else
-                    return BadRequest("EditTemplateFonctionnelEntity error: ");
+                _fonctionnelRepositoryWrapper.FonctionnelEntityRepository.DeleteTemplateFonctionnelEntity(templateFonctionnelEntity);
+                _fonctionnelRepositoryWrapper.Save();
             }
             catch (Exception ex)
             {
-                return BadRequest("EditTemplateFonctionnelEntity error: " + ex.Message);
+                _logger.LogError($"Something went wrong inside DeleteTemplateFonctionnelEntity action: {ex.Message}");
             }
         }
 
-        [HttpPost]
-        [Route("EditTemplateFonctionnelEntity")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditTemplateFonctionnelEntity([FromBody] TemplateFonctionnelEntity templateFonctionnelEntity)
+        [Route("DeleteFonctionnelProperty")]
+        [HttpDelete("{id}")]
+        public void DeleteTemplateFonctionnelProperty(int id)
         {
-            try 
+            try
             {
-                if (ModelState.IsValid)
+                var templateFonctionnelProperty = _fonctionnelRepositoryWrapper.FonctionnelPropertyRepository.FindByCondition(id);
+                if (templateFonctionnelProperty == null)
                 {
-                    TemplateFonctionnelEntity _templateFonctionnelEntity = await this._itemplateFonctionnelService.EditTemplateFonctionnelEntity(templateFonctionnelEntity);
-                    TemplateFonctionnelEntityVM templateFonctionnelEntityVM = _mapper.Map<TemplateFonctionnelEntityVM>(_templateFonctionnelEntity);
-                    return CreatedAtAction("templateFonctionnelEntityVM", new { id = templateFonctionnelEntityVM.TemplateFonctionnelEntityId }, templateFonctionnelEntityVM);
+                    _logger.LogError($"templateFonctionnelProperty with id: {id}, hasn't been found in db.");
                 }
-                else
-                    return BadRequest("EditTemplateFonctionnelEntity error: ");
+                _fonctionnelRepositoryWrapper.FonctionnelPropertyRepository.DeleteTemplateFonctionnelProperty(templateFonctionnelProperty);
+                _fonctionnelRepositoryWrapper.Save();
             }
             catch (Exception ex)
             {
-                return BadRequest("EditTemplateFonctionnelEntity error: " + ex.Message);
+                _logger.LogError($"Something went wrong inside DeleteTemplateFonctionnelProperty action: {ex.Message}");
             }
-        }
-
-        [Route("Delete")]
-        public void TemplateFonctionnelDelete(int id)
-        {
-            this._itemplateFonctionnelService.DeleteTemplateFonctionnel(id);
         }
     }
 }

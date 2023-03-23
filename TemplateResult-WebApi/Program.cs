@@ -2,7 +2,9 @@ using __WEB_API__TemplateResult_WebApi;
 using _4___E_CODING_DAL;
 using AutoMapper;
 using E_CODING_Service_Abstraction;
+using E_CODING_Service_Abstraction.Result;
 using E_CODING_Services;
+using E_CODING_Services.Result;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -26,7 +28,7 @@ IMapper mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
 builder.Services.AddScoped<ITemplateResultRepository, TemplateResultRepository>();
-builder.Services.AddScoped<ITemplateResultService, TemplateResultService>();
+builder.Services.AddScoped<IResultRepositoryWrapper, ResultRepositoryWrapper>();
 
 
 var app = builder.Build();

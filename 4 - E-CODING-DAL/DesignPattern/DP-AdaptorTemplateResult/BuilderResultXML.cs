@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using _4___E_CODING_DAL.Models;
 
 namespace _4___E_CODING_DAL.DesignPattern
 {

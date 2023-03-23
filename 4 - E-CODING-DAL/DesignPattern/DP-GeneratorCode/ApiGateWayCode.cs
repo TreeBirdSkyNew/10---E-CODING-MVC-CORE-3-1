@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using _4___E_CODING_DAL.Models;
 
 namespace _4___E_CODING_DAL.DesignPattern
 {

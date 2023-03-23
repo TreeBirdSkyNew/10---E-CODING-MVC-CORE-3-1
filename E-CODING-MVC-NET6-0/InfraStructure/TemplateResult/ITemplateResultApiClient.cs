@@ -1,5 +1,4 @@
-﻿using _4___E_CODING_DAL;
-using E_CODING_MVC_NET6_0.Models;
+﻿using E_CODING_MVC_NET6_0.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,15 +9,14 @@ namespace E_CODING_MVC_NET6_0
 {
     public interface ITemplateResultApiClient
     {
-        public Task<List<TemplateResultVM>> GetAllTemplateResult(string api);
-        public Task<TemplateResultVM> GetTemplateResult(string api);
-        public Task<TemplateResulItemVM> GetTemplateResultItem(string api);
-        public Task<List<TemplateResulItemVM>> GetTemplateResultItems(string api);
-        public Task<TemplateResultVM> PostTemplateResult(string api, StringContent client);
-        public Task<TemplateResulItemVM> PostTemplateResultItem(string api, StringContent client);
-        public Task DeleteTemplateResult(string api);
-        public Task DeleteTemplateResultItem(string api);
-        public Task<TemplateResulItemVM> NewTemplateResultItemId(string api);
+        Task<TemplateResultVM> GetTemplateResult(string clientName, string api);
+        Task<List<TemplateResultVM>> GetAllTemplateResult(string clientName, string api);
+        Task PostTemplateResult(string clientName, string api, StringContent client);
+        Task DeleteTemplateResult(string clientName, string api);
 
+        Task<TemplateResultItemVM> GetTemplateResultItem(string clientName, string api);
+        Task<List<TemplateResultItemVM>> GetAllTemplateResultItem(string clientName, string api);
+        Task PostTemplateResultItem(string clientName, string api, StringContent client);
+        Task DeleteTemplateResultItem(string clientName, string api);
     }
 }

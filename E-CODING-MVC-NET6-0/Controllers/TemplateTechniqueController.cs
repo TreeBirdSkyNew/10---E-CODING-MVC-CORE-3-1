@@ -21,6 +21,7 @@ namespace E_CODING_MVC_NET6_0
     public class TemplateTechniqueController : Controller
     {
         private  ITemplateTechniqueApiClient _techniqueApiClient;
+        private const string _clientName = "ClientApiTechnique";
         public TemplateTechniqueController(ITemplateTechniqueApiClient techniqueApiClient)
         {
             _techniqueApiClient = techniqueApiClient;
@@ -30,22 +31,21 @@ namespace E_CODING_MVC_NET6_0
         [Route("Index")]
         public async Task<IActionResult> Index()
         {
-            List<TemplateTechniqueVM> projectsVMs = await _techniqueApiClient.GetAllTemplateTechnique("api/TemplateTechnique/Index");
+            List<TemplateTechniqueVM> projectsVMs = await _techniqueApiClient.GetAllTemplateTechnique(_clientName, "api/TemplateTechnique/Index");
             await Task.Delay(1);
             return View(projectsVMs);
         }
 
-        [HttpGet]
-        [Route("TemplateTechniqueByProject")]
-        public async Task<IActionResult> TemplateTechniqueByProject(int id)
+        [Route("TechniqueDetails")]
+        public async Task<IActionResult> Details(int id)
         {
-            IEnumerable<TemplateTechniqueVM> templateTechniqueVMs = await _techniqueApiClient.GetAllTemplateTechnique("api/TemplateTechnique/TemplateTechniqueByProject?id=" + id);
-            await Task.Delay(1);
-            return View("Index",templateTechniqueVMs);
+            TemplateTechniqueVM templateTechniqueVM = 
+                await _techniqueApiClient.GetTemplateTechnique(_clientName, "api/TemplateTechnique/TechniqueDetails?id=" + id);
+            return View(templateTechniqueVM);
         }
 
         [HttpGet]
-        [Route("Create")]
+        [Route("CreateTechnique")]
         public IActionResult CreateTemplateTechnique()
         {
             TemplateTechniqueVM templateTechniqueVM = new TemplateTechniqueVM();
@@ -53,16 +53,57 @@ namespace E_CODING_MVC_NET6_0
         }
 
         [HttpPost]
-        [Route("Create")]
+        [Route("CreateTechnique")]
         public async Task<IActionResult> CreateTemplateTechnique(TemplateTechniqueVM templateTechniqueVM)
         {
             StringContent content = new StringContent(JsonConvert.SerializeObject(templateTechniqueVM), Encoding.UTF8, "application/json");
-            await this._techniqueApiClient.PostTemplateTechnique("api/TemplateTechnique/Create", content);
+            await this._techniqueApiClient.PostTemplateTechnique(_clientName, "api/TemplateTechnique/CreateTechnique", content);
             return RedirectToAction("Index");
         }
 
         [HttpGet]
-        [Route("CreateItem")]
+        [Route("EditTechnique")]
+        public async Task<IActionResult> Edit(int id)
+        {
+            TemplateTechniqueVM templateTechniqueVM = await _techniqueApiClient.GetTemplateTechnique(_clientName, "api/TemplateTechnique/TechniqueDetails?id=" + id);
+            return View(templateTechniqueVM);
+        }
+
+        [HttpPost]
+        [Route("EditTechnique")]
+        public async Task<IActionResult> Edit(TemplateTechniqueVM templateTechniqueVM)
+        {
+            StringContent content = new StringContent(JsonConvert.SerializeObject(templateTechniqueVM), Encoding.UTF8, "application/json");
+            await this._techniqueApiClient.PostTemplateTechnique(_clientName, "api/TemplateTechnique/EditTechnique", content);
+            return RedirectToAction("Index");
+        }
+
+        [Route("DeleteTechnique")]
+        public IActionResult DeleteTemplateTechnique(int id)
+        {
+            this._techniqueApiClient.DeleteTemplateTechnique(_clientName, "api/TemplateTechnique/Delete?id=" + id);
+            return RedirectToAction("Index");
+        }
+
+        [Route("TechniqueAllItems")]
+        [Produces(MediaTypeNames.Application.Json)]
+        public async Task<IActionResult> TemplateTechniqueItems(int id)
+        {
+            IEnumerable<TemplateTechniqueItemVM> templateTechniqueItemVMs = await _techniqueApiClient.GetAllTemplateTechniqueItem(_clientName, "api/TemplateTechnique/TechniqueAllItems?id=" + id);
+            await Task.Delay(1);
+            return Json(templateTechniqueItemVMs, new JsonSerializerOptions { WriteIndented = true });
+        }
+
+        [Route("TechniqueItemDetails")]
+        public async Task<IActionResult> TemplateTechniqueItem(int id)
+        {
+            TemplateTechniqueItemVM templateTechniqueItemVM = await _techniqueApiClient.GetTemplateTechniqueItem(_clientName, "api/TemplateTechnique/TechniqueItemDetails?id=" + id);
+            return View(templateTechniqueItemVM);
+
+        }
+
+        [HttpGet]
+        [Route("CreateTechniqueItem")]
         public async Task<IActionResult> CreateTemplateTechniqueItem()
         {
             await Task.Delay(1);
@@ -70,87 +111,31 @@ namespace E_CODING_MVC_NET6_0
             return View(templateTechniqueItemVM);
         }
 
-
         [HttpPost]
-        [Route("CreateItem")]
+        [Route("CreateTechniqueItem")]
         public async Task<IActionResult> CreateTemplateTechniqueItem(TemplateTechniqueItemVM templateTechniqueItemVM)
         {
             StringContent content = new StringContent(JsonConvert.SerializeObject(templateTechniqueItemVM), Encoding.UTF8, "application/json");
-            await this._techniqueApiClient.PostTemplateTechniqueItem("api/TemplateTechnique/CreateItem", content);
-            return RedirectToAction("Index");
-        }
-
-        [Route("TemplateTechniqueItems")]
-        [Produces(MediaTypeNames.Application.Json)]
-        public async Task<IActionResult> TemplateTechniqueItems(int id)
-        {
-            IEnumerable<TemplateTechniqueItemVM> templateTechniqueItemVMs =  await _techniqueApiClient.DetailsTemplateTechniqueItems("api/TemplateTechnique/TemplateTechniqueItems?id=" + id);
-            await Task.Delay(1);
-            return Json(templateTechniqueItemVMs, new JsonSerializerOptions { WriteIndented = true });
-        }
-        /*
-        [Route("TemplateTechniqueItems")]
-        public async Task<IActionResult> TemplateTechniqueItems(int id)
-        {
-            List<TemplateTechniqueItemVM> templateTechniqueItemVMs = await _techniqueApiClient.DetailsTemplateTechniqueItems("api/TemplateTechnique/TemplateTechniqueItems?id=" + id);
-            return View(templateTechniqueItemVMs);
-        }*/
-
-        [Route("TemplateTechniqueItem")]
-        public async Task<IActionResult> TemplateTechniqueItem(int id)
-        {
-            TemplateTechniqueItemVM templateTechniqueItemVM = await _techniqueApiClient.DetailsTemplateTechniqueItem("api/TemplateTechnique/TemplateTechniqueItemDetail?id=" + id);
-            return View(templateTechniqueItemVM);
-
-        }
-
-        [Route("Details")]
-        public async Task<IActionResult> Details(int id)
-        {
-            TemplateTechniqueVM templateTechniqueVM = await _techniqueApiClient.GetTemplateTechnique("api/TemplateTechnique/Details?id=" + id);
-            return View(templateTechniqueVM);
-        }
-
-        [HttpGet]
-        [Route("Edit")]
-        public async Task<IActionResult> Edit(int id)
-        {
-            TemplateTechniqueVM templateTechniqueVM = await _techniqueApiClient.GetTemplateTechnique("api/TemplateTechnique/Details?id=" + id);
-            return View(templateTechniqueVM);
-        }        
-
-        [HttpPost]
-        [Route("Edit")]
-        public async Task<IActionResult> Edit(TemplateTechniqueVM templateTechniqueVM)
-        {
-            StringContent content = new StringContent(JsonConvert.SerializeObject(templateTechniqueVM), Encoding.UTF8, "application/json");
-            await this._techniqueApiClient.PostTemplateTechnique("api/TemplateTechnique/Edit", content);
+            await this._techniqueApiClient.PostTemplateTechniqueItem(_clientName, "api/TemplateTechnique/CreateTechniqueItem", content);
             return RedirectToAction("Index");
         }       
 
 
         [HttpGet]
-        [Route("EditTemplateTechniqueItem")]
+        [Route("EditTechniqueItem")]
         public async Task<IActionResult> EditTemplateTechniqueItem(int id)
         {
-            TemplateTechniqueItemVM templateTechniqueVM = await _techniqueApiClient.DetailsTemplateTechniqueItem("api/TemplateTechnique/DetailsItem?id=" + id);
+            TemplateTechniqueItemVM templateTechniqueVM = await _techniqueApiClient.GetTemplateTechniqueItem(_clientName, "api/TemplateTechnique/DetailsItem?id=" + id);
             return View(templateTechniqueVM);
         }
 
         [HttpPost]
-        [Route("EditTemplateTechniqueItem")]
+        [Route("EditTechniqueItem")]
         public async Task<IActionResult> EditTemplateTechniqueItem(TemplateTechniqueItemVM templateTechniqueItemVM)
         {
             StringContent content = new StringContent(JsonConvert.SerializeObject(templateTechniqueItemVM), Encoding.UTF8, "application/json");
-            await this._techniqueApiClient.PostTemplateTechniqueItem("api/TemplateTechnique/EditTemplateTechniqueItem", content);
+            await this._techniqueApiClient.PostTemplateTechniqueItem(_clientName, "api/TemplateTechnique/EditTemplateTechniqueItem", content);
             return RedirectToAction("Index");
         }               
-
-        [Route("Delete")]
-        public IActionResult DeleteTemplateTechnique(int id)
-        {
-            this._techniqueApiClient.DeleteTemplateTechnique("api/TemplateTechnique/Delete?id=" + id);
-            return RedirectToAction("Index");
-        }
     }
 }

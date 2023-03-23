@@ -1,4 +1,6 @@
 ﻿using _4___E_CODING_DAL;
+using E_CODING_MVC_NET6_0.InfraStructure.ApiClient;
+using E_CODING_MVC_NET6_0.InfraStructure.TemplateFonctionnel;
 using E_CODING_MVC_NET6_0.Models;
 using Newtonsoft.Json;
 using System;
@@ -10,89 +12,107 @@ using System.Threading.Tasks;
 
 namespace E_CODING_MVC_NET6_0
 {
-    public class TemplateResultApiClient : ITemplateResultApiClient
+    public class TemplateResultApiClient : ApiClientService, ITemplateResultApiClient
     {
-        private HttpClient _clientResult;
+        private IHttpClientFactory _httpClientFactory;
+        private ILogger<TemplateResultApiClient> _logger;
+        private IConfiguration _configuration;
 
-        public TemplateResultApiClient(HttpClient clientResult) 
+        public TemplateResultApiClient(
+            ILogger<TemplateResultApiClient> logger,
+            IConfiguration configuration,
+            IHttpClientFactory httpClientFactory) : base(httpClientFactory)
         {
-            _clientResult = clientResult;
+            _logger = logger;
+            _configuration = configuration;
+            string urlWebApiCourier = _configuration["UrlWebApiCourier"];
+            _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<List<TemplateResultVM>> GetAllTemplateResult(string api)
+        /************************** TemplateResult *********************************************/
+        public async Task<TemplateResultVM?> GetTemplateResult(string clientName, string api)
         {
-            HttpResponseMessage response = await _clientResult.GetAsync(api);
-            var content = await response.Content.ReadAsStringAsync();
-            var results = JsonConvert.DeserializeObject<List<TemplateResultVM>>(content);
-            return results;
+            HttpResponseMessage httpResponseMessage = await GetObject<TemplateResultVM>(clientName, api);
+            if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var contentStream = await httpResponseMessage.Content.ReadAsStringAsync();
+                if (!string.IsNullOrEmpty(contentStream))
+                {
+                    var templateResultVM = JsonConvert.DeserializeObject<TemplateResultVM>(contentStream);
+                    if (templateResultVM != null)
+                        return templateResultVM;
+                }
+            }
+            return null;
         }
 
-        public async Task<TemplateResultVM> GetTemplateResult(string api)
+        public async Task<List<TemplateResultVM?>> GetAllTemplateResult(string clientName, string api)
         {
-            HttpResponseMessage response = await _clientResult.GetAsync(api);
-            var content = await response.Content.ReadAsStringAsync();
-            var results = JsonConvert.DeserializeObject<TemplateResultVM>(content);
-            return results;
+            HttpResponseMessage httpResponseMessage = await GetObject<TemplateResultVM>(clientName, api);
+            if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var contentStream = await httpResponseMessage.Content.ReadAsStringAsync();
+                if (!string.IsNullOrEmpty(contentStream))
+                {
+                    var templateResultVM = JsonConvert.DeserializeObject<List<TemplateResultVM>>(contentStream);
+                    if (templateResultVM != null)
+                        return templateResultVM;
+                }
+            }
+            return null;
         }
 
-        public async Task<TemplateResulItemVM> GetTemplateResultItem(string api)
+        public async Task PostTemplateResult(string clientName, string api, StringContent content)
         {
-            HttpResponseMessage response = await _clientResult.GetAsync(api);
-            var content = await response.Content.ReadAsStringAsync();
-            var results = JsonConvert.DeserializeObject<TemplateResulItemVM>(content);
-            return results;
+            var httpResponseMessage = await PostObject<TemplateResultVM>(clientName, api, content);
         }
 
-        public async Task<List<TemplateResulItemVM>> GetTemplateResultItems(string api)
+        public async Task DeleteTemplateResult(string clientName, string api)
         {
-            HttpResponseMessage response = await _clientResult.GetAsync(api);
-            var content = await response.Content.ReadAsStringAsync();
-            var results = JsonConvert.DeserializeObject<List<TemplateResulItemVM>>(content);
-            return results;
+            var httpResponseMessage = await DeleteObject<TemplateResultVM>(clientName, api);
         }
 
-        
-        public async Task<TemplateResultVM> PostTemplateResult(string api, StringContent client)
+        /************************** TemplateResult *********************************************/
+        public async Task<TemplateResultItemVM?> GetTemplateResultItem(string clientName, string api)
         {
-            HttpResponseMessage response = await _clientResult.PostAsync(api, client);
-            var content = await response.Content.ReadAsStringAsync();
-            var results = JsonConvert.DeserializeObject<TemplateResultVM>(content);
-            return results;
+            HttpResponseMessage httpResponseMessage = await GetObject<TemplateResultItemVM>(clientName, api);
+            if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var contentStream = await httpResponseMessage.Content.ReadAsStringAsync();
+                if (!string.IsNullOrEmpty(contentStream))
+                {
+                    var templateResultItemVM = JsonConvert.DeserializeObject<TemplateResultItemVM>(contentStream);
+                    if (templateResultItemVM != null)
+                        return templateResultItemVM;
+                }
+            }
+            return null;
         }
 
-        public async Task<TemplateResulItemVM> PosTemplateResultItem(string api, StringContent client)
+        public async Task<List<TemplateResultItemVM?>> GetAllTemplateResultItem(string clientName, string api)
         {
-            HttpResponseMessage response = await _clientResult.PostAsync(api, client);
-            var content = await response.Content.ReadAsStringAsync();
-            var results = JsonConvert.DeserializeObject<TemplateResulItemVM>(content);
-            return results;
+            HttpResponseMessage httpResponseMessage = await GetObject<TemplateResultItemVM>(clientName, api);
+            if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var contentStream = await httpResponseMessage.Content.ReadAsStringAsync();
+                if (!string.IsNullOrEmpty(contentStream))
+                {
+                    var templateResultItemVM = JsonConvert.DeserializeObject<List<TemplateResultItemVM>>(contentStream);
+                    if (templateResultItemVM != null)
+                        return templateResultItemVM;
+                }
+            }
+            return null;
         }
 
-        public async Task DeleteTemplateResult(string api)
+        public async Task PostTemplateResultItem(string clientName, string api, StringContent content)
         {
-            HttpResponseMessage response = await _clientResult.DeleteAsync(api);
-            var content = await response.Content.ReadAsStringAsync();
+            var httpResponseMessage = await PostObject<TemplateResultItemVM>(clientName, api, content);
         }
 
-        public async Task DeleteTemplateResultItem(string api)
+        public async Task DeleteTemplateResultItem(string clientName, string api)
         {
-            HttpResponseMessage response = await _clientResult.DeleteAsync(api);
-            var content = await response.Content.ReadAsStringAsync();
-        }
-
-        public Task<TemplateResulItemVM> PostTemplateResultItem(string api, StringContent client)
-        {
-            return PosTemplateResultItem(api, client);
-        }
-
-        public async Task<TemplateResulItemVM> NewTemplateResultItemId(string api)
-        {
-            HttpResponseMessage response = await _clientResult.GetAsync(api);
-            var content = await response.Content.ReadAsStringAsync();
-            var results = JsonConvert.DeserializeObject<TemplateResulItemVM>(content);
-            return results;
+            var httpResponseMessage = await DeleteObject<TemplateResultItemVM>(clientName, api);
         }
     }
-       
-    
 }

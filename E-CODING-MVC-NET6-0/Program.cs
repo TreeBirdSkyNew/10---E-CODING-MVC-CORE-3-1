@@ -17,40 +17,34 @@ IMapper mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
 
-builder.Services.AddHttpClient<ITemplateFonctionnelApiClient, TemplateFonctionnelApiClient>(clientFonctionnel =>
+builder.Services.AddHttpClient("ClientApiFonctionnel", httpClient => 
 {
-    clientFonctionnel.BaseAddress = new Uri("https://localhost:7073");
-    clientFonctionnel.DefaultRequestHeaders.Clear();
-    clientFonctionnel.DefaultRequestHeaders.Add("Accept", "application/json");
+    httpClient.BaseAddress = new Uri("https://localhost:7073");
+    httpClient.DefaultRequestHeaders.Clear();
+    httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
 });
 
-builder.Services.AddHttpClient<ITemplateResultApiClient, TemplateResultApiClient>(clientResult =>
+builder.Services.AddHttpClient("ClientApiResult", httpClient =>
 {
-    clientResult.BaseAddress = new Uri("https://localhost:7092");
-    clientResult.DefaultRequestHeaders.Clear();
-    clientResult.DefaultRequestHeaders.Add("Accept", "application/json");
+    httpClient.BaseAddress = new Uri("https://localhost:7092");
+    httpClient.DefaultRequestHeaders.Clear();
+    httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
 });
 
-builder.Services.AddHttpClient<ITemplateTechniqueApiClient, TemplateTechniqueApiClient>(clientTechnique =>
+builder.Services.AddHttpClient("ClientApiTechnique", httpClient =>
 {
-    clientTechnique.BaseAddress = new Uri("https://localhost:7132");
-    clientTechnique.DefaultRequestHeaders.Clear();
-    clientTechnique.DefaultRequestHeaders.Add("Accept", "application/json");
+    httpClient.BaseAddress = new Uri("https://localhost:7132");
+    httpClient.DefaultRequestHeaders.Clear();
+    httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
 });
 
-builder.Services.AddHttpClient<ITemplateProjectApiClient, TemplateProjectApiClient>(clientTechnique =>
+builder.Services.AddHttpClient("ClientApiProject", httpClient =>
 {
-    clientTechnique.BaseAddress = new Uri("https://localhost:7265");
-    clientTechnique.DefaultRequestHeaders.Clear();
-    clientTechnique.DefaultRequestHeaders.Add("Accept", "application/json");
+    httpClient.BaseAddress = new Uri("https://localhost:7265");
+    httpClient.DefaultRequestHeaders.Clear();
+    httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
 });
 
-/*
-services.AddScoped<ITemplateResultApiClient, TemplateResultApiClient>();
-services.AddScoped<ITemplateFonctionnelApiClient, TemplateFonctionnelApiClient>();
-services.AddScoped<ITemplateTechniqueApiClient, TemplateTechniqueApiClient>();
-services.AddScoped<ITemplateProjectApiClient, TemplateProjectApiClient>();
-*/
 builder.Services.AddMvc();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();

@@ -1,4 +1,5 @@
 ﻿using _4___E_CODING_DAL.DesignPattern;
+using _4___E_CODING_DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;

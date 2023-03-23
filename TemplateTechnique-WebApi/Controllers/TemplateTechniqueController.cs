@@ -1,11 +1,14 @@
-﻿using _4___E_CODING_DAL;
+﻿using _4___E_CODING_DAL.Models;
 using AutoMapper;
 using E_CODING_MVC_NET6_0;
 using E_CODING_MVC_NET6_0.Models;
+using E_CODING_Service_Abstraction;
 using E_CODING_Services;
+using E_CODING_Services.Technique;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Protocol.Core.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,254 +25,278 @@ namespace TemplateTechnique_WebApi
     [ApiController]
     public class TemplateTechniqueController : ControllerBase
     {
-        private readonly ITemplateTechniqueService _ServiceTechnique;
-        private IMapper _mapper;
-        public TemplateTechniqueController(IMapper mapper , ITemplateTechniqueService itemplateTechniqueService)
+        private readonly ITechniqueRepositoryWrapper _techniqueRepositoryWrapper;
+        private readonly IMapper _mapper;
+        private readonly ILoggerManager _logger;
+        public TemplateTechniqueController(
+            ILoggerManager logger,
+            IMapper mapper ,
+            ITechniqueRepositoryWrapper techniqueRepositoryWrapper)
         {
+            _logger = logger;
             _mapper = mapper;
-            _ServiceTechnique = itemplateTechniqueService;
+            _techniqueRepositoryWrapper = techniqueRepositoryWrapper;
         }
 
         [HttpGet]
         [Route("Index")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Index()
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult Index()
         {   
             try
             {
-                List<TemplateTechnique> templateTechniques = await _ServiceTechnique.GetAllTemplateTechnique();
-                List<TemplateTechniqueVM> templateTechniquesVM = _mapper.Map<List<TemplateTechniqueVM>>(templateTechniques);
+                IEnumerable<TemplateTechnique> templateTechniques = _techniqueRepositoryWrapper.TechniqueRepository.GetAllTemplateTechnique();
+                _logger.LogInfo($"Returned all templateTechniques from database.");
+                IEnumerable<TemplateTechniqueVM> templateTechniquesVM = _mapper.Map<List<TemplateTechniqueVM>>(templateTechniques);
                 return Ok(templateTechniquesVM);
             }
             catch (Exception ex)
             {
-                return BadRequest("TemplateTechnique Index error: " + ex.Message);
+                _logger.LogError($"Something went wrong inside TemplateTechnique/Index action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
             }
         }
 
         [HttpGet]
-        [Route("TemplateTechniqueByProject")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> TemplateTechniqueByProject(int id)
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Route("TechniqueAllItems")]
+        public IActionResult TemplateTechniqueAllItems(int id)
         {
             try
             {
-                List<TemplateTechnique> templateTechniques = await _ServiceTechnique.TemplateTechniqueByProject(id);
-                List<TemplateTechniqueVM> templateTechniquesVM = _mapper.Map<List<TemplateTechniqueVM>>(templateTechniques);
-                return Ok(templateTechniquesVM);
+                IEnumerable<TemplateTechniqueItem> TemplateTechniqueAllItems = _techniqueRepositoryWrapper.TechniqueItemRepository.GetAllTemplateTechniqueItem(id);
+                if (TemplateTechniqueAllItems.ToList().Count==0)
+                {
+                    _logger.LogError($"Returned TechniqueAllItems for TemplateTechniqueId={id} from database.");
+                    return NotFound();
+                }
+                else
+                { 
+                    _logger.LogInfo($"Returned all TechniqueAllItems for TemplateTechniqueId={id} from database.");
+                    IEnumerable<TemplateTechniqueItemVM> TemplateTechniqueAllItemsVM = _mapper.Map<List<TemplateTechniqueItemVM>>(TemplateTechniqueAllItems);
+                    return Ok(TemplateTechniqueAllItemsVM);
+                }
             }
             catch (Exception ex)
             {
-                return BadRequest("TemplateTechnique Index error: " + ex.Message);
-            }
-        }
-        
-
-
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Route("TemplateTechniqueItems")]
-        public async Task<IActionResult> TemplateTechniqueItems(int id)
-        {            
-            try
-            {
-                List<TemplateTechniqueItem> TemplateTechniqueAllItems = await _ServiceTechnique.DetailTemplateTechniqueItems(id);
-                List<TemplateTechniqueItemVM> TemplateTechniqueAllItemsVM = _mapper.Map<List<TemplateTechniqueItemVM>>(TemplateTechniqueAllItems);
-                return Ok(TemplateTechniqueAllItemsVM);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("TemplateTechnique Index error: " + ex.Message);
+                _logger.LogError($"Something went wrong inside TemplateTechniqueItems for TemplateTechniqueId={id} action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
             }
         }
 
-        
-        [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ActionName("TemplateTechniqueDetail")]
-        [Route("Details")]
-        public async Task<IActionResult> TemplateTechniqueDetail(int id)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Route("TechniqueDetails")]
+        [HttpGet("{id}", Name = "TechniqueDetailsById")]
+        public IActionResult TemplateTechniqueDetails(int id)
         {
             try
             {
-                TemplateTechnique templateTechnique = await _ServiceTechnique.DetailTemplateTechnique(id);
-                TemplateTechniqueVM templateTechniqueVM = _mapper.Map<TemplateTechniqueVM>(templateTechnique);
-                List<TemplateTechniqueItem> templateTechniqueItems = templateTechnique.TemplateTechniqueItem.ToList();                
-                List<TemplateTechniqueItemVM> templateTechniqueItemsVM = _mapper.Map<List<TemplateTechniqueItemVM>>(templateTechniqueItems);
-                templateTechniqueVM.TemplateTechniqueItemVM = templateTechniqueItemsVM;
-                return Ok(templateTechniqueVM);
+                TemplateTechnique templateTechnique = _techniqueRepositoryWrapper.TechniqueRepository.FindByCondition(id);
+                if (templateTechnique is null)
+                {
+                    _logger.LogError($"Returned templateTechnique for TemplateTechniqueId={id} from database.");
+                    return NotFound();
+                }
+                else
+                {
+                    _logger.LogInfo($"Returned templateTechnique with TemplateTechniqueId: {id}");
+                    List<TemplateTechniqueItem> templateTechniqueItems = _techniqueRepositoryWrapper.TechniqueItemRepository.GetAllTemplateTechniqueItem(id).ToList();
+                    TemplateTechniqueVM templateTechniqueVM = _mapper.Map<TemplateTechniqueVM>(templateTechnique);
+                    if (templateTechniqueItems.Any())
+                    {
+                        _logger.LogInfo($"Returned templateTechniqueItems with TemplateTechniqueId: {id}");
+                        List<TemplateTechniqueItemVM> templateTechniqueItemsVM = _mapper.Map<List<TemplateTechniqueItemVM>>(templateTechniqueItems);
+                        templateTechniqueVM.TemplateTechniqueItemVM = templateTechniqueItemsVM;
+                    }
+                    return Ok(templateTechniqueVM);
+                }
             }
             catch (Exception ex)
             {
-                return BadRequest("TemplateTechnique Detail error: " + ex.Message);
+                _logger.LogError($"Something went wrong inside TemplateTechniqueDetails for TemplateTechniqueId={id} action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+     
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Route("CreateTechnique")]
+        [ValidateAntiForgeryToken]
+        public IActionResult TemplateTechniqueCreate([FromBody] TemplateTechniqueVM templateTechniqueVM)
+        {
+            try
+            {
+                if (templateTechniqueVM is null)
+                {
+                    _logger.LogError("templateTechnique object sent from client is null.");
+                    return BadRequest("templateTechnique object is null");
+                }
+                if (!ModelState.IsValid)
+                {
+                    _logger.LogError("Invalid templateTechnique object sent from client.");
+                    return BadRequest("Invalid model object");
+                }
+                TemplateTechnique templateTechniqueEntity = _mapper.Map<TemplateTechnique>(templateTechniqueVM);
+                _techniqueRepositoryWrapper.TechniqueRepository.CreateTemplateTechnique(templateTechniqueEntity);
+                _techniqueRepositoryWrapper.Save();
+                var templateTechnique = _mapper.Map<TemplateTechniqueVM>(templateTechniqueEntity);
+                return CreatedAtRoute("TemplateTechniqueId", new { id = templateTechnique.TemplateTechniqueId }, templateTechnique);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside TemplateTechniqueDetails for TemplateTechniqueId action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ValidateAntiForgeryToken]
+        [Route("EditTechnique")]
+        public IActionResult TemplateTechniqueEdit(int id, [FromBody] TemplateTechniqueVM templateTechniqueVM)
+        {
+            try
+            {
+                if (templateTechniqueVM is null)
+                {
+                    _logger.LogError("templateTechnique object sent from client is null.");
+                    return BadRequest("templateTechnique object is null");
+                }
+                if (!ModelState.IsValid)
+                {
+                    _logger.LogError("Invalid templateTechnique object sent from client.");
+                    return BadRequest("Invalid model object");
+                }
+                var templateTechniqueEntity = _techniqueRepositoryWrapper.TechniqueRepository.FindByCondition(id);
+                if (templateTechniqueEntity is null)
+                {
+                    _logger.LogError($"templateTechnique with id: {id}, hasn't been found in db.");
+                    return NotFound();
+                }
+                _mapper.Map(templateTechniqueVM, templateTechniqueEntity);
+                _techniqueRepositoryWrapper.TechniqueRepository.UpdateTemplateTechnique(templateTechniqueEntity);
+                _techniqueRepositoryWrapper.Save();
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside TemplateTechniqueEdit for TemplateTechniqueId={id} action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [Route("DeleteTechnique")]
+        [HttpDelete("{id}")]
+        public void DeleteTemplateTechnique(int id)
+        {
+            try
+            {
+                var templateTechnique = _techniqueRepositoryWrapper.TechniqueRepository.FindByCondition(id);
+                if (templateTechnique == null)
+                {
+                    _logger.LogError($"templateTechnique with id: {id}, hasn't been found in db.");
+                }
+                if (_techniqueRepositoryWrapper.TechniqueItemRepository.GetAllTemplateTechniqueItem(id).Any())
+                {
+                    _logger.LogError($"Cannot delete owner with id: {id}. It has related accounts. Delete those accounts first");
+                }
+                _techniqueRepositoryWrapper.TechniqueRepository.DeleteTemplateTechnique(templateTechnique);
+                _techniqueRepositoryWrapper.Save();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside DeleteOwner action: {ex.Message}");
             }
         }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Route("TemplateTechniqueItemDetail")]
-        public async Task<IActionResult> TemplateTechniqueItemDetail(int id)
+        [Route("TechniqueItemDetails")]
+        public IActionResult TemplateTechniqueItemDetail(int id)
         {
             try
             {
-                TemplateTechniqueItem templateTechniqueItem = await _ServiceTechnique.DetailTemplateTechniqueItem(id);
+                TemplateTechniqueItem templateTechniqueItem = _techniqueRepositoryWrapper.TechniqueItemRepository.FindByCondition(id);
+                _logger.LogInfo($"Returned templateTechniqueItem for TemplateTechniqueId={id} from database.");
                 TemplateTechniqueItemVM templateTechniqueVM = _mapper.Map<TemplateTechniqueItemVM>(templateTechniqueItem);
                 return Ok(templateTechniqueVM);
             }
             catch (Exception ex)
             {
-                return BadRequest("TemplateTechniqueItem Detail error: " + ex.Message);
+                _logger.LogError($"Something went wrong inside TemplateTechniqueDetails for TemplateTechniqueId={id} action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
             }
         }
-
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Route("Create")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> TemplateTechniqueCreate()
-        {            
-            try
-            {
-                TemplateTechnique templateTechnique = await _ServiceTechnique.CreateTemplateTechnique();
-                TemplateTechniqueVM templateTechniqueVM = _mapper.Map<TemplateTechniqueVM>(templateTechnique);
-                return CreatedAtAction("templateTechniqueVM", new { id = templateTechniqueVM.TemplateTechniqueId }, templateTechniqueVM);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("TemplateTechniqueCreate error: " + ex.Message);
-            }
-        }
-
-        
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Route("Create")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> TemplateTechniqueCreate(TemplateTechnique templateTechnique)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    TemplateTechnique _templateTechnique = await _ServiceTechnique.CreateTemplateTechnique(templateTechnique);
-                    TemplateTechniqueVM templateTechniqueVM = _mapper.Map<TemplateTechniqueVM>(templateTechnique);
-                    return CreatedAtAction("templateTechniqueVM", new { id = templateTechniqueVM.TemplateTechniqueId }, templateTechniqueVM);
-                }
-                else return BadRequest("TemplateTechniqueCreate ModelState.IsValid=false");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("TemplateTechniqueCreate error: " + ex.Message);
-            }
-        }
-
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ValidateAntiForgeryToken]
-        [Route("Edit")]
-        public async Task<IActionResult> TemplateTechniqueEdit(int id)
-        {
-            try
-            {
-                TemplateTechnique templateTechnique = await this._ServiceTechnique.EditTemplateTechnique(id);
-                TemplateTechniqueVM templateTechniqueVM = _mapper.Map<TemplateTechniqueVM>(templateTechnique);
-                return Ok(templateTechniqueVM);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("TemplateTechniqueEdit error: " + ex.Message);
-            }
-
-        }
-
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Route("Edit")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> TemplateTechniqueEdit(TemplateTechnique templateTechnique)
-        {            
-            try
-            {
-                if(ModelState.IsValid)
-                {
-                    TemplateTechnique _templateTechnique =  await this._ServiceTechnique.EditTemplateTechnique(templateTechnique);
-                    return NoContent();
-                }
-                else return BadRequest("TemplateTechniqueEdit ModelState.IsValid=false");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("TemplateTechniqueEdit error: " + ex.Message);
-            }
-
-        }
-
-
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Route("CreateItem")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateTemplateTechniqueItem()
-        {
-            try
-            {
-                TemplateTechniqueItem templateTechniqueItem = await _ServiceTechnique.CreateTemplateTechniqueItem();
-                TemplateTechniqueItemVM templateTechniqueItemVM = _mapper.Map<TemplateTechniqueItemVM>(templateTechniqueItem);
-                return Ok(templateTechniqueItemVM);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("TemplateTechniqueCreate error: " + ex.Message);
-            }
-        }
-
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Route("CreateItem")]
+        [Route("CreateTechniqueItem")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateTemplateTechniqueItem([FromBody] TemplateTechniqueItem templateTechniqueItem)
+        public IActionResult CreateTemplateTechniqueItem([FromBody] TemplateTechniqueItemVM templateTechniqueItemVM)
         {
             try
             {
-                if (ModelState.IsValid)
+                if (templateTechniqueItemVM is null)
                 {
-                    TemplateTechniqueItem _templateTechniqueItem = await _ServiceTechnique.CreateTemplateTechniqueItem(templateTechniqueItem);
-                    TemplateTechniqueItemVM _templateTechniqueItemVM = _mapper.Map<TemplateTechniqueItemVM>(_templateTechniqueItem);
-                    return CreatedAtAction("_templateTechniqueItem", new { id = _templateTechniqueItemVM.TemplateTechniqueItemId }, _templateTechniqueItemVM);
-
+                    _logger.LogError("templateTechniqueItem object sent from client is null.");
+                    return BadRequest("templateTechniqueItem object is null");
                 }
-                else return BadRequest("CreateTemplateTechniqueItem IsValid=false");
+                if (!ModelState.IsValid)
+                {
+                    _logger.LogError("Invalid templateTechniqueItem object sent from client.");
+                    return BadRequest("Invalid model object");
+                }
+                TemplateTechniqueItem templateTechniqueItemEntity = _mapper.Map<TemplateTechniqueItem>(templateTechniqueItemVM);
+                _techniqueRepositoryWrapper.TechniqueItemRepository.CreateTemplateTechniqueItem(templateTechniqueItemEntity);
+                _techniqueRepositoryWrapper.Save();
+                TemplateTechniqueItemVM templateTechniqueItem = _mapper.Map<TemplateTechniqueItemVM>(templateTechniqueItemEntity);
+                return CreatedAtAction("templateTechniqueItem", new { id = templateTechniqueItem.TemplateTechniqueItemId }, templateTechniqueItem);
             }
             catch (Exception ex)
             {
-                return BadRequest("CreateTemplateTechniqueItem error: " + ex.Message);
+                    _logger.LogError($"Something went wrong inside TemplateTechniqueItem  action: {ex.Message}");
+                    return StatusCode(500, "Internal server error");
             }
         }
 
-        [HttpGet]
+        [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Route("EditTemplateTechniqueItem")]
+        [Route("EditTechniqueItem")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditTemplateTechniqueItem(int id)
+        public IActionResult EditTemplateTechniqueItem(int id, [FromBody] TemplateTechniqueItemVM templateTechniqueItemVM)
         {            
             try
             {
-                TemplateTechniqueItem _templateTechniqueItem = await this._ServiceTechnique.EditTemplateTechniqueItem(id);
-                TemplateTechniqueItemVM _templateTechniqueItemVM = _mapper.Map<TemplateTechniqueItemVM>(_templateTechniqueItem);
-                return Ok(_templateTechniqueItemVM);
+                if (templateTechniqueItemVM is null)
+                {
+                    _logger.LogError("templateTechniqueItem object sent from client is null.");
+                    return BadRequest("templateTechniqueItem object is null");
+                }
+                if (!ModelState.IsValid)
+                {
+                    _logger.LogError("Invalid templateTechniqueItem object sent from client.");
+                    return BadRequest("Invalid model object");
+                }
+                var templateTechniqueItemEntity = _techniqueRepositoryWrapper.TechniqueItemRepository.FindByCondition(id);
+                if (templateTechniqueItemEntity is null)
+                {
+                    _logger.LogError($"templateTechniqueItem with id: {id}, hasn't been found in db.");
+                    return NotFound();
+                }
+                _mapper.Map(templateTechniqueItemVM, templateTechniqueItemEntity);
+                _techniqueRepositoryWrapper.TechniqueItemRepository.UpdateTemplateTechniqueItem(templateTechniqueItemEntity);
+                _techniqueRepositoryWrapper.Save();
+                return NoContent();
+
             }
             catch (Exception ex)
             {
@@ -277,39 +304,28 @@ namespace TemplateTechnique_WebApi
             }
         }
 
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Route("EditTemplateTechniqueItem")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditTemplateTechniqueItem([FromBody] TemplateTechniqueItem templateTechniqueItem)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    TemplateTechniqueItem _templateTechniqueItem = await _ServiceTechnique.EditTemplateTechniqueItem(templateTechniqueItem);
-                    TemplateTechniqueItemVM _templateTechniqueItemVM = _mapper.Map<TemplateTechniqueItemVM>(_templateTechniqueItem);
-                    return Ok(_templateTechniqueItemVM);
-                }
-                else return BadRequest("EditTemplateTechniqueItem IsValid=false");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("EditTemplateTechniqueItem error: " + ex.Message);
-            }
-        }
-
-        [Route("Delete")]
-        public void DeleteTemplateTechnique(int id)
-        {
-            this._ServiceTechnique.DeleteTemplateTechnique(id);
-        }
-
-        [Route("DeleteItem")]
+        [Route("DeleteTechniqueItem")]
+        [HttpDelete("{id}")]
         public void DeleteTemplateTechniqueItem(int id)
         {
-            this._ServiceTechnique.DeleteTemplateTechniqueItem(id);
+            try
+            {
+                var templateTechnique = _techniqueRepositoryWrapper.TechniqueRepository.FindByCondition(id);
+                if (templateTechnique == null)
+                {
+                    _logger.LogError($"templateTechnique with id: {id}, hasn't been found in db.");
+                }
+                if (_techniqueRepositoryWrapper.TechniqueItemRepository.GetAllTemplateTechniqueItem(id).Any())
+                {
+                    _logger.LogError($"Cannot delete owner with id: {id}. It has related accounts. Delete those accounts first");
+                }
+                _techniqueRepositoryWrapper.TechniqueRepository.DeleteTemplateTechnique(templateTechnique);
+                _techniqueRepositoryWrapper.Save();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside DeleteOwner action: {ex.Message}");
+            }
         }
     }
 }

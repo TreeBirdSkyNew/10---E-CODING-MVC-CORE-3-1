@@ -1,9 +1,11 @@
-﻿using _4___E_CODING_DAL;
+﻿using _4___E_CODING_DAL.Models;
 using AutoMapper;
 using E_CODING_MVC_NET6_0;
 using E_CODING_MVC_NET6_0.Models;
 using E_CODING_Service_Abstraction;
 using E_CODING_Services;
+using E_CODING_Services.Project;
+using E_CODING_Services.Result;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,178 +19,174 @@ namespace __WEB_API__TemplateProject_WebApi.Controllers
     [Route("api/TemplateProject")]
     public class TemplateProjectController : ControllerBase
     {
-        private readonly ITemplateProjectService _templateProjectService;
-        private IMapper _mapper;
+        private readonly IProjectRepositoryWrapper _projectRepositoryWrapper;
+        private readonly IMapper _mapper;
+        private readonly ILoggerManager _logger;
 
-        public TemplateProjectController(IMapper mapper, ITemplateProjectService templateProjectService)
+        public TemplateProjectController(
+            IProjectRepositoryWrapper projectRepositoryWrapper,
+            IMapper mapper,
+            ILoggerManager logger)
         {
+            _projectRepositoryWrapper = projectRepositoryWrapper;
             _mapper = mapper;
-            _templateProjectService = templateProjectService;
-
+            _logger = logger;
         }
         [HttpGet]
         [Route("Index")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TemplateProject))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Index()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult Index()
         {
             try
             {
-                List<TemplateProject> templateFonctionnels = await _templateProjectService.GetAllTemplateProject();
-                List<TemplateProjectVM> templateFonctionnelsVM = _mapper.Map<List<TemplateProjectVM>>(templateFonctionnels);
-                return Ok(templateFonctionnelsVM);
+                IEnumerable<TemplateProject> templateProjects = _projectRepositoryWrapper.ProjectRepository.GetAllTemplateProject();
+                _logger.LogInfo($"Returned all templateProjects from database.");
+                IEnumerable<TemplateProjectVM> templateProjectsVM = _mapper.Map<IEnumerable<TemplateProjectVM>>(templateProjects);
+                return Ok(templateProjectsVM);
             }
             catch (Exception ex)
             {
-                return BadRequest("TemplateProject Index error: " + ex.Message);
+                _logger.LogError($"Something went wrong inside TemplateProject/Index action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
             }
         }
 
         [HttpGet]
         [Route("Details")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TemplateProject))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> TemplateProjectlDetail(int id)
         {
             try
             {
-                TemplateProject templateProject = await _templateProjectService.DetailTemplateProject(id);
+                TemplateProject templateProject = _projectRepositoryWrapper.ProjectRepository.FindByCondition(id);
                 TemplateProjectVM templateProjectVM = _mapper.Map<TemplateProjectVM>(templateProject);
                 return Ok(templateProjectVM);
             }
             catch (Exception ex)
             {
-                return BadRequest("TemplateFonctionnelDetail error: " + ex.Message);
+                _logger.LogError($"Something went wrong inside TemplateProject/Index action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
             }
         }
 
-        [HttpGet]
-        [Route("DetailsTechnique")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TemplateProject))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> DetailsTechnique(int id)
-        {
-            try
-            {
-                List<TemplateTechnique> templateProject = await _templateProjectService.DetailsTechnique(id);
-                List<TemplateTechnique> templateProjectVM = _mapper.Map<List<TemplateTechnique>>(templateProject);
-                return Ok(templateProjectVM);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("TemplateFonctionnelDetail error: " + ex.Message);
-            }
-        }
-
-        [HttpGet]
-        [Route("DetailsEntity")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TemplateProject))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> DetailsEntity(int id)
-        {
-            try
-            {
-                TemplateFonctionnel templateProject = await _templateProjectService.DetailsFonctionnel(id);
-                TemplateFonctionnelVM templateProjectVM = _mapper.Map<TemplateFonctionnelVM>(templateProject);
-                return Ok(templateProjectVM);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("TemplateFonctionnelDetail error: " + ex.Message);
-            }
-        }
-        
+                
 
 
 
         [HttpGet]
         [Route("Create")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> TemplateProjectCreate()
         {
             try
             {                
-                    TemplateProject templateProject = await _templateProjectService.CreateTemplateProject();
+                    TemplateProject templateProject = new ();
                     TemplateProjectVM templateProjectVM = _mapper.Map<TemplateProjectVM>(templateProject);
-                    return CreatedAtAction("templateProjectVM", new { id = templateProjectVM.TemplateProjectId }, templateProjectVM);
+                    return CreatedAtAction("templateProject", new { id = templateProjectVM.TemplateProjectId }, templateProjectVM);
             }
             catch (Exception ex)
             {
-                return BadRequest("TemplateProjectCreate error: " + ex.Message);
+                _logger.LogError($"Something went wrong inside TemplateProjectCreate action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
             }
         }
 
+
         [HttpPost]
-        [Route("Create")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Route("Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> TemplateProjectCreate([FromBody] TemplateProject templateProject)
+        public IActionResult TemplateTechniqueCreate([FromBody] TemplateProjectVM templateProjectVM)
         {
             try
-            {   
-                if(!ModelState.IsValid)
+            {
+                if (templateProjectVM is null)
                 {
-                    TemplateProject _templateProject = await _templateProjectService.CreateTemplateProject(templateProject);
-                    TemplateProjectVM _templateProjectVM = _mapper.Map<TemplateProjectVM>(_templateProject);
-                    return CreatedAtAction("templateProjectVM", new { id = _templateProjectVM.TemplateProjectId }, _templateProjectVM);
+                    _logger.LogError("templateTechnique object sent from client is null.");
+                    return BadRequest("templateTechnique object is null");
                 }
-                return BadRequest("TemplateProjectCreate error: ");
+                if (!ModelState.IsValid)
+                {
+                    _logger.LogError("Invalid templateTechnique object sent from client.");
+                    return BadRequest("Invalid model object");
+                }
+                TemplateProject TemplateProjectEntity = _mapper.Map<TemplateProject>(templateProjectVM);
+                _projectRepositoryWrapper.ProjectRepository.CreateTemplateProject(TemplateProjectEntity);
+                _projectRepositoryWrapper.Save();
+                var templateProject = _mapper.Map<TemplateProjectVM>(TemplateProjectEntity);
+                return CreatedAtAction("TemplateProjectVM", new { id = templateProject.TemplateProjectId }, templateProject);
             }
             catch (Exception ex)
             {
-                return BadRequest("TemplateProjectCreate error: " + ex.Message);
+                _logger.LogError($"Something went wrong inside TemplateTechniqueCreate action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
             }
         }
-        [HttpGet]
-        [Route("Edit")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditTemplateProject(int id)
+        [Route("Edit")]
+        public IActionResult TemplateProjectEdit(int id, [FromBody] TemplateProjectVM templateProjectVM)
         {
             try
             {
-                TemplateProject templateProject = await this._templateProjectService.EditTemplateProject(id);
-                TemplateProjectVM templateProjectVM = _mapper.Map<TemplateProjectVM>(templateProject);
+                if (templateProjectVM is null)
+                {
+                    _logger.LogError("TemplateResult object sent from client is null.");
+                    return BadRequest("TemplateResult object is null");
+                }
+                if (!ModelState.IsValid)
+                {
+                    _logger.LogError("Invalid TemplateResult object sent from client.");
+                    return BadRequest("Invalid model object");
+                }
+                var templateProjectEntity = _projectRepositoryWrapper.ProjectRepository.FindByCondition(id);
+                if (templateProjectEntity is null)
+                {
+                    _logger.LogError($"TemplateProject with id: {id}, hasn't been found in db.");
+                    return NotFound();
+                }
+                _mapper.Map(templateProjectVM, templateProjectEntity);
+                _projectRepositoryWrapper.ProjectRepository.UpdateTemplateProject(templateProjectEntity);
+                _projectRepositoryWrapper.Save();
                 return NoContent();
             }
             catch (Exception ex)
             {
-                return BadRequest("EditTemplateFonctionnelEntity error: " + ex.Message);
-            }
-        }
-
-        [HttpPost]
-        [Route("Edit")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditTemplateProject([FromBody] TemplateProject templateProject)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    TemplateProject _templateFonctionnel = await this._templateProjectService.EditTemplateProject(templateProject);
-                    TemplateProjectVM templateFonctionnelVM = _mapper.Map<TemplateProjectVM>(_templateFonctionnel);
-                    return NoContent();
-                }
-                else
-                    return BadRequest("EditTemplateFonctionnelEntity error: ");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("EditTemplateFonctionnelEntity error: " + ex.Message);
+                _logger.LogError($"Something went wrong inside TemplateProject action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
             }
         }
 
         [Route("Delete")]
-        public void TemplateProjectDelete(int id)
+        [HttpDelete("{id}")]
+        public void DeleteTemplatePrpject(int id)
         {
-            this._templateProjectService.DeleteTemplateProject(id);
+            try
+            {
+                var templateProject = _projectRepositoryWrapper.ProjectRepository.FindByCondition(id);
+                if (templateProject == null)
+                {
+                    _logger.LogError($"TemplateResult with id: {id}, hasn't been found in db.");
+                }
+                //if (_projectRepositoryWrapper.TechniqueRepository.GetAllTemplateTechnique(id).Any())
+                {
+                    _logger.LogError($"Cannot delete owner with id: {id}. It has related accounts. Delete those accounts first");
+                }
+                _projectRepositoryWrapper.ProjectRepository.DeleteTemplateProject(templateProject);
+                _projectRepositoryWrapper.Save();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside TemplateProject action: {ex.Message}");
+            }
         }
 
     }

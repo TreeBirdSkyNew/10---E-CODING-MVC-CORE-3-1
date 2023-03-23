@@ -1,5 +1,5 @@
 ﻿using __WEB_API__TemplateTechnique_WebApi_Test._TemplateTechnique.UnitTest.FakeTest;
-using _4___E_CODING_DAL;
+using _4___E_CODING_DAL.Models;
 using AutoMapper;
 using E_CODING_MVC_NET6_0.Models;
 using E_CODING_Services;

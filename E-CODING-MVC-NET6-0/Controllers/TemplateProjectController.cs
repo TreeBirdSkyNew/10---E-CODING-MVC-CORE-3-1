@@ -15,6 +15,8 @@ using System.Threading.Tasks;
 using E_CODING_Service_Abstraction;
 using E_CODING_Services;
 using E_CODING_MVC_NET6_0.Models;
+using E_CODING_MVC_NET6_0.InfraStructure.TemplateFonctionnel;
+using E_CODING_MVC_NET6_0.InfraStructure.Project;
 
 namespace E_CODING_MVC_NET6_0
 {
@@ -22,51 +24,53 @@ namespace E_CODING_MVC_NET6_0
     [Route("TemplateProject")]
     public class TemplateProjectController : Controller
     {
-        private readonly ITemplateProjectApiClient _itemplateProjectApiClient;
-        private readonly ITemplateTechniqueApiClient _itemplateTechniqueApiClient;
-        private readonly ITemplateResultApiClient _itemplateResultApiClient;
-        private readonly ITemplateFonctionnelApiClient _itemplateFonctionnelApiClient;
+        private ITemplateProjectApiClient _projectApiClient;
+        private ITemplateTechniqueApiClient _techniqueApiClient;
+        private ITemplateResultApiClient _resultApiClient;
+        private ITemplateFonctionnelApiClient _fonctionnelApiClient;
 
+        private const string _clientProjectName = "ClientApiProject";
+        private const string _clientTechniqueName = "ClientApiTechnique";
+        private const string _clientFonctionnelName = "ClientApiFonctionnel";
+        private const string _clientResultName = "ClientApiResult";
 
-        public TemplateProjectController(ITemplateProjectApiClient itemplateProjectApiClient,
-                                         ITemplateTechniqueApiClient itemplateTechniqueApiClient,
-                                         ITemplateResultApiClient itemplateResultApiClient,
-                                         ITemplateFonctionnelApiClient itemplateFonctionnelApiClient)
+        public TemplateProjectController(
+                        ITemplateProjectApiClient projectApiClient,
+                        ITemplateTechniqueApiClient techniqueApiClient,
+                        ITemplateResultApiClient resultApiClient,
+                        ITemplateFonctionnelApiClient fonctionnelApiClient)
         {
-            _itemplateTechniqueApiClient = itemplateTechniqueApiClient;
-            _itemplateFonctionnelApiClient = itemplateFonctionnelApiClient;
-            _itemplateProjectApiClient = itemplateProjectApiClient;
-            _itemplateResultApiClient = itemplateResultApiClient;
+            _projectApiClient = projectApiClient;
+            _techniqueApiClient = techniqueApiClient;
+            _resultApiClient = resultApiClient;
+            _fonctionnelApiClient = fonctionnelApiClient;
         }
-
         
         [Route("Index")]
         public async Task<IActionResult> Index()
         {
-            List<TemplateProjectVM> templateProjectVMResult = new List<TemplateProjectVM>();
-            List<TemplateProjectVM> templateProjectVMs = await _itemplateProjectApiClient.GetAllTemplateProject("api/TemplateProject/Index");
+            List<TemplateProjectVM?> templateProjectVMs = await _projectApiClient.GetAllTemplateProject(_clientProjectName,"api/TemplateProject/Index");
             foreach (TemplateProjectVM project in templateProjectVMs)
             {
-                List<TemplateTechniqueVM> TemplateTechniquesVM = await _itemplateTechniqueApiClient.GetAllTemplateTechnique("api/TemplateTechnique/TemplateTechniqueByProject?id=" + project.TemplateProjectId);
+                List<TemplateTechniqueVM> TemplateTechniquesVM = await _techniqueApiClient.GetAllTemplateTechnique(_clientTechniqueName, "api/TemplateTechnique/TemplateTechniqueByProject?id=" + project.TemplateProjectId);
                 if (TemplateTechniquesVM!=null)
                 {
                     project.TemplateTechniquesVM = TemplateTechniquesVM;
                 }
-                
-                TemplateFonctionnelVM templateFonctionnelVM = await _itemplateFonctionnelApiClient.GetTemplateFonctionnel("api/TemplateFonctionnel/TemplateFonctionnelByProject?id=" + project.TemplateProjectId);
+                TemplateFonctionnelVM templateFonctionnelVM = await _fonctionnelApiClient.GetTemplateFonctionnel(_clientFonctionnelName, "api/TemplateFonctionnel/TemplateFonctionnelByProject?id=" + project.TemplateProjectId);
                 if (TemplateTechniquesVM != null)
                 {
                     project.TemplateFonctionnelVM = templateFonctionnelVM;
                 }
-                templateProjectVMResult.Add(project);
+                templateProjectVMs.Add(project);
             }
-            return View(templateProjectVMResult);
+            return View(templateProjectVMs);
         }
 
         [Route("Details")]
         public async Task<IActionResult> Details(int id)
         {
-            TemplateProjectVM templateProjectVM = await _itemplateProjectApiClient.GetTemplateProject("api/TemplateProject/Details?id=" + id);
+            TemplateProjectVM? templateProjectVM = await _projectApiClient.GetTemplateProject(_clientProjectName,"api/TemplateProject/Details?id=" + id);
             return View(templateProjectVM);
         }
 
@@ -74,8 +78,8 @@ namespace E_CODING_MVC_NET6_0
         [Produces(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> DetailsTechnique(int id)
         {
-            TemplateProjectVM templateProjectVM = await _itemplateProjectApiClient.GetTemplateProject("api/TemplateProject/Details?id=" + id);
-            List<TemplateTechniqueVM> TemplateTechniquesVM = await _itemplateProjectApiClient.DetailsTechnique("api/TemplateProject/DetailsTechnique?id=" + id);
+            TemplateProjectVM? templateProjectVM = await _projectApiClient.GetTemplateProject(_clientProjectName,"api/TemplateProject/ProjectDetails?id=" + id);
+            List<TemplateTechniqueVM> TemplateTechniquesVM = await _techniqueApiClient.GetAllTemplateTechnique(_clientProjectName,"api/TemplateProject/TechniqueDetails?id=" + id);
             return Json(TemplateTechniquesVM, new JsonSerializerOptions { WriteIndented = true });
         }
 
@@ -83,27 +87,25 @@ namespace E_CODING_MVC_NET6_0
         [Produces(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> DetailsEntity(int id)
         {
-            TemplateProjectVM templateProjectVM = await _itemplateProjectApiClient.GetTemplateProject("api/TemplateProject/Details?id=" + id);
-            List<TemplateFonctionnelEntityVM> TemplateTechniquesVM = await _itemplateProjectApiClient.DetailsEntity("api/TemplateProject/DetailsEntity?id=" + id);
+            TemplateProjectVM? templateProjectVM = await _projectApiClient.GetTemplateProject(_clientProjectName,"api/TemplateProject/ProjectDetails?id=" + id);
+            List<TemplateFonctionnelEntityVM> TemplateTechniquesVM = await _fonctionnelApiClient.GetAllTemplateFonctionnelEntity(_clientProjectName,"api/TemplateProject/FonctionnelEntityDetails?id=" + id);
             return Json(TemplateTechniquesVM, new JsonSerializerOptions { WriteIndented = true });
         }
-        
 
         [Route("DetailsFonctionnel")]
         public async Task<IActionResult> DetailsFonctionnel(int id)
         {
-            TemplateFonctionnelVM templateProjectVM = await _itemplateFonctionnelApiClient.GetTemplateFonctionnel("api/TemplateFonctionnel/Details?id=" + id);
-            List<TemplateFonctionnelEntityVM> templateProjectEntitiesVM = await _itemplateFonctionnelApiClient.GetTemplateFonctionnelEntities("api/TemplateFonctionnel/DetailsEntity?id=" + id);
-            List<TemplateFonctionnelPropertyVM> TemplateFonctionnelPropertiesVM = await _itemplateFonctionnelApiClient.GetTemplateFonctionnelProperties("api/TemplateFonctionnel/DetailsEntity?id=" + id);
+            TemplateFonctionnelVM templateProjectVM = await _fonctionnelApiClient.GetTemplateFonctionnel(_clientProjectName, "api/TemplateFonctionnel/FonctionnelEntityDetails?id=" + id);
+            List<TemplateFonctionnelEntityVM> templateProjectEntitiesVM = await _fonctionnelApiClient.GetAllTemplateFonctionnelEntity(_clientProjectName, "api/TemplateFonctionnel/FonctionnelAllEntities?id=" + id);
+            List<TemplateFonctionnelPropertyVM> TemplateFonctionnelPropertiesVM = await _fonctionnelApiClient.GetAllTemplateFonctionnelProperty(_clientProjectName, "api/TemplateFonctionnel/FonctionnelAllProperties?id=" + id);
             return View(templateProjectVM);
         }
-
 
         [HttpGet]
         [Route("Edit")]
         public async Task<IActionResult> Edit(int id)
         {
-            TemplateProjectVM templateProjectVM = await _itemplateProjectApiClient.GetTemplateProject("api/TemplateProject/Details?id=" + id);
+            TemplateProjectVM? templateProjectVM = await _projectApiClient.GetTemplateProject(_clientProjectName,"api/TemplateProject/ProjectDetails?id=" + id);
             return View(templateProjectVM);
         }
 
@@ -112,7 +114,7 @@ namespace E_CODING_MVC_NET6_0
         public async Task<IActionResult> Edit(TemplateProjectVM templateProjectVM)
         {
             StringContent content = new StringContent(JsonConvert.SerializeObject(templateProjectVM), Encoding.UTF8, "application/json");
-            await this._itemplateProjectApiClient.PostTemplateProject("api/TemplateProject/Edit", content);
+            await this._projectApiClient.PostTemplateProject(_clientProjectName,"api/TemplateProject/Edit", content);
             return RedirectToAction("Index");
         }
 
@@ -120,7 +122,7 @@ namespace E_CODING_MVC_NET6_0
         [Route("Create")]
         public async Task<IActionResult> CreateTemplateProject()
         {
-            TemplateProjectVM templateProjectVM = await _itemplateProjectApiClient.GetTemplateProject("api/TemplateProject/Create");
+            TemplateProjectVM templateProjectVM = new TemplateProjectVM();
             return View(templateProjectVM);
         }
 
@@ -129,14 +131,14 @@ namespace E_CODING_MVC_NET6_0
         public async Task<IActionResult> CreateTemplateProject(TemplateProjectVM templateProjectVM)
         {
             StringContent content = new StringContent(JsonConvert.SerializeObject(templateProjectVM), Encoding.UTF8, "application/json");
-            await this._itemplateProjectApiClient.PostTemplateProject("api/TemplateProject/Create", content);
+            await this._projectApiClient.PostTemplateProject(_clientProjectName,"api/TemplateProject/Create", content);
             return RedirectToAction("Index");
         }
 
         [Route("Delete")]
         public async Task<IActionResult> DeleteTemplateProject(int id)
         {
-            await this._itemplateProjectApiClient.DeleteTemplateProject("api/TemplateProject/Delete?id=" + id);
+            await this._projectApiClient.DeleteTemplateProject(_clientProjectName,"api/TemplateProject/Delete?id=" + id);
             return RedirectToAction("Index");
         }
 

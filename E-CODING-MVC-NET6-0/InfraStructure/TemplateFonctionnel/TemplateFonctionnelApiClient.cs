@@ -1,108 +1,155 @@
-﻿using _4___E_CODING_DAL;
+﻿using _4___E_CODING_DAL.Models;
+using E_CODING_MVC_NET6_0.InfraStructure.ApiClient;
+using E_CODING_MVC_NET6_0.InfraStructure.Project;
 using E_CODING_MVC_NET6_0.Models;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text.Json;
-using System.Threading.Tasks;
 
-namespace E_CODING_MVC_NET6_0
+namespace E_CODING_MVC_NET6_0.InfraStructure.TemplateFonctionnel
 {
-    public class TemplateFonctionnelApiClient : ITemplateFonctionnelApiClient
+    public class TemplateFonctionnelApiClient : ApiClientService, ITemplateFonctionnelApiClient
     {
-        private HttpClient _clientFonctionnel;
+        private IHttpClientFactory _httpClientFactory;
+        private ILogger<TemplateFonctionnelApiClient> _logger;
+        private IConfiguration _configuration;
 
-        public TemplateFonctionnelApiClient(HttpClient clientFonctionnel) 
+        public TemplateFonctionnelApiClient(
+            ILogger<TemplateFonctionnelApiClient> logger,
+            IConfiguration configuration,
+            IHttpClientFactory httpClientFactory) : base(httpClientFactory)
         {
-            _clientFonctionnel = clientFonctionnel;
+            _logger = logger;
+            _configuration = configuration;
+            string urlWebApiCourier = _configuration["UrlWebApiCourier"];
+            _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<List<TemplateFonctionnelVM>> GetAllTemplateFonctionnel(string api)
+        /************************ TemplateFonctionnel ***************************************************/
+        public async Task<TemplateFonctionnelVM?> GetTemplateFonctionnel(string clientName, string api)
         {
-            HttpResponseMessage response = await _clientFonctionnel.GetAsync(api);
-            var content = await response.Content.ReadAsStringAsync();
-            var results = JsonConvert.DeserializeObject<List<TemplateFonctionnelVM>>(content);
-            return results;
+            HttpResponseMessage httpResponseMessage = await GetObject<TemplateFonctionnelVM>(clientName, api);
+            if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var contentStream = await httpResponseMessage.Content.ReadAsStringAsync();
+                if (!string.IsNullOrEmpty(contentStream))
+                {
+                    var templateFonctionnel = JsonConvert.DeserializeObject<TemplateFonctionnelVM>(contentStream);
+                    if (templateFonctionnel != null)
+                        return templateFonctionnel;
+                }
+            }
+            return null;
         }
 
-        public async Task<TemplateFonctionnelVM> GetTemplateFonctionnel(string api)
+        public async Task<List<TemplateFonctionnelVM?>> GetAllTemplateFonctionnel(string clientName, string api)
         {
-            HttpResponseMessage response = await _clientFonctionnel.GetAsync(api);
-            var content = await response.Content.ReadAsStringAsync();
-            var results = JsonConvert.DeserializeObject<TemplateFonctionnelVM>(content);
-            return results;
+            HttpResponseMessage httpResponseMessage = await GetObject<TemplateFonctionnelVM>(clientName, api);
+            if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var contentStream = await httpResponseMessage.Content.ReadAsStringAsync();
+                if (!string.IsNullOrEmpty(contentStream))
+                {
+                    var templateFonctionnel = JsonConvert.DeserializeObject<List<TemplateFonctionnelVM>>(contentStream);
+                    if (templateFonctionnel != null)
+                        return templateFonctionnel;
+                }
+            }
+            return null;
         }
 
-        public async Task<TemplateFonctionnelEntityVM> GetTemplateFonctionnelEntity(string api)
+        public async Task PostTemplateFonctionnel(string clientName, string api, StringContent content)
         {
-            HttpResponseMessage response = await _clientFonctionnel.GetAsync(api);
-            var content = await response.Content.ReadAsStringAsync();
-            var results = JsonConvert.DeserializeObject<TemplateFonctionnelEntityVM>(content);
-            return results;
+            var httpResponseMessage = await PostObject<TemplateFonctionnelVM>(clientName, api, content);
         }
 
-        public async Task<List<TemplateFonctionnelEntityVM>> GetTemplateFonctionnelEntities(string api)
+        public async Task DeleteTemplateFonctionnel(string clientName, string api)
         {
-            HttpResponseMessage response = await _clientFonctionnel.GetAsync(api);
-            var content = await response.Content.ReadAsStringAsync();
-            var results = JsonConvert.DeserializeObject<List<TemplateFonctionnelEntityVM>>(content);
-            return results;
+            var httpResponseMessage = await DeleteObject<TemplateFonctionnelVM>(clientName, api);
         }
 
-
-        public async Task<List<TemplateFonctionnelPropertyVM>> GetTemplateFonctionnelProperties(string api)
+        /************************ TemplateFonctionnelEntity ***************************************************/
+        public async Task<TemplateFonctionnelEntityVM?> GetTemplateFonctionnelEntity(string clientName, string api)
         {
-            HttpResponseMessage response = await _clientFonctionnel.GetAsync(api);
-            var content = await response.Content.ReadAsStringAsync();
-            var results = JsonConvert.DeserializeObject<List<TemplateFonctionnelPropertyVM>>(content);
-            return results;
+            HttpResponseMessage httpResponseMessage = await GetObject<TemplateFonctionnelEntityVM>(clientName, api);
+            if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var contentStream = await httpResponseMessage.Content.ReadAsStringAsync();
+                if (!string.IsNullOrEmpty(contentStream))
+                {
+                    var templateFonctionnelEntity = JsonConvert.DeserializeObject<TemplateFonctionnelEntityVM>(contentStream);
+                    if (templateFonctionnelEntity != null)
+                        return templateFonctionnelEntity;
+                }
+            }
+            return null;
         }
 
-        public async Task<TemplateFonctionnelVM> PostTemplateFonctionnel(string api, StringContent client)
+        public async Task<List<TemplateFonctionnelEntityVM?>> GetAllTemplateFonctionnelEntity(string clientName, string api)
         {
-            HttpResponseMessage response = await _clientFonctionnel.PostAsync(api, client);
-            var content = await response.Content.ReadAsStringAsync();
-            var results = JsonConvert.DeserializeObject<TemplateFonctionnelVM>(content);
-            return results;
+            HttpResponseMessage httpResponseMessage = await GetObject<TemplateFonctionnelEntityVM>(clientName, api);
+            if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var contentStream = await httpResponseMessage.Content.ReadAsStringAsync();
+                if (!string.IsNullOrEmpty(contentStream))
+                {
+                    var templateFonctionnelEntity = JsonConvert.DeserializeObject<List<TemplateFonctionnelEntityVM>>(contentStream);
+                    if (templateFonctionnelEntity != null)
+                        return templateFonctionnelEntity;
+                }
+            }
+            return null;
         }
 
-        public async Task DeleteTemplateFonctionnel(string api)
+        public async Task PostTemplateFonctionnelEntity(string clientName, string api, StringContent content)
         {
-            HttpResponseMessage response = await _clientFonctionnel.DeleteAsync(api);
-            var content = await response.Content.ReadAsStringAsync();
+            var httpResponseMessage = await PostObject<TemplateFonctionnelEntityVM>(clientName, api, content);
         }
 
-        public async Task<TemplateFonctionnelEntityVM> PostTemplateFonctionnelEntity(string api, StringContent client)
+        public async Task DeleteTemplateFonctionnelEntity(string clientName, string api)
         {
-            HttpResponseMessage response = await _clientFonctionnel.PostAsync(api, client);
-            var content = await response.Content.ReadAsStringAsync();
-            var results = JsonConvert.DeserializeObject<TemplateFonctionnelEntityVM>(content);
-            return results;
+            var httpResponseMessage = await DeleteObject<TemplateFonctionnelEntityVM>(clientName, api);
         }
 
-        public async Task DeleteTemplateFonctionnelEntity(string api)
+        /************************ TemplateFonctionnelProperty ***************************************************/
+        public async Task<TemplateFonctionnelPropertyVM?> GetTemplateFonctionnelProperty(string clientName, string api)
         {
-            HttpResponseMessage response = await _clientFonctionnel.DeleteAsync(api);
-            var content = await response.Content.ReadAsStringAsync();
+            HttpResponseMessage httpResponseMessage = await GetObject<TemplateFonctionnelPropertyVM>(clientName, api);
+            if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var contentStream = await httpResponseMessage.Content.ReadAsStringAsync();
+                if (!string.IsNullOrEmpty(contentStream))
+                {
+                    var templateFonctionnelProperty = JsonConvert.DeserializeObject<TemplateFonctionnelPropertyVM>(contentStream);
+                    if (templateFonctionnelProperty != null)
+                        return templateFonctionnelProperty;
+                }
+            }
+            return null;
         }
 
-        public async Task<TemplateFonctionnelPropertyVM> PostTemplateFonctionnelProperty(string api, StringContent client)
+        public async Task<List<TemplateFonctionnelPropertyVM?>> GetAllTemplateFonctionnelProperty(string clientName, string api)
         {
-            HttpResponseMessage response = await _clientFonctionnel.PostAsync(api, client);
-            var content = await response.Content.ReadAsStringAsync();
-            var results = JsonConvert.DeserializeObject<TemplateFonctionnelPropertyVM>(content);
-            return results;
+            HttpResponseMessage httpResponseMessage = await GetObject<TemplateFonctionnelPropertyVM>(clientName, api);
+            if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var contentStream = await httpResponseMessage.Content.ReadAsStringAsync();
+                if (!string.IsNullOrEmpty(contentStream))
+                {
+                    var templateFonctionnelProperty = JsonConvert.DeserializeObject<List<TemplateFonctionnelPropertyVM>>(contentStream);
+                    if (templateFonctionnelProperty != null)
+                        return templateFonctionnelProperty;
+                }
+            }
+            return null;
         }
 
-        public async Task DeleteTemplateFonctionnelProperty(string api)
+        public async Task PostTemplateFonctionnelProperty(string clientName, string api, StringContent content)
         {
-            HttpResponseMessage response = await _clientFonctionnel.DeleteAsync(api);
-            var content = await response.Content.ReadAsStringAsync();
+            var httpResponseMessage = await PostObject<TemplateFonctionnelPropertyVM>(clientName, api, content);
         }
 
-        
+        public async Task DeleteTemplateFonctionnelProperty(string clientName, string api)
+        {
+            var httpResponseMessage = await DeleteObject<TemplateFonctionnelPropertyVM>(clientName, api);
+        }
     }
 }

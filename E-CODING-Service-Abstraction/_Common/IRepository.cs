@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Linq;
 
 namespace E_CODING_Service_Abstraction
 {
-    public interface IRepository<T>
+    public interface IRepositoryBase<T>
     {
-        ICollection<T> GetAll();
-        T GetById(int id);
-        T Create();
-        T Create(T t);
-        void Delete(int id);
-        T Detail(int id);
-        void Update(int id);
+        IQueryable<T> FindAll();
+        IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression);
+        void Create(T entity);
+        void Update(T entity);
+        void Delete(T entity);
     }
 }

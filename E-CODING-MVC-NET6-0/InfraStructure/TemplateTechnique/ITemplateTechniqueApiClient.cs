@@ -10,17 +10,14 @@ namespace E_CODING_MVC_NET6_0
 {
     public interface ITemplateTechniqueApiClient
     {
-        Task<List<TemplateTechniqueVM>> GetAllTemplateTechnique(string api);
-        Task<TemplateTechniqueVM> GetTemplateTechnique(string api);
-        Task<TemplateTechniqueItemVM> DetailsTemplateTechniqueItem(string api);
-        Task<List<TemplateTechniqueItemVM>> DetailsTemplateTechniqueItems(string api);
-        Task EditTemplateTechniqueItem(string api, StringContent client);
-        Task PostTemplateTechnique(string api, StringContent client);
-        Task PostTemplateTechniqueItem(string api, StringContent client);
-        void DeleteTemplateTechnique(string api);
+        Task<TemplateTechniqueVM> GetTemplateTechnique(string clientName, string api);
+        Task<List<TemplateTechniqueVM>> GetAllTemplateTechnique(string clientName, string api);
+        Task PostTemplateTechnique(string clientName, string api, StringContent client);
+        Task DeleteTemplateTechnique(string clientName, string api);
+
+        Task<TemplateTechniqueItemVM> GetTemplateTechniqueItem(string clientName, string api);
+        Task<List<TemplateTechniqueItemVM>> GetAllTemplateTechniqueItem(string clientName, string api);
+        Task PostTemplateTechniqueItem(string clientName, string api, StringContent client);
+        Task DeleteTemplateTechniqueItem(string clientName, string api);
     }
-
-
-
-    
 }

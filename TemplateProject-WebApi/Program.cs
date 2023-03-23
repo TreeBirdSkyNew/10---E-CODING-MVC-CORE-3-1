@@ -1,7 +1,9 @@
 using _4___E_CODING_DAL;
 using AutoMapper;
 using E_CODING_Service_Abstraction;
+using E_CODING_Service_Abstraction.Project;
 using E_CODING_Services;
+using E_CODING_Services.Project;
 using Microsoft.EntityFrameworkCore;
 using TemplateProject_WebApi;
 
@@ -22,7 +24,7 @@ IMapper mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
 builder.Services.AddScoped<ITemplateProjectRepository, TemplateProjectRepository>();
-builder.Services.AddScoped<ITemplateProjectService, TemplateProjectService>();
+builder.Services.AddScoped<IProjectRepositoryWrapper, ProjectRepositoryWrapper>();
 
 var app = builder.Build();
 

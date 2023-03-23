@@ -1,6 +1,7 @@
 using _4___E_CODING_DAL;
 using AutoMapper;
 using E_CODING_Service_Abstraction;
+using E_CODING_Service_Abstraction.Fonctionnel;
 using E_CODING_Services;
 using Microsoft.EntityFrameworkCore;
 using TemplateFonctionnel_WebApi;
@@ -22,7 +23,7 @@ IMapper mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
 builder.Services.AddScoped<ITemplateFonctionnelRepository, TemplateFonctionnelRepository>();
-builder.Services.AddScoped<ITemplateFonctionnelService, TemplateFonctionnelService>();
+builder.Services.AddScoped<IFonctionnelRepositoryWrapper, FonctionnelRepositoryWrapper>();
 
 var app = builder.Build();
 

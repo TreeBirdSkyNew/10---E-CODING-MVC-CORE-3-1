@@ -1,5 +1,6 @@
 ﻿using _4___E_CODING_DAL;
 using AutoMapper;
+using E_CODING_MVC_NET6_0.InfraStructure.TemplateFonctionnel;
 using E_CODING_MVC_NET6_0.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -18,88 +19,30 @@ namespace E_CODING_MVC_NET6_0
     [Route("TemplateFonctionnel")]
     public class TemplateFonctionnelController : Controller
     {
-        private readonly ITemplateFonctionnelApiClient _itemplateFonctionnelApiClient;
+        private ITemplateFonctionnelApiClient _fonctionnelApiClient;
+        private const string _clientName = "ClientApiFonctionnel";
 
-        public TemplateFonctionnelController(ITemplateFonctionnelApiClient itemplateFonctionnelApiClient)
+        public TemplateFonctionnelController(ITemplateFonctionnelApiClient fonctionnelApiClient)
         {
-            _itemplateFonctionnelApiClient = itemplateFonctionnelApiClient;
+            _fonctionnelApiClient = fonctionnelApiClient;
         }
      
         [Route("Index")]
         public async Task<IActionResult> Index()
         {
-            List<TemplateFonctionnelVM> templateFonctionnelVMs = await _itemplateFonctionnelApiClient.GetAllTemplateFonctionnel("api/TemplateFonctionnel/Index");
+            List<TemplateFonctionnelVM> templateFonctionnelVMs = await _fonctionnelApiClient.GetAllTemplateFonctionnel(_clientName,"api/TemplateFonctionnel/Index");
             return View(templateFonctionnelVMs);
         }
 
-        [Route("Details")]
+        [Route("FonctionnelDetails")]
         public async Task<IActionResult> Details(int id)
         {
-            TemplateFonctionnelVM templateFonctionnelVM = await _itemplateFonctionnelApiClient.GetTemplateFonctionnel("api/TemplateFonctionnel/Details?id=" + id);
+            TemplateFonctionnelVM templateFonctionnelVM = await _fonctionnelApiClient.GetTemplateFonctionnel(_clientName, "api/TemplateFonctionnel/FonctionnelDetails?id=" + id);
             return View(templateFonctionnelVM);
         }
 
-        [Route("TemplateFonctionnelEntities")]
-        [Produces(MediaTypeNames.Application.Json)]
-        public IActionResult TemplateFonctionnelEntities(int id)
-        {
-            List<TemplateFonctionnelEntityVM> templateTechniqueItemVMs = _itemplateFonctionnelApiClient.GetTemplateFonctionnelEntities("api/TemplateFonctionnel/TemplateFonctionnelEntities?id=" + id).Result;
-             return Json(templateTechniqueItemVMs, new JsonSerializerOptions { WriteIndented = true });
-        }
-
-        [Route("TemplateFonctionnelEntity")]
-        public IActionResult TemplateFonctionnelEntity(int id)
-        {
-            TemplateFonctionnelEntityVM templateFonctionnelEntityVM = _itemplateFonctionnelApiClient.GetTemplateFonctionnelEntity("api/TemplateFonctionnel/TemplateFonctionnelEntity?id=" + id).Result;
-            return View(templateFonctionnelEntityVM);
-        }
-
-
-        [Route("TemplateFonctionnelProperties")]
-        [Produces(MediaTypeNames.Application.Json)]
-        public IActionResult TemplateFonctionnelProperties(int id)
-        {
-            List<TemplateFonctionnelPropertyVM> templateTechniqueItemVMs = _itemplateFonctionnelApiClient.GetTemplateFonctionnelProperties("api/TemplateFonctionnel/TemplateFonctionnelProperties?id=" + id).Result;
-            return Json(templateTechniqueItemVMs, new JsonSerializerOptions { WriteIndented = true });
-        }
-
-
         [HttpGet]
-        [Route("Edit")]
-        public async Task<IActionResult> Edit(int id)
-        {
-            TemplateFonctionnelVM templateFonctionnelVM = await _itemplateFonctionnelApiClient.GetTemplateFonctionnel("api/TemplateFonctionnel/Details?id=" + id);
-             return View(templateFonctionnelVM);
-        }
-
-        [HttpPost]
-        [Route("Edit")]
-        public async Task<IActionResult> Edit(TemplateFonctionnelVM templateFonctionnelVM)
-        {
-            StringContent content = new StringContent(JsonConvert.SerializeObject(templateFonctionnelVM), Encoding.UTF8, "application/json");
-            await this._itemplateFonctionnelApiClient.PostTemplateFonctionnel("api/TemplateFonctionnel/Edit", content);
-            return RedirectToAction("Index");
-        }
-
-        [HttpGet]
-        [Route("EditTemplateFonctionnelEntity")]
-        public async Task<IActionResult> EditTemplateFonctionnelEntity(int id)
-        {
-            TemplateFonctionnelEntityVM templateFonctionnelEntityVM = await _itemplateFonctionnelApiClient.GetTemplateFonctionnelEntity("api/TemplateFonctionnel/TemplateFonctionnelEntity?id=" + id);
-            return View(templateFonctionnelEntityVM);
-        }
-
-        [HttpPost]
-        [Route("EditTemplateFonctionnelEntity")]
-        public async Task<IActionResult> EditTemplateFonctionnelEntity(TemplateFonctionnelEntityVM templateFonctionnelEntityVM)
-        {
-            StringContent content = new StringContent(JsonConvert.SerializeObject(templateFonctionnelEntityVM), Encoding.UTF8, "application/json");
-            await this._itemplateFonctionnelApiClient.PostTemplateFonctionnelEntity("api/TemplateFonctionnel/EditTemplateFonctionnelEntity", content);
-            return RedirectToAction("Index");
-        }
-
-        [HttpGet]
-        [Route("Create")]
+        [Route("CreateFonctionnel")]
         public IActionResult CreateTemplateFonctionnel()
         {
             TemplateFonctionnelVM templateFonctionnelVM = new TemplateFonctionnelVM();
@@ -107,18 +50,135 @@ namespace E_CODING_MVC_NET6_0
         }
 
         [HttpPost]
-        [Route("Create")]
+        [Route("CreateFonctionnel")]
         public async Task<IActionResult> CreateTemplateFonctionnel(TemplateFonctionnelVM templateFonctionnelVM)
         {
             StringContent content = new StringContent(JsonConvert.SerializeObject(templateFonctionnelVM), Encoding.UTF8, "application/json");
-            await this._itemplateFonctionnelApiClient.PostTemplateFonctionnel("api/TemplateFonctionnel/Create", content);
+            await this._fonctionnelApiClient.PostTemplateFonctionnel(_clientName, "api/TemplateFonctionnel/CreateFonctionnel", content);
             return RedirectToAction("Index");
         }
 
-        [Route("Delete")]
+        [HttpGet]
+        [Route("EditFonctionnel")]
+        public async Task<IActionResult> Edit(int id)
+        {
+             TemplateFonctionnelVM templateFonctionnelVM = await _fonctionnelApiClient.GetTemplateFonctionnel(_clientName, "api/TemplateFonctionnel/FonctionnelDetails?id=" + id);
+            return View(templateFonctionnelVM);
+        }
+
+        [HttpPost]
+        [Route("EditFonctionnel")]
+        public async Task<IActionResult> Edit(TemplateFonctionnelVM templateFonctionnelVM)
+        {
+            StringContent content = new StringContent(JsonConvert.SerializeObject(templateFonctionnelVM), Encoding.UTF8, "application/json");
+            await this._fonctionnelApiClient.PostTemplateFonctionnel(_clientName, "api/TemplateFonctionnel/EditFonctionnel?id=" + templateFonctionnelVM.TemplateFonctionnelId, content);
+            return RedirectToAction("Index");
+        }
+
+        [Route("DeleteFonctionnel")]
         public async Task<IActionResult> DeleteTemplateFonctionnel(int id)
         {
-            await this._itemplateFonctionnelApiClient.DeleteTemplateFonctionnel("api/TemplateFonctionnel/Delete?id=" + id);
+            await this._fonctionnelApiClient.DeleteTemplateFonctionnel(_clientName, "api/TemplateFonctionnel/DeleteFonctionnel?id=" + id);
+            return RedirectToAction("Index");
+        }
+
+        [Route("FonctionnelAllEntities")]
+        [Produces(MediaTypeNames.Application.Json)]
+        public IActionResult TemplateFonctionnelEntities(int id)
+        {
+            List<TemplateFonctionnelEntityVM> templateTechniqueItemVMs = _fonctionnelApiClient.GetAllTemplateFonctionnelEntity(_clientName, "api/TemplateFonctionnel/FonctionnelAllEntities?id=" + id).Result;
+            return Json(templateTechniqueItemVMs, new JsonSerializerOptions { WriteIndented = true });
+        }
+
+        [Route("FonctionnelEntityDetails")]
+        public IActionResult TemplateFonctionnelEntity(int id)
+        {
+            TemplateFonctionnelEntityVM templateFonctionnelEntityVM = _fonctionnelApiClient.GetTemplateFonctionnelEntity(_clientName, "api/TemplateFonctionnel/FonctionnelEntityDetails?id=" + id).Result;
+            return View(templateFonctionnelEntityVM);
+        }
+
+        [HttpGet]
+        [Route("CreateFonctionnelEntity")]
+        public async Task<IActionResult> CreateTemplateFonctionnelEntity()
+        {
+            await Task.Delay(1);
+            TemplateFonctionnelEntityVM templateFonctionnelEntityVM = new TemplateFonctionnelEntityVM();
+            return View(templateFonctionnelEntityVM);
+        }
+
+        [HttpPost]
+        [Route("CreateFonctionnelEntity")]
+        public async Task<IActionResult> CreateTemplateFonctionnelEntity(TemplateFonctionnelEntityVM templateFonctionnelEntityVM)
+        {
+            StringContent content = new StringContent(JsonConvert.SerializeObject(templateFonctionnelEntityVM), Encoding.UTF8, "application/json");
+            await this._fonctionnelApiClient.PostTemplateFonctionnelEntity(_clientName, "api/TemplateFonctionnel/CreateFonctionnelEntity", content);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        [Route("EditFonctionnelEntity")]
+        public async Task<IActionResult> EditTemplateFonctionnelEntity(int id)
+        {
+            TemplateFonctionnelEntityVM templateFonctionnelEntityVM = await _fonctionnelApiClient.GetTemplateFonctionnelEntity(_clientName, "api/TemplateFonctionnel/FonctionnelEntityDetails?id=" + id);
+            return View(templateFonctionnelEntityVM);
+        }
+
+        [HttpPost]
+        [Route("EditFonctionnelEntity")]
+        public async Task<IActionResult> EditTemplateFonctionnelEntity(TemplateFonctionnelEntityVM templateFonctionnelEntityVM)
+        {
+            StringContent content = new StringContent(JsonConvert.SerializeObject(templateFonctionnelEntityVM), Encoding.UTF8, "application/json");
+            await this._fonctionnelApiClient.PostTemplateFonctionnelEntity(_clientName,"api/TemplateFonctionnel/EditTemplateFonctionnelEntity", content);
+            return RedirectToAction("Index");
+        }
+
+        [Route("FonctionnelAllProperties")]
+        [Produces(MediaTypeNames.Application.Json)]
+        public async Task<IActionResult> TemplateFonctionnelProperties(int id)
+        {
+            List<TemplateFonctionnelPropertyVM> templateTechniqueItemVMs = await _fonctionnelApiClient.GetAllTemplateFonctionnelProperty(_clientName, "api/TemplateFonctionnel/FonctionnelAllProperties?id=" + id);
+            return Json(templateTechniqueItemVMs, new JsonSerializerOptions { WriteIndented = true });
+        }
+
+        [Route("FonctionnelPropertyDetails")]
+        public async Task<IActionResult> FonctionnelPropertyDetails(int id)
+        {
+            TemplateFonctionnelPropertyVM templateFonctionnelPropertyVM = await _fonctionnelApiClient.GetTemplateFonctionnelProperty(_clientName, "api/TemplateFonctionnel/FonctionnelPropertyDetails?id=" + id);
+            return View(templateFonctionnelPropertyVM);
+        }
+
+        [HttpGet]
+        [Route("CreateFonctionnelProperty")]
+        public async Task<IActionResult> CreateTemplateFonctionnelProperty()
+        {
+            await Task.Delay(1);
+            TemplateFonctionnelPropertyVM TemplateFonctionnelPropertyVM = new TemplateFonctionnelPropertyVM();
+            return View(TemplateFonctionnelPropertyVM);
+        }
+
+        [HttpPost]
+        [Route("CreateFonctionnelProperty")]
+        public async Task<IActionResult> CreateTemplateFonctionnelProperty(TemplateFonctionnelPropertyVM templateFonctionnelPropertyVM)
+        {
+            StringContent content = new StringContent(JsonConvert.SerializeObject(templateFonctionnelPropertyVM), Encoding.UTF8, "application/json");
+            await this._fonctionnelApiClient.PostTemplateFonctionnelEntity(_clientName, "api/TemplateFonctionnel/CreateFonctionnelProperty", content);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        [Route("EditFonctionnelProperty")]
+        public async Task<IActionResult> EditFonctionnelProperty(int id)
+        {
+            TemplateFonctionnelPropertyVM TemplateFonctionnelPropertyVM = await _fonctionnelApiClient.GetTemplateFonctionnelProperty(_clientName, "api/TemplateFonctionnel/FonctionnelPropertyDetails?id=" + id);
+            return View(TemplateFonctionnelPropertyVM);
+        }
+
+        [HttpPost]
+        [Route("EditFonctionnelProperty")]
+        public async Task<IActionResult> EditFonctionnelProperty(TemplateFonctionnelEntityVM templateFonctionnelEntityVM)
+        {
+            StringContent content = new StringContent(JsonConvert.SerializeObject(templateFonctionnelEntityVM), Encoding.UTF8, "application/json");
+            await this._fonctionnelApiClient.PostTemplateFonctionnelEntity(_clientName, "api/TemplateFonctionnel/EditTemplateFonctionnelEntity", content);
             return RedirectToAction("Index");
         }
 
