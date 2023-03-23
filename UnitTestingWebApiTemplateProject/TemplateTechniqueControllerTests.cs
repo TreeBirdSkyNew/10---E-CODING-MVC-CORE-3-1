@@ -134,7 +134,7 @@ namespace UnitTestingWebApiTechniqueProject
             var logger = new LoggerManager();
             var ownerController = new TemplateTechniqueController(logger, mapper, repositoryWrapperMock.Object);
 
-            var ownerFinal = new TemplateTechniqueVM()
+            var techniqueFinal = new TemplateTechniqueVM()
             {
                 TemplateTechniqueId = 1,
                 TemplateTechniqueName = "TemplateTechniqueName3",
@@ -144,13 +144,17 @@ namespace UnitTestingWebApiTechniqueProject
                 TemplateTechniqueVersionNET = "TemplateTechniqueVersionNET3",
                 TemplateProjectId = 1
             };           
-
-            var initialTemplateTechnique = ownerController.TemplateTechniqueEdit(1, ownerFinal);
-            var finalTemplateTechnique = ownerController.TemplateTechniqueDetails(1) as ObjectResult; 
-            var ObjectResult = Assert.IsType<OkObjectResult>(finalTemplateTechnique);
-            var testEmployee = finalTemplateTechnique.Value as TemplateTechniqueVM;
-            Assert.Equal(ownerFinal.TemplateTechniqueId, testEmployee.TemplateTechniqueId);
+            
+            var getTechniqueFinal = ownerController.TemplateTechniqueEdit(1, techniqueFinal);
+            var getTestTechniqueInitial = ownerController.TemplateTechniqueDetails(1) as ObjectResult;
+            var ObjectResult = Assert.IsType<OkObjectResult>(getTestTechniqueInitial);
+            var techniqueTestFinal = getTestTechniqueInitial.Value as TemplateTechniqueVM;
+            Assert.Equal(techniqueTestFinal.TemplateTechniqueId, techniqueFinal.TemplateTechniqueId);
+            Assert.Equal(techniqueTestFinal.TemplateTechniqueName, techniqueFinal.TemplateTechniqueName);
+            Assert.Equal(techniqueTestFinal.TemplateTechniqueVersion, techniqueFinal.TemplateTechniqueVersion);
+            Assert.Equal(techniqueTestFinal.TemplateTechniqueTitle, techniqueFinal.TemplateTechniqueTitle);
+            Assert.Equal(techniqueTestFinal.TemplateTechniqueDescription, techniqueFinal.TemplateTechniqueDescription);
+            Assert.Equal(techniqueTestFinal.TemplateTechniqueVersionNET, techniqueFinal.TemplateTechniqueVersionNET);
         }
-
     }
 }

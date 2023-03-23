@@ -90,7 +90,7 @@ namespace TemplateTechnique_WebApi
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Route("TechniqueDetails")]
-        [HttpGet("{id}", Name = "TechniqueDetailsById")]
+        [HttpGet("{id}")]
         public IActionResult TemplateTechniqueDetails(int id)
         {
             try
@@ -215,22 +215,30 @@ namespace TemplateTechnique_WebApi
             }
         }
 
-        [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Route("TechniqueItemDetails")]
-        public IActionResult TemplateTechniqueItemDetail(int id)
+        public IActionResult TemplateTechniqueItemDetails(int id)
         {
             try
             {
                 TemplateTechniqueItem templateTechniqueItem = _techniqueRepositoryWrapper.TechniqueItemRepository.FindByCondition(id);
-                _logger.LogInfo($"Returned templateTechniqueItem for TemplateTechniqueId={id} from database.");
-                TemplateTechniqueItemVM templateTechniqueVM = _mapper.Map<TemplateTechniqueItemVM>(templateTechniqueItem);
-                return Ok(templateTechniqueVM);
+                if (templateTechniqueItem is null)
+                {
+                    _logger.LogError($"Returned TemplateTechniqueItemDetails for TemplateTechniqueId={id} from database.");
+                    return NotFound();
+                }
+                else 
+                {
+                    _logger.LogInfo($"Returned TemplateTechniqueItemDetails with TemplateTechniqueItemId: {id}");
+                    TemplateTechniqueItemVM templateTechniqueVM = _mapper.Map<TemplateTechniqueItemVM>(templateTechniqueItem);
+                    return Ok(templateTechniqueVM);
+                }
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside TemplateTechniqueDetails for TemplateTechniqueId={id} action: {ex.Message}");
+                _logger.LogError($"Something went wrong inside TemplateTechniqueItemDetails for TemplateTechniqueItemId={id} action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -240,7 +248,7 @@ namespace TemplateTechnique_WebApi
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("CreateTechniqueItem")]
         [ValidateAntiForgeryToken]
-        public IActionResult CreateTemplateTechniqueItem([FromBody] TemplateTechniqueItemVM templateTechniqueItemVM)
+        public IActionResult TemplateTechniqueItemCreate([FromBody] TemplateTechniqueItemVM templateTechniqueItemVM)
         {
             try
             {
@@ -258,7 +266,7 @@ namespace TemplateTechnique_WebApi
                 _techniqueRepositoryWrapper.TechniqueItemRepository.CreateTemplateTechniqueItem(templateTechniqueItemEntity);
                 _techniqueRepositoryWrapper.Save();
                 TemplateTechniqueItemVM templateTechniqueItem = _mapper.Map<TemplateTechniqueItemVM>(templateTechniqueItemEntity);
-                return CreatedAtAction("templateTechniqueItem", new { id = templateTechniqueItem.TemplateTechniqueItemId }, templateTechniqueItem);
+                return CreatedAtRoute("TemplateTechniqueItemId", new { id = templateTechniqueItem.TemplateTechniqueItemId }, templateTechniqueItem);
             }
             catch (Exception ex)
             {

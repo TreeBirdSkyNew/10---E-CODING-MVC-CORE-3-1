@@ -32,7 +32,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "__WEB_API__TemplateFonction
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoggerService", "LoggerService\LoggerService.csproj", "{9FFEB5A3-6E10-4BFC-B00C-809A48E0E920}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestingWebApiTechniqueProject", "UnitTestingWebApiTemplateProject\UnitTestingWebApiTechniqueProject.csproj", "{8EDAE6A6-4333-4C82-A093-1E20ED648ED2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestingWebApiTechniqueTechnique", "UnitTestingWebApiTemplateProject\UnitTestingWebApiTechniqueTechnique.csproj", "{8EDAE6A6-4333-4C82-A093-1E20ED648ED2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
