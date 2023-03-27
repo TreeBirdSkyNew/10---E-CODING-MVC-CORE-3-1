@@ -16,6 +16,8 @@ namespace TemplateProject_WebApi
             // Add as many of these lines as you need to map your objects
             CreateMap<TemplateProject, TemplateProjectVM>();
             CreateMap<TemplateProjectVM, TemplateProject>();
+            CreateMap<TemplateProjectVMForCreation, TemplateProject>();
+            CreateMap<TemplateProjectVMForUpdate, TemplateProject>();
 
             CreateMap<TemplateFonctionnel, TemplateFonctionnelVM>();
             CreateMap<TemplateFonctionnelVM, TemplateFonctionnel>();

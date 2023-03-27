@@ -13,7 +13,7 @@ namespace E_CODING_Service_Abstraction
         protected TemplateProjectDbContext _repositoryContext { get; set; }
         public RepositoryBase(TemplateProjectDbContext repositoryContext)
         {
-            _repositoryContext = _repositoryContext;
+            _repositoryContext = repositoryContext;
         }
 
         public IQueryable<T> FindAll() => _repositoryContext.Set<T>().AsNoTracking();

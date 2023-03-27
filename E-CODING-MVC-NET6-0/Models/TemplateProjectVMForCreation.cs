@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace E_CODING_MVC_NET6_0.Models
+namespace _4___E_CODING_DAL.Models
 {
-    public class TemplateProjectVM
+    public class TemplateProjectVMForCreation
     {
-        public int TemplateProjectId { get; set; }
         public string TemplateProjectName { get; set; } = string.Empty;
         public string TemplateProjectTitle { get; set; } = string.Empty;
         public string TemplateProjectDescription { get; set; } = string.Empty;
         public string TemplateProjectVersion { get; set; } = string.Empty;
         public string TemplateProjectVersionNet { get; set; } = string.Empty;
-        
-        public TemplateFonctionnelVM? TemplateFonctionnel { get; set; }
-        public ICollection<ProjectTechniqueVM?>? ProjectTechnique { get; set; }
-        public ICollection<ProjectResultVM?>? ProjectResult { get; set; }
     }
 }

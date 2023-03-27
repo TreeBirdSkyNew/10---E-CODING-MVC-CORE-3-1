@@ -47,23 +47,10 @@ namespace E_CODING_MVC_NET6_0
         }
         
         [Route("Index")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> TemplateProjectIndex()
         {
             List<TemplateProjectVM?> templateProjectVMs = await _projectApiClient.GetAllTemplateProject(_clientProjectName,"api/TemplateProject/Index");
-            foreach (TemplateProjectVM project in templateProjectVMs)
-            {
-                List<TemplateTechniqueVM> TemplateTechniquesVM = await _techniqueApiClient.GetAllTemplateTechnique(_clientTechniqueName, "api/TemplateTechnique/TemplateTechniqueByProject?id=" + project.TemplateProjectId);
-                if (TemplateTechniquesVM!=null)
-                {
-                    project.TemplateTechniquesVM = TemplateTechniquesVM;
-                }
-                TemplateFonctionnelVM templateFonctionnelVM = await _fonctionnelApiClient.GetTemplateFonctionnel(_clientFonctionnelName, "api/TemplateFonctionnel/TemplateFonctionnelByProject?id=" + project.TemplateProjectId);
-                if (TemplateTechniquesVM != null)
-                {
-                    project.TemplateFonctionnelVM = templateFonctionnelVM;
-                }
-                templateProjectVMs.Add(project);
-            }
+            
             return View(templateProjectVMs);
         }
 

@@ -37,9 +37,9 @@ namespace UnitTestingWebApiTechniqueProject
             var repositoryWrapperMock = MockTechniqueRepositoryWrapper.GetMock();
             var mapper = GetMapper();
             var logger = new LoggerManager();
-            var ownerController = new TemplateTechniqueController(logger, mapper, repositoryWrapperMock.Object);
+            var TemplateTechniqueController = new TemplateTechniqueController(logger, mapper, repositoryWrapperMock.Object);
 
-            var result = ownerController.Index() as ObjectResult;
+            var result = TemplateTechniqueController.Index() as ObjectResult;
             Assert.NotNull(result);
             Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
             Assert.IsAssignableFrom<IEnumerable<TemplateTechniqueVM>>(result.Value);
@@ -52,9 +52,9 @@ namespace UnitTestingWebApiTechniqueProject
             var repositoryWrapperMock = MockTechniqueRepositoryWrapper.GetMock();
             var mapper = GetMapper();
             var logger = new LoggerManager();
-            var ownerController = new TemplateTechniqueController(logger, mapper, repositoryWrapperMock.Object);
+            var TemplateTechniqueController = new TemplateTechniqueController(logger, mapper, repositoryWrapperMock.Object);
             var id = 1;
-            var result = ownerController.TemplateTechniqueAllItems(id) as ObjectResult;
+            var result = TemplateTechniqueController.TemplateTechniqueAllItems(id) as ObjectResult;
             Assert.NotNull(result);
             Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
             Assert.IsAssignableFrom<IEnumerable<TemplateTechniqueItemVM>>(result.Value);
@@ -67,22 +67,22 @@ namespace UnitTestingWebApiTechniqueProject
             var repositoryWrapperMock = MockTechniqueRepositoryWrapper.GetMock();
             var mapper = GetMapper();
             var logger = new LoggerManager();
-            var ownerController = new TemplateTechniqueController(logger, mapper, repositoryWrapperMock.Object);
+            var TemplateTechniqueController = new TemplateTechniqueController(logger, mapper, repositoryWrapperMock.Object);
             var id = 2;
-            var result = ownerController.TemplateTechniqueAllItems(id) as StatusCodeResult;
+            var result = TemplateTechniqueController.TemplateTechniqueAllItems(id) as StatusCodeResult;
             Assert.NotNull(result);
             Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
         }
 
         [Fact]
-        public void GivenAnIdOfAnExistingTemplateTechnique_WhenGettingTemplateTechniqueItemById_ThenTemplateTechniqueItemReturns()
+        public void GivenAnIdOfAnExistingTemplateTechnique_WhenGettingTemplateTechniqueById_ThenTemplateTechniqueReturns()
         {
             var repositoryWrapperMock = MockTechniqueRepositoryWrapper.GetMock();
             var mapper = GetMapper();
             var logger = new LoggerManager();
-            var ownerController = new TemplateTechniqueController(logger, mapper, repositoryWrapperMock.Object);
+            var TemplateTechniqueController = new TemplateTechniqueController(logger, mapper, repositoryWrapperMock.Object);
             var id = 1;
-            var result = ownerController.TemplateTechniqueDetails(id) as ObjectResult;
+            var result = TemplateTechniqueController.TemplateTechniqueDetails(id) as ObjectResult;
             Assert.NotNull(result);
             Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
             Assert.IsAssignableFrom<TemplateTechniqueVM>(result.Value);
@@ -95,9 +95,9 @@ namespace UnitTestingWebApiTechniqueProject
             var repositoryWrapperMock = MockTechniqueRepositoryWrapper.GetMock();
             var mapper = GetMapper();
             var logger = new LoggerManager();
-            var ownerController = new TemplateTechniqueController(logger, mapper, repositoryWrapperMock.Object);
+            var TemplateTechniqueController = new TemplateTechniqueController(logger, mapper, repositoryWrapperMock.Object);
             var id = 2;
-            var result = ownerController.TemplateTechniqueDetails(id) as StatusCodeResult;
+            var result = TemplateTechniqueController.TemplateTechniqueDetails(id) as StatusCodeResult;
             Assert.NotNull(result);
             Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
         }
@@ -108,7 +108,7 @@ namespace UnitTestingWebApiTechniqueProject
             var repositoryWrapperMock = MockTechniqueRepositoryWrapper.GetMock();
             var mapper = GetMapper();
             var logger = new LoggerManager();
-            var ownerController = new TemplateTechniqueController(logger, mapper, repositoryWrapperMock.Object);
+            var TemplateTechniqueController = new TemplateTechniqueController(logger, mapper, repositoryWrapperMock.Object);
             var owner = new TemplateTechniqueVM()
             {
                 TemplateTechniqueId = 2,
@@ -119,7 +119,7 @@ namespace UnitTestingWebApiTechniqueProject
                 TemplateTechniqueVersionNET = "TemplateTechniqueVersionNET1",
                 TemplateProjectId = 1
             };
-            var result = ownerController.TemplateTechniqueCreate(owner) as ObjectResult;
+            var result = TemplateTechniqueController.TemplateTechniqueCreate(owner) as ObjectResult;
             Assert.NotNull(result);
             Assert.IsAssignableFrom<CreatedAtRouteResult>(result);
             Assert.Equal((int)HttpStatusCode.Created, result!.StatusCode);
@@ -127,12 +127,12 @@ namespace UnitTestingWebApiTechniqueProject
         }
 
         [Fact]
-        public void GivenValidRequest_WhenuPDATINGOwner_ThenCreatedReturns()
+        public void GivenValidRequest_WhenUpdatingTemplateTechnique_ThenCreatedReturns()
         {
             var repositoryWrapperMock = MockTechniqueRepositoryWrapper.GetMock();
             var mapper = GetMapper();
             var logger = new LoggerManager();
-            var ownerController = new TemplateTechniqueController(logger, mapper, repositoryWrapperMock.Object);
+            var TemplateTechniqueController = new TemplateTechniqueController(logger, mapper, repositoryWrapperMock.Object);
 
             var techniqueFinal = new TemplateTechniqueVM()
             {
@@ -145,8 +145,8 @@ namespace UnitTestingWebApiTechniqueProject
                 TemplateProjectId = 1
             };           
             
-            var getTechniqueFinal = ownerController.TemplateTechniqueEdit(1, techniqueFinal);
-            var getTestTechniqueInitial = ownerController.TemplateTechniqueDetails(1) as ObjectResult;
+            var getTechniqueFinal = TemplateTechniqueController.TemplateTechniqueEdit(1, techniqueFinal);
+            var getTestTechniqueInitial = TemplateTechniqueController.TemplateTechniqueDetails(1) as ObjectResult;
             var ObjectResult = Assert.IsType<OkObjectResult>(getTestTechniqueInitial);
             var techniqueTestFinal = getTestTechniqueInitial.Value as TemplateTechniqueVM;
             Assert.Equal(techniqueTestFinal.TemplateTechniqueId, techniqueFinal.TemplateTechniqueId);

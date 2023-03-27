@@ -1,23 +1,28 @@
 using _4___E_CODING_DAL;
 using AutoMapper;
 using E_CODING_Service_Abstraction;
+using E_CODING_Service_Abstraction.Project;
 using E_CODING_Service_Abstraction.Technique;
 using E_CODING_Services;
+using E_CODING_Services.Project;
 using E_CODING_Services.Technique;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
+using NLog;
+using TemplateProject_WebApi.Extensions;
 using TemplateTechnique_WebApi;
 
+
 var builder = WebApplication.CreateBuilder(args);
+LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
 
-// Add services to the container.
+builder.Services.ConfigureCors();
+builder.Services.ConfigureIISIntegration();
+builder.Services.ConfigureLoggerService();
+builder.Services.ConfigureSqlServerContext();
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-builder.Services.AddDbContext<TemplateProjectDbContext>(
-                    item => item.UseSqlServer("Server=SQLEXPRESS; Database=ECODING; Integrated Security=SSPI; "));
+builder.Services.AddScoped<ITemplateTechniqueRepository, TemplateTechniqueRepository>();
+builder.Services.AddScoped<ITechniqueRepositoryWrapper, TechniqueRepositoryWrapper>();
 
 var mapperConfig = new MapperConfiguration(mc =>
 {
@@ -26,12 +31,24 @@ var mapperConfig = new MapperConfiguration(mc =>
 IMapper mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
-builder.Services.AddScoped<ITemplateTechniqueRepository, TemplateTechniqueRepository>();
-builder.Services.AddScoped<ITechniqueRepositoryWrapper, TechniqueRepositoryWrapper>();
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
-//app.UseHttpsRedirection();
+if (app.Environment.IsDevelopment())
+    app.UseDeveloperExceptionPage();
+else
+    app.UseHsts();
+
+app.UseHttpsRedirection();
+
+app.UseStaticFiles();
+
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.All
+});
+app.UseCors("CorsPolicy");
 
 app.UseAuthorization();
 

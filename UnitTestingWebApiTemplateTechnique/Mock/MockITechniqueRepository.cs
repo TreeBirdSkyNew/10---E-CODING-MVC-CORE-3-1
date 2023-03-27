@@ -1,14 +1,15 @@
 ﻿using _4___E_CODING_DAL.Models;
-using E_CODING_Service_Abstraction.Project;
+using E_CODING_MVC_NET6_0.Models;
 using E_CODING_Service_Abstraction.Technique;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UnitTestingWebApiTemplateProject.Mock
+namespace UnitTestingWebApiTechniqueProject.Mock
 {
     internal class MockITechniqueRepository
     {
@@ -20,10 +21,20 @@ namespace UnitTestingWebApiTemplateProject.Mock
                 new TemplateTechnique()
                 {
                     TemplateTechniqueId=1,
-                    TemplateTechniqueName="TemplateProjectName1",
-                    TemplateTechniqueTitle="TemplateProjectTitle1",
-                    TemplateTechniqueDescription="TemplateProjectDescription1",
-                    TemplateTechniqueVersion="TemplateProjectVersion1"
+                    TemplateTechniqueName="TemplateTechniqueName1",
+                    TemplateTechniqueVersion="TemplateTechniqueVersion1",
+                    TemplateTechniqueTitle="TemplateTechniqueTitle1",
+                    TemplateTechniqueDescription="TemplateTechniqueDescription1",
+                    TemplateTechniqueVersionNET="TemplateTechniqueVersionNET1",
+                    TemplateProjectId=1,
+                    ProjectTechnique= new List<ProjectTechnique>()
+                    {
+                        new ProjectTechnique()
+                        {
+                            TemplateTechniqueId=1,
+                            TemplateProjectId=1
+                        }
+                    }
                 }
             };
 

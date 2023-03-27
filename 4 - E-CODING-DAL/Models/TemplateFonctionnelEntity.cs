@@ -6,6 +6,10 @@ namespace _4___E_CODING_DAL.Models
 {
     public class TemplateFonctionnelEntity
     {
+        public TemplateFonctionnelEntity()
+        {
+            TemplateFonctionnelProperty = new HashSet<TemplateFonctionnelProperty>();
+        }
         public int TemplateFonctionnelEntityId { get; set; }
         public int TemplateFonctionnelId { get; set; }
         public string TemplateFonctionnelEntityName { get; set; } = string.Empty;

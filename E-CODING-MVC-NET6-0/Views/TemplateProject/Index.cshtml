@@ -37,26 +37,6 @@
                     </a>
                 </div>
             </td>
-            <td>
-                @if(@item.TemplateTechniquesVM!=null)
-                { 
-                    <div>
-                        <a asp-controller="TemplateTechnique" asp-action="TemplateTechniqueByProject" asp-route-id="@item.TemplateProjectId">
-                            <input type="button" value="TemplateTechnique" class="btn btn-success" />
-                        </a>
-                    </div>
-                }
-            </td>
-            <td>
-                @if (@item.TemplateFonctionnelVM != null)
-                {
-                    <div>
-                        <a asp-controller="TemplateFonctionnel" asp-action="TemplateFonctionnelByProject" asp-route-id="@item.TemplateProjectId">
-                            <input type="button" value="TemplateFonctionnel" class="btn btn-primary" />
-                        </a>
-                    </div>
-                }
-            </td>
             </tr>
             }
         </table>

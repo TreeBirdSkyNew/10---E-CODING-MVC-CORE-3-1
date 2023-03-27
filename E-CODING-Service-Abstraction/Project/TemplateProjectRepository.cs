@@ -30,17 +30,17 @@ namespace E_CODING_Service_Abstraction.Project
 
         public void CreateTemplateProject(TemplateProject templateProject)
         {
-            CreateTemplateProject(templateProject);
+            Create(templateProject);
         }
 
         public void UpdateTemplateProject(TemplateProject templateProject)
         {
-            UpdateTemplateProject(templateProject);
+            Update(templateProject);
         }
 
         public void DeleteTemplateProject(TemplateProject templateProject)
         {
-            DeleteTemplateProject(templateProject);
+            Delete(templateProject);
         }
     }
 }

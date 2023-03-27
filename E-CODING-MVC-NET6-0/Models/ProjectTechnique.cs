@@ -1,11 +1,10 @@
-﻿using E_CODING_MVC_NET6_0.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace _4___E_CODING_DAL.Models
+namespace E_CODING_MVC_NET6_0.Models
 {
     public class ProjectTechniqueVM
     {

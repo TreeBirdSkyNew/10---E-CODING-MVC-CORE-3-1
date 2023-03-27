@@ -22,7 +22,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "swagger",
+      "launchUrl": "https://localhost:7265/TemplateProject/index",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

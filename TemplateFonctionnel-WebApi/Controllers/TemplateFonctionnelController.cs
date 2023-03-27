@@ -76,8 +76,6 @@ namespace TemplateFonctionnel_WebApi
                 IEnumerable<TemplateFonctionnelPropertyVM> templateFonctionnelPropertiesVM = _mapper.Map<IEnumerable<TemplateFonctionnelPropertyVM>>(templateFonctionnelProperties);
                 if(templateFonctionnelEntitiesVM!=null)
                     templateFonctionnelVM.TemplateFonctionnelEntity = templateFonctionnelEntitiesVM.ToList();
-                if (templateFonctionnelPropertiesVM != null)
-                    templateFonctionnelVM.TemplateFonctionnelProperty = templateFonctionnelPropertiesVM.ToList();
                 return Ok(templateFonctionnelVM);
             }
             catch (Exception ex)

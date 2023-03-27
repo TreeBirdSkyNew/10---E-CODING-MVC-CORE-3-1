@@ -28,7 +28,7 @@ namespace E_CODING_MVC_NET6_0
         }
      
         [Route("Index")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> TemplateFonctionnelIndex()
         {
             List<TemplateFonctionnelVM> templateFonctionnelVMs = await _fonctionnelApiClient.GetAllTemplateFonctionnel(_clientName,"api/TemplateFonctionnel/Index");
             return View(templateFonctionnelVMs);

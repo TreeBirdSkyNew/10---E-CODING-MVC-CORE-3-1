@@ -27,9 +27,8 @@ namespace E_CODING_MVC_NET6_0
             _techniqueApiClient = techniqueApiClient;
         }
         
-        [HttpGet]
         [Route("Index")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> TemplateTechniqueIndex()
         {
             List<TemplateTechniqueVM> projectsVMs = await _techniqueApiClient.GetAllTemplateTechnique(_clientName, "api/TemplateTechnique/Index");
             await Task.Delay(1);

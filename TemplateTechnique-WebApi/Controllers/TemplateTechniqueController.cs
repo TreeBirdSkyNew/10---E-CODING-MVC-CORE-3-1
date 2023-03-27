@@ -86,11 +86,10 @@ namespace TemplateTechnique_WebApi
             }
         }
 
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [HttpGet("{id}", Name = "TemplateTechniqueById")]
         [Route("TechniqueDetails")]
-        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TemplateTechnique))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult TemplateTechniqueDetails(int id)
         {
             try
@@ -110,7 +109,7 @@ namespace TemplateTechnique_WebApi
                     {
                         _logger.LogInfo($"Returned templateTechniqueItems with TemplateTechniqueId: {id}");
                         List<TemplateTechniqueItemVM> templateTechniqueItemsVM = _mapper.Map<List<TemplateTechniqueItemVM>>(templateTechniqueItems);
-                        templateTechniqueVM.TemplateTechniqueItemVM = templateTechniqueItemsVM;
+                        templateTechniqueVM.TemplateTechniqueItem = templateTechniqueItemsVM;
                     }
                     return Ok(templateTechniqueVM);
                 }

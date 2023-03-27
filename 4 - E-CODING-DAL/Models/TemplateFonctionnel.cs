@@ -9,7 +9,6 @@ namespace _4___E_CODING_DAL.Models
         public TemplateFonctionnel()
         {
             TemplateFonctionnelEntity = new HashSet<TemplateFonctionnelEntity>();
-            TemplateFonctionnelProperty = new HashSet<TemplateFonctionnelProperty>();
         }
         public int TemplateFonctionnelId { get; set; }
         public string TemplateFonctionnelName { get; set; } = string.Empty;
@@ -20,6 +19,5 @@ namespace _4___E_CODING_DAL.Models
         public int TemplateProjectId { get; set; }
         public TemplateProject TemplateProject { get; set; }
         public ICollection<TemplateFonctionnelEntity> TemplateFonctionnelEntity { get; set; }
-        public ICollection<TemplateFonctionnelProperty> TemplateFonctionnelProperty { get; set; }
     }
 }

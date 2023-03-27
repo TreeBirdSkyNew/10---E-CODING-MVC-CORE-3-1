@@ -1,5 +1,4 @@
-﻿using _4___E_CODING_DAL;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,6 +6,7 @@ namespace E_CODING_MVC_NET6_0.Models
 {
     public class TemplateTechniqueItemVM
     {
+      
         public int TemplateTechniqueItemId { get; set; }
         public int TemplateTechniqueId { get; set; }
         public string TemplateTechniqueItemName { get; set; } = string.Empty;
@@ -16,7 +16,6 @@ namespace E_CODING_MVC_NET6_0.Models
         public string TemplateTechniqueItemVersionNET { get; set; } = string.Empty;
         public string TemplateTechniqueInitialFile { get; set; } = string.Empty;
         public string TemplateTechniqueFinalContent { get; set; } = string.Empty;
-        public TemplateTechniqueVM? TemplateTechniqueVM { get; set; }
-
+        public TemplateTechniqueVM TemplateTechnique { get; set; }
     }
 }

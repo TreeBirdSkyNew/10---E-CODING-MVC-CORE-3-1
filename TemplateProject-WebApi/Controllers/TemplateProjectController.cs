@@ -32,6 +32,7 @@ namespace __WEB_API__TemplateProject_WebApi.Controllers
             _mapper = mapper;
             _logger = logger;
         }
+
         [HttpGet]
         [Route("Index")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -52,56 +53,40 @@ namespace __WEB_API__TemplateProject_WebApi.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("Details")]
+        [HttpGet("{id}", Name = "TemplateProjectById")]
+        [Route("ProjectDetails")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TemplateProject))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> TemplateProjectlDetail(int id)
+        public IActionResult TemplateProjectDetails(int id)
         {
             try
             {
                 TemplateProject templateProject = _projectRepositoryWrapper.ProjectRepository.FindByCondition(id);
-                TemplateProjectVM templateProjectVM = _mapper.Map<TemplateProjectVM>(templateProject);
-                return Ok(templateProjectVM);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Something went wrong inside TemplateProject/Index action: {ex.Message}");
-                return StatusCode(500, "Internal server error");
-            }
-        }
-
-                
-
-
-
-        [HttpGet]
-        [Route("Create")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> TemplateProjectCreate()
-        {
-            try
-            {                
-                    TemplateProject templateProject = new ();
+                if (templateProject is null)
+                {
+                    _logger.LogError($"Returned TemplateProjectDetails TemplateProject={id} from database.");
+                    return NotFound();
+                }
+                else
+                {
+                    _logger.LogInfo($"Returned TemplateProjectDetails TemplateProject: {id}");
                     TemplateProjectVM templateProjectVM = _mapper.Map<TemplateProjectVM>(templateProject);
-                    return CreatedAtAction("templateProject", new { id = templateProjectVM.TemplateProjectId }, templateProjectVM);
+                    return Ok(templateProjectVM);
+                }
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong inside TemplateProjectCreate action: {ex.Message}");
+                _logger.LogError($"Something went wrong inside TemplateProjectDetails action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
-
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("Create")]
-        [ValidateAntiForgeryToken]
-        public IActionResult TemplateTechniqueCreate([FromBody] TemplateProjectVM templateProjectVM)
+        //[ValidateAntiForgeryToken]
+        public IActionResult TemplateProjectCreate([FromBody] TemplateProjectVMForCreation templateProjectVM)
         {
             try
             {
@@ -119,7 +104,7 @@ namespace __WEB_API__TemplateProject_WebApi.Controllers
                 _projectRepositoryWrapper.ProjectRepository.CreateTemplateProject(TemplateProjectEntity);
                 _projectRepositoryWrapper.Save();
                 var templateProject = _mapper.Map<TemplateProjectVM>(TemplateProjectEntity);
-                return CreatedAtAction("TemplateProjectVM", new { id = templateProject.TemplateProjectId }, templateProject);
+                return CreatedAtRoute("TemplateProjectById", new { id = templateProject.TemplateProjectId }, templateProject);
             }
             catch (Exception ex)
             {
@@ -128,12 +113,12 @@ namespace __WEB_API__TemplateProject_WebApi.Controllers
             }
         }
 
-        [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ValidateAntiForgeryToken]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [HttpPut("{id}")]
         [Route("Edit")]
-        public IActionResult TemplateProjectEdit(int id, [FromBody] TemplateProjectVM templateProjectVM)
+        public IActionResult TemplateProjectEdit(int id, [FromBody] TemplateProjectVMForUpdate templateProjectVM)
         {
             try
             {
@@ -167,7 +152,7 @@ namespace __WEB_API__TemplateProject_WebApi.Controllers
 
         [Route("Delete")]
         [HttpDelete("{id}")]
-        public void DeleteTemplatePrpject(int id)
+        public void DeleteTemplateProject(int id)
         {
             try
             {
