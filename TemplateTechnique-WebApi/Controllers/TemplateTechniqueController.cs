@@ -86,8 +86,8 @@ namespace TemplateTechnique_WebApi
             }
         }
 
-        [HttpGet("{id}", Name = "TemplateTechniqueById")]
-        [Route("TechniqueDetails")]
+        [HttpGet]
+        [Route("TechniqueDetails/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TemplateTechnique))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult TemplateTechniqueDetails(int id)
@@ -153,11 +153,12 @@ namespace TemplateTechnique_WebApi
             }
         }
 
-        [HttpPut("{id}")]
+
+        [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ValidateAntiForgeryToken]
-        [Route("EditTechnique")]
+        [Route("EditTechnique/{id}")]
         public IActionResult TemplateTechniqueEdit(int id, [FromBody] TemplateTechniqueVM templateTechniqueVM)
         {
             try
@@ -190,8 +191,8 @@ namespace TemplateTechnique_WebApi
             }
         }
 
-        [Route("DeleteTechnique")]
-        [HttpDelete("{id}")]
+        [Route("DeleteTechnique/{id}")]
+        [HttpDelete]
         public void DeleteTemplateTechnique(int id)
         {
             try
@@ -214,10 +215,11 @@ namespace TemplateTechnique_WebApi
             }
         }
 
+        [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [Route("TechniqueItemDetails")]
+        [Route("TechniqueItemDetails/{id}")]
         public IActionResult TemplateTechniqueItemDetails(int id)
         {
             try
@@ -274,10 +276,10 @@ namespace TemplateTechnique_WebApi
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Route("EditTechniqueItem")]
+        [Route("EditTechniqueItem/{id}")]
         [ValidateAntiForgeryToken]
         public IActionResult EditTemplateTechniqueItem(int id, [FromBody] TemplateTechniqueItemVM templateTechniqueItemVM)
         {            
@@ -311,8 +313,9 @@ namespace TemplateTechnique_WebApi
             }
         }
 
-        [Route("DeleteTechniqueItem")]
-        [HttpDelete("{id}")]
+        [HttpGet]
+        [Route("DeleteTechniqueItem/{id}")]
+        [HttpDelete]
         public void DeleteTemplateTechniqueItem(int id)
         {
             try

@@ -26,8 +26,9 @@ namespace E_CODING_MVC_NET6_0
         {
             _techniqueApiClient = techniqueApiClient;
         }
-        
-        [Route("Index")]
+
+        [HttpGet]
+        [Route("TemplateResult/Index")]
         public async Task<IActionResult> TemplateTechniqueIndex()
         {
             List<TemplateTechniqueVM> projectsVMs = await _techniqueApiClient.GetAllTemplateTechnique(_clientName, "api/TemplateTechnique/Index");
@@ -35,6 +36,7 @@ namespace E_CODING_MVC_NET6_0
             return View(projectsVMs);
         }
 
+        [HttpGet]
         [Route("TechniqueDetails")]
         public async Task<IActionResult> Details(int id)
         {
@@ -42,6 +44,7 @@ namespace E_CODING_MVC_NET6_0
                 await _techniqueApiClient.GetTemplateTechnique(_clientName, "api/TemplateTechnique/TechniqueDetails?id=" + id);
             return View(templateTechniqueVM);
         }
+
 
         [HttpGet]
         [Route("CreateTechnique")]
@@ -77,6 +80,7 @@ namespace E_CODING_MVC_NET6_0
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
         [Route("DeleteTechnique")]
         public IActionResult DeleteTemplateTechnique(int id)
         {
@@ -84,6 +88,7 @@ namespace E_CODING_MVC_NET6_0
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
         [Route("TechniqueAllItems")]
         [Produces(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> TemplateTechniqueItems(int id)
@@ -93,6 +98,7 @@ namespace E_CODING_MVC_NET6_0
             return Json(templateTechniqueItemVMs, new JsonSerializerOptions { WriteIndented = true });
         }
 
+        [HttpGet]
         [Route("TechniqueItemDetails")]
         public async Task<IActionResult> TemplateTechniqueItem(int id)
         {

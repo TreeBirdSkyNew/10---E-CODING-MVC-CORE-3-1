@@ -45,8 +45,9 @@ namespace E_CODING_MVC_NET6_0
             _resultApiClient = resultApiClient;
             _fonctionnelApiClient = fonctionnelApiClient;
         }
-        
-        [Route("Index")]
+
+        [HttpGet]
+        [Route("TemplateProject/Index")]
         public async Task<IActionResult> TemplateProjectIndex()
         {
             List<TemplateProjectVM?> templateProjectVMs = await _projectApiClient.GetAllTemplateProject(_clientProjectName,"api/TemplateProject/Index");
@@ -54,6 +55,7 @@ namespace E_CODING_MVC_NET6_0
             return View(templateProjectVMs);
         }
 
+        [HttpGet]
         [Route("Details")]
         public async Task<IActionResult> Details(int id)
         {
@@ -61,6 +63,7 @@ namespace E_CODING_MVC_NET6_0
             return View(templateProjectVM);
         }
 
+        [HttpGet]
         [Route("DetailsTechnique")]
         [Produces(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> DetailsTechnique(int id)
@@ -70,6 +73,7 @@ namespace E_CODING_MVC_NET6_0
             return Json(TemplateTechniquesVM, new JsonSerializerOptions { WriteIndented = true });
         }
 
+        [HttpGet]
         [Route("DetailsEntity")]
         [Produces(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> DetailsEntity(int id)
@@ -79,6 +83,7 @@ namespace E_CODING_MVC_NET6_0
             return Json(TemplateTechniquesVM, new JsonSerializerOptions { WriteIndented = true });
         }
 
+        [HttpGet]
         [Route("DetailsFonctionnel")]
         public async Task<IActionResult> DetailsFonctionnel(int id)
         {
@@ -122,6 +127,7 @@ namespace E_CODING_MVC_NET6_0
             return RedirectToAction("Index");
         }
 
+        [HttpDelete]
         [Route("Delete")]
         public async Task<IActionResult> DeleteTemplateProject(int id)
         {

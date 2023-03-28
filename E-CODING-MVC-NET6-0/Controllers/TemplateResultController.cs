@@ -26,13 +26,15 @@ namespace E_CODING_MVC_NET6_0
             _resultApiClient = resultApiClient;
         }
 
-        [Route("Index")]
+        [HttpGet]
+        [Route("TemplateResult/Index")]
         public async Task<IActionResult> TemplateResultIndex()
         {
             List<TemplateResultVM> templateResults = await _resultApiClient.GetAllTemplateResult(_clientName,"api/TemplateResult/Index");
             return View(templateResults);
         }
 
+        [HttpGet]
         [Route("Details")]
         public async Task<IActionResult> Details(int id)
         {
@@ -40,6 +42,7 @@ namespace E_CODING_MVC_NET6_0
             return View(templateResultVM);
         }
 
+        [HttpGet]
         [Route("TemplateResultItems")]
         [Produces(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> TemplateResultItems(int id)
@@ -48,6 +51,7 @@ namespace E_CODING_MVC_NET6_0
             return Json(TemplateResultItemVMs, new JsonSerializerOptions { WriteIndented = true });
         }
 
+        [HttpGet]
         [Route("TemplateResultItem")]
         [Produces(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> TemplateResultItem(int id)
@@ -124,6 +128,7 @@ namespace E_CODING_MVC_NET6_0
             return RedirectToAction("Index");
         }
 
+        [HttpDelete]
         [Route("Delete")]
         public async Task<IActionResult> DeleteTemplateResult(int id)
         {

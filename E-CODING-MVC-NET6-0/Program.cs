@@ -87,7 +87,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=TemplateTechnique}/{action=Index}/{id?}");
 
+app.MapControllers();
 app.Run();
 
-
-/**/
