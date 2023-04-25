@@ -14,6 +14,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.6" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="5.2.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
@@ -21,6 +22,7 @@
     <ProjectReference Include="..\4 - E-CODING-DAL\E-CODING-DAL.csproj" />
     <ProjectReference Include="..\E-CODING-MVC-NET6-0\E-CODING-MVC-NET6-0.csproj" />
     <ProjectReference Include="..\E-CODING-Services\E-CODING-Services.csproj" />
+    <ProjectReference Include="..\LoggerService\LoggerService.csproj" />
   </ItemGroup>
 
 </Project>

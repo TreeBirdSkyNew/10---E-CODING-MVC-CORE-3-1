@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 
-namespace TemplateProject_WebApi.Extensions
+namespace __WEB_API__TemplateResult_WebApi
 {
     public static class ServiceExtensions
     {

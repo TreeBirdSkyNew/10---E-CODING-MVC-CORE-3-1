@@ -22,7 +22,6 @@ namespace E_CODING_MVC_NET6_0.InfraStructure.Project
         {
             _logger = logger;
             _configuration = configuration;
-            string urlWebApiCourier = _configuration["UrlWebApiCourier"];
             _httpClientFactory = httpClientFactory;
         }
 

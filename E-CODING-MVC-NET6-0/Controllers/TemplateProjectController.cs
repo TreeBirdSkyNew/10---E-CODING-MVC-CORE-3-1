@@ -18,6 +18,7 @@ using E_CODING_MVC_NET6_0.Models;
 using E_CODING_MVC_NET6_0.InfraStructure.TemplateFonctionnel;
 using E_CODING_MVC_NET6_0.InfraStructure.Project;
 
+
 namespace E_CODING_MVC_NET6_0
 {
 
@@ -47,16 +48,15 @@ namespace E_CODING_MVC_NET6_0
         }
 
         [HttpGet]
-        [Route("TemplateProject/Index")]
-        public async Task<IActionResult> TemplateProjectIndex()
+        [Route("Index")]
+        public async Task<IActionResult> Index()
         {
             List<TemplateProjectVM?> templateProjectVMs = await _projectApiClient.GetAllTemplateProject(_clientProjectName,"api/TemplateProject/Index");
-            
             return View(templateProjectVMs);
         }
 
         [HttpGet]
-        [Route("Details")]
+        [Route("Details/{id}")]
         public async Task<IActionResult> Details(int id)
         {
             TemplateProjectVM? templateProjectVM = await _projectApiClient.GetTemplateProject(_clientProjectName,"api/TemplateProject/Details?id=" + id);
@@ -127,13 +127,21 @@ namespace E_CODING_MVC_NET6_0
             return RedirectToAction("Index");
         }
 
-        [HttpDelete]
+        [HttpPost("{id}")]
         [Route("Delete")]
         public async Task<IActionResult> DeleteTemplateProject(int id)
         {
-            await this._projectApiClient.DeleteTemplateProject(_clientProjectName,"api/TemplateProject/Delete?id=" + id);
+            await this._projectApiClient.DeleteTemplateProject(_clientProjectName,$"api/TemplateProject/Delete/{id}");
             return RedirectToAction("Index");
         }
 
+        [HttpPost("{id}")]
+        [Route("DeleteAjax")]
+        [Produces(MediaTypeNames.Application.Json)]
+        public async Task<IActionResult> DeleteAjaxTemplateProject(int id)
+        {
+            await this._projectApiClient.DeleteTemplateProject(_clientProjectName, $"api/TemplateProject/Delete/{id}");
+            return Json(false, new JsonSerializerOptions { WriteIndented = true });
+        }
     }
 }

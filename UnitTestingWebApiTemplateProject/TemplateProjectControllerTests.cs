@@ -88,7 +88,7 @@ namespace UnitTestingWebApiTemplateProject
             Assert.NotNull(result);
             Assert.IsAssignableFrom<CreatedAtRouteResult>(result);
             Assert.Equal((int)HttpStatusCode.Created, result!.StatusCode);
-            Assert.Equal("TemplateProjectId", (result as CreatedAtRouteResult)!.RouteName);
+            Assert.Equal("TemplateProjectById", (result as CreatedAtRouteResult)!.RouteName);
         }
 
         [Fact]

@@ -20,9 +20,8 @@ namespace UnitTestingWebApiTechniqueProject
         }
 
         [Theory]
-        [InlineData(null, "templateTechniqueName0", "templateTechniqueVersion0", "templateTechniqueTitle0", "templateTechniqueDescription0", "TemplateTechniqueVersionNET",1,false)]
+        [InlineData("templateTechniqueName0", "templateTechniqueVersion0", "templateTechniqueTitle0", "templateTechniqueDescription0", "TemplateTechniqueVersionNET",1,true)]
         public void TestModelValidation(
-            int templateTechniqueId, 
             string? templateTechniqueName, 
             string? templateTechniqueVersion,
             string? templateTechniqueTitle,
@@ -33,7 +32,6 @@ namespace UnitTestingWebApiTechniqueProject
         {
             var owner = new TemplateTechnique()
             {
-                TemplateTechniqueId = templateTechniqueId,
                 TemplateTechniqueName = templateTechniqueName,
                 TemplateTechniqueVersion = templateTechniqueVersion,
                 TemplateTechniqueTitle = templateTechniqueTitle,

@@ -42,8 +42,8 @@ namespace UnitTestingWebApiTechniqueProject
             var result = TemplateTechniqueController.Index() as ObjectResult;
             Assert.NotNull(result);
             Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
-            Assert.IsAssignableFrom<IEnumerable<TemplateTechniqueVM>>(result.Value);
-            Assert.NotEmpty(result.Value as IEnumerable<TemplateTechniqueVM>);
+            Assert.IsAssignableFrom<IEnumerable<TemplateProjectVM>>(result.Value);
+            Assert.NotEmpty(result.Value as IEnumerable<TemplateProjectVM>);
         }
 
         [Fact]
@@ -109,9 +109,8 @@ namespace UnitTestingWebApiTechniqueProject
             var mapper = GetMapper();
             var logger = new LoggerManager();
             var TemplateTechniqueController = new TemplateTechniqueController(logger, mapper, repositoryWrapperMock.Object);
-            var owner = new TemplateTechniqueVM()
+            var owner = new TemplateTechniqueVMForCreation()
             {
-                TemplateTechniqueId = 2,
                 TemplateTechniqueName = "TemplateTechniqueName1",
                 TemplateTechniqueVersion = "TemplateTechniqueVersion1",
                 TemplateTechniqueTitle = "TemplateTechniqueTitle1",
@@ -123,7 +122,7 @@ namespace UnitTestingWebApiTechniqueProject
             Assert.NotNull(result);
             Assert.IsAssignableFrom<CreatedAtRouteResult>(result);
             Assert.Equal((int)HttpStatusCode.Created, result!.StatusCode);
-            Assert.Equal("TemplateTechniqueId", (result as CreatedAtRouteResult)!.RouteName);
+            Assert.Equal("TemplateTechniqueById", (result as CreatedAtRouteResult)!.RouteName);
         }
 
         [Fact]
@@ -134,9 +133,8 @@ namespace UnitTestingWebApiTechniqueProject
             var logger = new LoggerManager();
             var TemplateTechniqueController = new TemplateTechniqueController(logger, mapper, repositoryWrapperMock.Object);
 
-            var techniqueFinal = new TemplateTechniqueVM()
+            var techniqueFinal = new TemplateTechniqueVMForUpdate()
             {
-                TemplateTechniqueId = 1,
                 TemplateTechniqueName = "TemplateTechniqueName3",
                 TemplateTechniqueVersion = "TemplateTechniqueVersion3",
                 TemplateTechniqueTitle = "TemplateTechniqueTitle3",
@@ -149,7 +147,6 @@ namespace UnitTestingWebApiTechniqueProject
             var getTestTechniqueInitial = TemplateTechniqueController.TemplateTechniqueDetails(1) as ObjectResult;
             var ObjectResult = Assert.IsType<OkObjectResult>(getTestTechniqueInitial);
             var techniqueTestFinal = getTestTechniqueInitial.Value as TemplateTechniqueVM;
-            Assert.Equal(techniqueTestFinal.TemplateTechniqueId, techniqueFinal.TemplateTechniqueId);
             Assert.Equal(techniqueTestFinal.TemplateTechniqueName, techniqueFinal.TemplateTechniqueName);
             Assert.Equal(techniqueTestFinal.TemplateTechniqueVersion, techniqueFinal.TemplateTechniqueVersion);
             Assert.Equal(techniqueTestFinal.TemplateTechniqueTitle, techniqueFinal.TemplateTechniqueTitle);

@@ -33,17 +33,17 @@ namespace E_CODING_Service_Abstraction.Technique
 
         public void CreateTemplateTechniqueItem(TemplateTechniqueItem templateTechniqueItem)
         {
-            CreateTemplateTechniqueItem(templateTechniqueItem);
+            Create(templateTechniqueItem);
         }
 
         public void UpdateTemplateTechniqueItem(TemplateTechniqueItem templateTechniqueItem)
         {
-            UpdateTemplateTechniqueItem(templateTechniqueItem);
+            Update(templateTechniqueItem);
         }
 
         public void DeleteTemplateTechniqueItem(TemplateTechniqueItem templateTechniqueItem)
         {
-            DeleteTemplateTechniqueItem(templateTechniqueItem);
+            Delete(templateTechniqueItem);
         }
     }
 }

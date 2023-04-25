@@ -13,7 +13,7 @@
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "applicationUrl": "https://localhost:7237;http://localhost:5237",
-      "launchUrl": "TemplateTechnique/Index",
+      "launchUrl": "TemplateProject/Index",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

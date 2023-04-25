@@ -28,9 +28,13 @@ namespace TemplateTechnique_WebApi
 
             CreateMap<TemplateTechnique, TemplateTechniqueVM>();
             CreateMap<TemplateTechniqueVM, TemplateTechnique>();
+            CreateMap<TemplateTechniqueVMForCreation, TemplateTechnique>();
+            CreateMap<TemplateTechniqueVMForUpdate, TemplateTechnique>();
 
             CreateMap<TemplateTechniqueItem, TemplateTechniqueItemVM>();
             CreateMap<TemplateTechniqueItemVM, TemplateTechniqueItem>();
+            CreateMap<TemplateTechniqueItemVMForCreation, TemplateTechniqueItem>();
+            CreateMap<TemplateTechniqueItemVMForUpdate, TemplateTechniqueItem>();
 
             CreateMap<TemplateResult, TemplateResultVM>();
             CreateMap<TemplateResultVM, TemplateResult>();

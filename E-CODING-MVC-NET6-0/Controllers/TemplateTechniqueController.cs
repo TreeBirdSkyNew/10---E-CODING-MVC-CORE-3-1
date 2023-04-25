@@ -28,8 +28,8 @@ namespace E_CODING_MVC_NET6_0
         }
 
         [HttpGet]
-        [Route("TemplateResult/Index")]
-        public async Task<IActionResult> TemplateTechniqueIndex()
+        [Route("Index")]
+        public async Task<IActionResult> Index()
         {
             List<TemplateTechniqueVM> projectsVMs = await _techniqueApiClient.GetAllTemplateTechnique(_clientName, "api/TemplateTechnique/Index");
             await Task.Delay(1);
@@ -37,11 +37,11 @@ namespace E_CODING_MVC_NET6_0
         }
 
         [HttpGet]
-        [Route("TechniqueDetails")]
+        [Route("TechniqueDetails/{id}")]
         public async Task<IActionResult> Details(int id)
         {
             TemplateTechniqueVM templateTechniqueVM = 
-                await _techniqueApiClient.GetTemplateTechnique(_clientName, "api/TemplateTechnique/TechniqueDetails?id=" + id);
+                await _techniqueApiClient.GetTemplateTechnique(_clientName, $"api/TemplateTechnique/TechniqueDetails/{id}");
             return View(templateTechniqueVM);
         }
 

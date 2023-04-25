@@ -1,10 +1,22 @@
 using _4___E_CODING_DAL;
 using AutoMapper;
 using E_CODING_MVC_NET6_0;
+using E_CODING_MVC_NET6_0.InfraStructure.ApiClient;
+using E_CODING_MVC_NET6_0.InfraStructure.Project;
+using E_CODING_MVC_NET6_0.InfraStructure.TemplateFonctionnel;
+using E_CODING_Service_Abstraction.ApiClient;
+using E_CODING_Service_Abstraction.Project;
+using E_CODING_Services.Project;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScoped<IApiClientService, ApiClientService>();
+builder.Services.AddScoped<ITemplateProjectApiClient, TemplateProjectApiClient>();
+builder.Services.AddScoped<ITemplateTechniqueApiClient, TemplateTechniqueApiClient>();
+builder.Services.AddScoped<ITemplateFonctionnelApiClient, TemplateFonctionnelApiClient>();
+builder.Services.AddScoped<ITemplateResultApiClient, TemplateResultApiClient>();
 
 builder.Services.AddDbContext<TemplateProjectDbContext>(
                     item => item.UseSqlServer("Server=SQLEXPRESS; Database=ECODING; Integrated Security=SSPI;"));
@@ -85,7 +97,7 @@ app.MapControllerRoute(
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=TemplateTechnique}/{action=Index}/{id?}");
+    pattern: "{controller=TemplateProject}/{action=Index}/{id?}");
 
 app.MapControllers();
 app.Run();

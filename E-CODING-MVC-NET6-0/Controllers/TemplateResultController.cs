@@ -28,7 +28,7 @@ namespace E_CODING_MVC_NET6_0
 
         [HttpGet]
         [Route("TemplateResult/Index")]
-        public async Task<IActionResult> TemplateResultIndex()
+        public async Task<IActionResult> Index()
         {
             List<TemplateResultVM> templateResults = await _resultApiClient.GetAllTemplateResult(_clientName,"api/TemplateResult/Index");
             return View(templateResults);

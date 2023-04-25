@@ -150,8 +150,8 @@ namespace __WEB_API__TemplateProject_WebApi.Controllers
             }
         }
 
-        [Route("Delete")]
-        [HttpDelete("{id}")]
+        [Route("Delete/{id}")]
+        [HttpPost("{id}")]
         public void DeleteTemplateProject(int id)
         {
             try
@@ -160,10 +160,6 @@ namespace __WEB_API__TemplateProject_WebApi.Controllers
                 if (templateProject == null)
                 {
                     _logger.LogError($"TemplateResult with id: {id}, hasn't been found in db.");
-                }
-                //if (_projectRepositoryWrapper.TechniqueRepository.GetAllTemplateTechnique(id).Any())
-                {
-                    _logger.LogError($"Cannot delete owner with id: {id}. It has related accounts. Delete those accounts first");
                 }
                 _projectRepositoryWrapper.ProjectRepository.DeleteTemplateProject(templateProject);
                 _projectRepositoryWrapper.Save();

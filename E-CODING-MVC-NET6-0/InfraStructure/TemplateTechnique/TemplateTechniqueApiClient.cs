@@ -28,11 +28,8 @@ namespace E_CODING_MVC_NET6_0
         {
             _logger = logger;
             _configuration = configuration;
-            string urlWebApiCourier = _configuration["UrlWebApiCourier"];
             _httpClientFactory = httpClientFactory;
         }
-
-
         public async Task<TemplateTechniqueVM?> GetTemplateTechnique(string clientName, string api)
         {
             HttpResponseMessage httpResponseMessage = await GetObject<TemplateTechniqueVM>(clientName, api);

@@ -59,9 +59,8 @@ namespace UnitTestingWebApiTechniqueProject
             var mapper = GetMapper();
             var logger = new LoggerManager();
             var TemplateTechniqueController = new TemplateTechniqueController(logger, mapper, repositoryWrapperMock.Object);
-            var templateTechniqueItemVM = new TemplateTechniqueItemVM()
+            var templateTechniqueItemVM = new TemplateTechniqueItemVMForCreation()
             {
-                TemplateTechniqueItemId = 2,
                 TemplateTechniqueItemName = "TemplateTechniqueItemName1",
                 TemplateTechniqueItemVersion = "TemplateTechniqueItemVersion1",
                 TemplateTechniqueItemTitle = "TemplateTechniqueItemTitle1",
@@ -84,9 +83,8 @@ namespace UnitTestingWebApiTechniqueProject
             var logger = new LoggerManager();
             var TemplateTechniqueController = new TemplateTechniqueController(logger, mapper, repositoryWrapperMock.Object);
 
-            var templateTechniqueItemfinal = new TemplateTechniqueItemVM()
+            var templateTechniqueItemfinal = new TemplateTechniqueItemVMForUpdate()
             {
-                TemplateTechniqueItemId = 1,
                 TemplateTechniqueItemName = "TemplateTechniqueItemName1",
                 TemplateTechniqueItemVersion = "TemplateTechniqueItemVersion1",
                 TemplateTechniqueItemTitle = "TemplateTechniqueItemTitle1",
@@ -99,7 +97,6 @@ namespace UnitTestingWebApiTechniqueProject
             var getTestTechniqueItemInitial = TemplateTechniqueController.TemplateTechniqueItemDetails(1) as ObjectResult;
             var ObjectResult = Assert.IsType<OkObjectResult>(getTestTechniqueItemInitial);
             var techniqueItemTestFinal = getTestTechniqueItemInitial.Value as TemplateTechniqueItemVM;
-            Assert.Equal(techniqueItemTestFinal.TemplateTechniqueItemId, templateTechniqueItemfinal.TemplateTechniqueItemId);
             Assert.Equal(techniqueItemTestFinal.TemplateTechniqueItemName, templateTechniqueItemfinal.TemplateTechniqueItemName);
             Assert.Equal(techniqueItemTestFinal.TemplateTechniqueItemVersion, templateTechniqueItemfinal.TemplateTechniqueItemVersion);
             Assert.Equal(techniqueItemTestFinal.TemplateTechniqueItemTitle, templateTechniqueItemfinal.TemplateTechniqueItemTitle);

@@ -34,7 +34,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoggerService", "LoggerServ
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTestingWebApiTemplateTechnique", "UnitTestingWebApiTemplateTechnique\UnitTestingWebApiTemplateTechnique.csproj", "{951431D0-E89E-4CBF-818D-5EB773A88B68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestingWebApiTemplateProject", "UnitTestingWebApiTemplateProject\UnitTestingWebApiTemplateProject.csproj", "{CBCF7D69-6D72-4F02-9694-B8C2E6A9EA94}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTestingWebApiTemplateProject", "UnitTestingWebApiTemplateProject\UnitTestingWebApiTemplateProject.csproj", "{CBCF7D69-6D72-4F02-9694-B8C2E6A9EA94}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

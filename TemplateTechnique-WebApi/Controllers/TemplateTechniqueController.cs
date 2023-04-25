@@ -48,7 +48,7 @@ namespace TemplateTechnique_WebApi
             {
                 IEnumerable<TemplateTechnique> templateTechniques = _techniqueRepositoryWrapper.TechniqueRepository.GetAllTemplateTechnique();
                 _logger.LogInfo($"Returned all templateTechniques from database.");
-                IEnumerable<TemplateTechniqueVM> templateTechniquesVM = _mapper.Map<List<TemplateTechniqueVM>>(templateTechniques);
+                IEnumerable<TemplateTechniqueVM> templateTechniquesVM = _mapper.Map<IEnumerable<TemplateTechniqueVM>>(templateTechniques);
                 return Ok(templateTechniquesVM);
             }
             catch (Exception ex)
@@ -86,7 +86,7 @@ namespace TemplateTechnique_WebApi
             }
         }
 
-        [HttpGet]
+        [HttpGet("{id}", Name = "TemplateTechniqueById")]
         [Route("TechniqueDetails/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TemplateTechnique))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -125,8 +125,8 @@ namespace TemplateTechnique_WebApi
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("CreateTechnique")]
-        [ValidateAntiForgeryToken]
-        public IActionResult TemplateTechniqueCreate([FromBody] TemplateTechniqueVM templateTechniqueVM)
+        //[ValidateAntiForgeryToken]
+        public IActionResult TemplateTechniqueCreate([FromBody] TemplateTechniqueVMForCreation templateTechniqueVM)
         {
             try
             {
@@ -144,7 +144,7 @@ namespace TemplateTechnique_WebApi
                 _techniqueRepositoryWrapper.TechniqueRepository.CreateTemplateTechnique(templateTechniqueEntity);
                 _techniqueRepositoryWrapper.Save();
                 var templateTechnique = _mapper.Map<TemplateTechniqueVM>(templateTechniqueEntity);
-                return CreatedAtRoute("TemplateTechniqueId", new { id = templateTechnique.TemplateTechniqueId }, templateTechnique);
+                return CreatedAtRoute("TemplateTechniqueById", new { id = templateTechnique.TemplateTechniqueId }, templateTechnique);
             }
             catch (Exception ex)
             {
@@ -154,12 +154,11 @@ namespace TemplateTechnique_WebApi
         }
 
 
-        [HttpPut]
+        [HttpPut("{id}")]
+        [Route("EditTechnique/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ValidateAntiForgeryToken]
-        [Route("EditTechnique/{id}")]
-        public IActionResult TemplateTechniqueEdit(int id, [FromBody] TemplateTechniqueVM templateTechniqueVM)
+        public IActionResult TemplateTechniqueEdit(int id, [FromBody] TemplateTechniqueVMForUpdate templateTechniqueVM)
         {
             try
             {
@@ -215,7 +214,7 @@ namespace TemplateTechnique_WebApi
             }
         }
 
-        [HttpGet]
+        [HttpGet("{id}", Name = "TemplateTechniqueItemById")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -248,8 +247,8 @@ namespace TemplateTechnique_WebApi
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("CreateTechniqueItem")]
-        [ValidateAntiForgeryToken]
-        public IActionResult TemplateTechniqueItemCreate([FromBody] TemplateTechniqueItemVM templateTechniqueItemVM)
+        //[ValidateAntiForgeryToken]
+        public IActionResult TemplateTechniqueItemCreate([FromBody] TemplateTechniqueItemVMForCreation templateTechniqueItemVM)
         {
             try
             {
@@ -267,7 +266,7 @@ namespace TemplateTechnique_WebApi
                 _techniqueRepositoryWrapper.TechniqueItemRepository.CreateTemplateTechniqueItem(templateTechniqueItemEntity);
                 _techniqueRepositoryWrapper.Save();
                 TemplateTechniqueItemVM templateTechniqueItem = _mapper.Map<TemplateTechniqueItemVM>(templateTechniqueItemEntity);
-                return CreatedAtRoute("TemplateTechniqueItemId", new { id = templateTechniqueItem.TemplateTechniqueItemId }, templateTechniqueItem);
+                return CreatedAtRoute("TemplateTechniqueItemById", new { id = templateTechniqueItem.TemplateTechniqueItemId }, templateTechniqueItem);
             }
             catch (Exception ex)
             {
@@ -276,12 +275,12 @@ namespace TemplateTechnique_WebApi
             }
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("EditTechniqueItem/{id}")]
-        [ValidateAntiForgeryToken]
-        public IActionResult EditTemplateTechniqueItem(int id, [FromBody] TemplateTechniqueItemVM templateTechniqueItemVM)
+        //[ValidateAntiForgeryToken]
+        public IActionResult EditTemplateTechniqueItem(int id, [FromBody] TemplateTechniqueItemVMForUpdate templateTechniqueItemVM)
         {            
             try
             {
@@ -313,7 +312,6 @@ namespace TemplateTechnique_WebApi
             }
         }
 
-        [HttpGet]
         [Route("DeleteTechniqueItem/{id}")]
         [HttpDelete]
         public void DeleteTemplateTechniqueItem(int id)

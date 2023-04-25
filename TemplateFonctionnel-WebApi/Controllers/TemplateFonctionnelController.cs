@@ -30,8 +30,7 @@ namespace TemplateFonctionnel_WebApi
         public TemplateFonctionnelController(
             IFonctionnelRepositoryWrapper fonctionnelRepositoryWrapper,
             IMapper mapper,
-            ILoggerManager logger
-            )
+            ILoggerManager logger)
         {
             _fonctionnelRepositoryWrapper = fonctionnelRepositoryWrapper;
             _mapper = mapper;
@@ -40,16 +39,16 @@ namespace TemplateFonctionnel_WebApi
 
         [HttpGet]
         [Route("Index")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TemplateFonctionnelVM>))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult Index()
         {
             try
             {
                 IEnumerable<TemplateFonctionnel> templateFonctionnels = _fonctionnelRepositoryWrapper.FonctionnelRepository.GetAllTemplateFonctionnel();
-                _logger.LogInfo($"Returned all templateFonctionnels from database.");
-                IEnumerable<TemplateProjectVM> templateProjectsVM = _mapper.Map<IEnumerable<TemplateProjectVM>>(templateFonctionnels);
-                return Ok(templateProjectsVM);
+                _logger.LogInfo($"Returned all templateProjects from database.");
+                IEnumerable<TemplateFonctionnelVM> templateFonctionnelsVM = _mapper.Map<IEnumerable<TemplateFonctionnelVM>>(templateFonctionnels);
+                return Ok(templateFonctionnelsVM);
             }
             catch (Exception ex)
             {
