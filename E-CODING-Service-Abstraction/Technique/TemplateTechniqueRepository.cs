@@ -20,6 +20,12 @@ namespace E_CODING_Service_Abstraction.Technique
             return FindAll().ToList();
         }
 
+        public IEnumerable<TemplateTechnique> GetProjectAllTemplateTechnique(int projectId)
+        {
+            return FindByCondition(TemplateTechnique => TemplateTechnique.TemplateProjectId.Equals(projectId))
+                    .ToList();
+        }
+
         public TemplateTechnique FindByCondition(int id)
         {
             return FindByCondition(TemplateTechnique => TemplateTechnique.TemplateTechniqueId.Equals(id))

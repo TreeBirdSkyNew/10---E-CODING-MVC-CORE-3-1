@@ -12,6 +12,10 @@ using Microsoft.Extensions.Options;
 using FluentAssertions.Common;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.Extensions.Hosting;
+using System;
+using E_CODING_Service_Abstraction.Technique;
+using E_CODING_Services.Technique;
 
 var builder = WebApplication.CreateBuilder(args);
 LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
@@ -55,6 +59,8 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }
 
 
 

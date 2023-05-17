@@ -19,10 +19,9 @@ using System.Net.Mime;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace TemplateTechnique_WebApi
+namespace TemplateTechnique_WebApi.Controllers
 {
     [Route("api/TemplateTechnique")]
-    [ApiController]
     public class TemplateTechniqueController : ControllerBase
     {
         private readonly ITechniqueRepositoryWrapper _techniqueRepositoryWrapper;
@@ -48,7 +47,7 @@ namespace TemplateTechnique_WebApi
             {
                 IEnumerable<TemplateTechnique> templateTechniques = _techniqueRepositoryWrapper.TechniqueRepository.GetAllTemplateTechnique();
                 _logger.LogInfo($"Returned all templateTechniques from database.");
-                IEnumerable<TemplateTechniqueVM> templateTechniquesVM = _mapper.Map<IEnumerable<TemplateTechniqueVM>>(templateTechniques);
+                List<TemplateTechniqueVM> templateTechniquesVM = _mapper.Map<List<TemplateTechniqueVM>>(templateTechniques.ToList());
                 return Ok(templateTechniquesVM);
             }
             catch (Exception ex)
@@ -58,10 +57,40 @@ namespace TemplateTechnique_WebApi
             }
         }
 
+        
+
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [Route("TechniqueAllItems")]
+        [Route("ProjectAllTechniques/{id}")]
+        public IActionResult ProjectAllTechniques(int id)
+        {
+            try
+            {
+                IEnumerable<TemplateTechnique> ProjectTemplateTechniques = _techniqueRepositoryWrapper.TechniqueRepository.GetProjectAllTemplateTechnique(id);
+                if (ProjectTemplateTechniques.ToList().Count == 0)
+                {
+                    _logger.LogError($"Returned GetProjectAllTemplateTechnique for TemplateProject={id} from database.");
+                    return NotFound();
+                }
+                else
+                {
+                    _logger.LogInfo($"Returned all TechniqueAllItems for TemplateTechniqueId={id} from database.");
+                    IEnumerable<TemplateTechniqueVM> ProjectTemplateTechniqueVMs = _mapper.Map<List<TemplateTechniqueVM>>(ProjectTemplateTechniques);
+                    return Ok(ProjectTemplateTechniqueVMs);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside TemplateTechniqueItems for TemplateTechniqueId={id} action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Route("TechniqueAllItems/{id}")]
         public IActionResult TemplateTechniqueAllItems(int id)
         {
             try
@@ -103,8 +132,8 @@ namespace TemplateTechnique_WebApi
                 else
                 {
                     _logger.LogInfo($"Returned templateTechnique with TemplateTechniqueId: {id}");
-                    List<TemplateTechniqueItem> templateTechniqueItems = _techniqueRepositoryWrapper.TechniqueItemRepository.GetAllTemplateTechniqueItem(id).ToList();
                     TemplateTechniqueVM templateTechniqueVM = _mapper.Map<TemplateTechniqueVM>(templateTechnique);
+                    List<TemplateTechniqueItem> templateTechniqueItems = _techniqueRepositoryWrapper.TechniqueItemRepository.GetAllTemplateTechniqueItem(id).ToList();
                     if (templateTechniqueItems.Any())
                     {
                         _logger.LogInfo($"Returned templateTechniqueItems with TemplateTechniqueId: {id}");
@@ -126,7 +155,7 @@ namespace TemplateTechnique_WebApi
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("CreateTechnique")]
         //[ValidateAntiForgeryToken]
-        public IActionResult TemplateTechniqueCreate([FromBody] TemplateTechniqueVMForCreation templateTechniqueVM)
+        public IActionResult TemplateTechniqueCreate([FromBody] TemplateTechniqueVM templateTechniqueVM)
         {
             try
             {
@@ -248,7 +277,7 @@ namespace TemplateTechnique_WebApi
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("CreateTechniqueItem")]
         //[ValidateAntiForgeryToken]
-        public IActionResult TemplateTechniqueItemCreate([FromBody] TemplateTechniqueItemVMForCreation templateTechniqueItemVM)
+        public IActionResult TemplateTechniqueItemCreate([FromBody] TemplateTechniqueItemVM templateTechniqueItemVM)
         {
             try
             {
@@ -280,7 +309,7 @@ namespace TemplateTechnique_WebApi
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("EditTechniqueItem/{id}")]
         //[ValidateAntiForgeryToken]
-        public IActionResult EditTemplateTechniqueItem(int id, [FromBody] TemplateTechniqueItemVMForUpdate templateTechniqueItemVM)
+        public IActionResult EditTemplateTechniqueItem(int id, [FromBody] TemplateTechniqueItemVM templateTechniqueItemVM)
         {            
             try
             {
@@ -294,14 +323,8 @@ namespace TemplateTechnique_WebApi
                     _logger.LogError("Invalid templateTechniqueItem object sent from client.");
                     return BadRequest("Invalid model object");
                 }
-                var templateTechniqueItemEntity = _techniqueRepositoryWrapper.TechniqueItemRepository.FindByCondition(id);
-                if (templateTechniqueItemEntity is null)
-                {
-                    _logger.LogError($"templateTechniqueItem with id: {id}, hasn't been found in db.");
-                    return NotFound();
-                }
-                _mapper.Map(templateTechniqueItemVM, templateTechniqueItemEntity);
-                _techniqueRepositoryWrapper.TechniqueItemRepository.UpdateTemplateTechniqueItem(templateTechniqueItemEntity);
+                var templateTechniqueItem = _mapper.Map<TemplateTechniqueItem>(templateTechniqueItemVM);
+                _techniqueRepositoryWrapper.TechniqueItemRepository.UpdateTemplateTechniqueItem(templateTechniqueItem);
                 _techniqueRepositoryWrapper.Save();
                 return NoContent();
 

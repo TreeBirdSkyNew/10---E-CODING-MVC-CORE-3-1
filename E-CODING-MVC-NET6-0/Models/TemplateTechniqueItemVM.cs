@@ -16,6 +16,6 @@ namespace E_CODING_MVC_NET6_0.Models
         public string TemplateTechniqueItemVersionNET { get; set; } = string.Empty;
         public string TemplateTechniqueInitialFile { get; set; } = string.Empty;
         public string TemplateTechniqueFinalContent { get; set; } = string.Empty;
-        public TemplateTechniqueVM TemplateTechnique { get; set; }
+        public TemplateTechniqueVM? TemplateTechnique { get; set; }
     }
 }

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 
-namespace TemplateProject_WebApi.Extensions
+namespace TemplateTechnique_WebApi.Extensions
 {
     public static class ServiceExtensions
     {

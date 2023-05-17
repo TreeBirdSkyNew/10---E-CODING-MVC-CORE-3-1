@@ -38,7 +38,7 @@ namespace E_CODING_MVC_NET6_0
         [Route("Details")]
         public async Task<IActionResult> Details(int id)
         {
-            TemplateResultVM templateResultVM = await _resultApiClient.GetTemplateResult(_clientName,"api/TemplateResult/Details?id=" + id);
+            TemplateResultVM templateResultVM = await _resultApiClient.GetTemplateResult(_clientName,"api/TemplateResult/Details/" + id);
             return View(templateResultVM);
         }
 
@@ -47,7 +47,7 @@ namespace E_CODING_MVC_NET6_0
         [Produces(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> TemplateResultItems(int id)
         {
-            List<TemplateResultItemVM> TemplateResultItemVMs = await _resultApiClient.GetAllTemplateResultItem(_clientName,"api/TemplateResult/TemplateResultItems?id=" + id);
+            List<TemplateResultItemVM> TemplateResultItemVMs = await _resultApiClient.GetAllTemplateResultItem(_clientName,"api/TemplateResult/TemplateResultItems/" + id);
             return Json(TemplateResultItemVMs, new JsonSerializerOptions { WriteIndented = true });
         }
 
@@ -56,7 +56,7 @@ namespace E_CODING_MVC_NET6_0
         [Produces(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> TemplateResultItem(int id)
         {
-            TemplateResultItemVM TemplateResultItemVM = await _resultApiClient.GetTemplateResultItem(_clientName,"api/TemplateResult/ResultItemDetails?id=" + id);
+            TemplateResultItemVM TemplateResultItemVM = await _resultApiClient.GetTemplateResultItem(_clientName,"api/TemplateResult/ResultItemDetails/" + id);
             return View(TemplateResultItemVM);
         }
 
@@ -81,7 +81,7 @@ namespace E_CODING_MVC_NET6_0
         [Route("Edit")]
         public async Task<IActionResult> Edit(int id)
         {
-            TemplateResultVM templateResultVM = await _resultApiClient.GetTemplateResult(_clientName,"api/TemplateResult/ResultDetails?id=" + id);
+            TemplateResultVM templateResultVM = await _resultApiClient.GetTemplateResult(_clientName,"api/TemplateResult/ResultDetails/" + id);
             return View(templateResultVM);
         }
 
@@ -115,7 +115,7 @@ namespace E_CODING_MVC_NET6_0
         [Route("EditTemplateResultItem")]
         public IActionResult EditTemplateResultItem(int id)
         {
-            TemplateResultItemVM templateResulItemVM = _resultApiClient.GetTemplateResultItem(_clientName,"api/TemplateResult/TemplateResultItem?id=" + id).Result;
+            TemplateResultItemVM templateResulItemVM = _resultApiClient.GetTemplateResultItem(_clientName,"api/TemplateResult/TemplateResultItem/" + id).Result;
             return View(templateResulItemVM);
         }
 
@@ -132,7 +132,7 @@ namespace E_CODING_MVC_NET6_0
         [Route("Delete")]
         public async Task<IActionResult> DeleteTemplateResult(int id)
         {
-            await this._resultApiClient.DeleteTemplateResult(_clientName,"api/TemplateResult/Delete?id=" + id);
+            await this._resultApiClient.DeleteTemplateResult(_clientName,"api/TemplateResult/Delete/" + id);
             return RedirectToAction("Index");
         }
 

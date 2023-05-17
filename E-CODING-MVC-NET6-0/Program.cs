@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<IApiClientService, ApiClientService>();
+builder.Services.AddScoped<ITemplateSolutionApiClient, TemplateProjectApiClient>();
 builder.Services.AddScoped<ITemplateProjectApiClient, TemplateProjectApiClient>();
 builder.Services.AddScoped<ITemplateTechniqueApiClient, TemplateTechniqueApiClient>();
 builder.Services.AddScoped<ITemplateFonctionnelApiClient, TemplateFonctionnelApiClient>();

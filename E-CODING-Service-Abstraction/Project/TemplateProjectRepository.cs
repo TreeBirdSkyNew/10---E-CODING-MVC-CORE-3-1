@@ -1,5 +1,6 @@
 ﻿using _4___E_CODING_DAL;
 using _4___E_CODING_DAL.Models;
+using E_CODING_Service_Abstraction.Technique;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace E_CODING_Service_Abstraction.Project
 
         public IEnumerable<TemplateProject> GetAllTemplateProject()
         {
-            return FindAll().ToList(); ;
+            return FindAll().ToList();
         }
 
         public TemplateProject FindByCondition(int id)

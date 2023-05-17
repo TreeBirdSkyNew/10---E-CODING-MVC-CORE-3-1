@@ -10,8 +10,8 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using NLog;
-using TemplateProject_WebApi.Extensions;
 using TemplateTechnique_WebApi;
+using TemplateTechnique_WebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));

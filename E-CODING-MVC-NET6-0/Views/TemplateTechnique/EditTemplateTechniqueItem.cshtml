@@ -18,6 +18,9 @@
                         <strong><label asp-for="TemplateTechniqueId" class="control-label"></label></strong>
                     </div>
                     <div>
+                        <strong><label asp-for="TemplateTechniqueItemTitle" class="control-label"></label></strong>
+                    </div>
+                    <div>
                         <strong><label asp-for="TemplateTechniqueItemName" class="control-label"></label></strong>
                     </div>
                     <div>
@@ -34,6 +37,10 @@
                         <span asp-validation-for="TemplateTechniqueId" class="text-danger"></span>
                     </div>
                     <div>
+                        <input asp-for="TemplateTechniqueItemTitle" class="form-control" />
+                        <span asp-validation-for="TemplateTechniqueItemTitle" class="text-danger"></span>
+                    </div>
+                    <div>
                         <input asp-for="TemplateTechniqueItemName" class="form-control" />
                         <span asp-validation-for="TemplateTechniqueItemName" class="text-danger"></span>
                     </div>
@@ -47,8 +54,16 @@
         </div>
 
         <div class="col-md-12">
+            <label asp-for="TemplateTechniqueItemName" class="control-label"></label>
+            <textarea asp-for="TemplateTechniqueItemDescription" id="textareContent" class="mytextarea" rows="30">
+                @Model.TemplateTechniqueItemDescription
+            </textarea>
+            <span asp-validation-for="TemplateTechniqueItemDescription" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-12">
             <label asp-for="TemplateTechniqueInitialFile" class="control-label"></label>
-            <textarea asp-for="TemplateTechniqueInitialFile" id="textareContent" class="mytextarea" rows="100">
+            <textarea asp-for="TemplateTechniqueInitialFile" id="textareContent" class="mytextarea" rows="30">
                 @Model.TemplateTechniqueInitialFile
             </textarea>
             <span asp-validation-for="TemplateTechniqueInitialFile" class="text-danger"></span>
@@ -56,7 +71,7 @@
 
         <div class="col-md-12">
             <label asp-for="TemplateTechniqueFinalContent" class="control-label"></label>
-            <textarea asp-for="TemplateTechniqueFinalContent" id="textareDescription" class="mytextarea" rows="100">
+            <textarea asp-for="TemplateTechniqueFinalContent" id="textareDescription" class="mytextarea" rows="30">
                 @Model.TemplateTechniqueFinalContent
             </textarea>
             <span asp-validation-for="TemplateTechniqueFinalContent" class="text-danger"></span>

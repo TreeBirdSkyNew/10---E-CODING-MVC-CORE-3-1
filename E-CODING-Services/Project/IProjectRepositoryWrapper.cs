@@ -13,6 +13,7 @@ namespace E_CODING_Services.Project
     {
         ITemplateProjectRepository ProjectRepository { get; }
         ITemplateTechniqueRepository TechniqueRepository { get; }
+        ITemplateTechniqueItemRepository TechniqueItemRepository { get; }
         ITemplateResultRepository ResultRepository { get; }
         void Save();
     }

@@ -10,10 +10,14 @@
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="row">
         <div class="col-md-4">
-            <img src="~/Images/software/soft2.jpg" />
+            <div>
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+            <div>
+                <img src="~/Images/software/soft2.jpg" />
+            </div>
         </div>
         <div class="col-md-4">
-            <div><strong><label asp-for="TemplateProjectId" class="control-label"></label></strong></div>
             <div><strong><label asp-for="TemplateProjectName" class="control-label"></label></strong></div>
             <div><strong><label asp-for="TemplateProjectTitle" class="control-label"></label></strong></div>
             <div><strong><label asp-for="TemplateProjectDescription" class="control-label"></label></strong></div>
@@ -22,10 +26,6 @@
         </div>
 
         <div class="col-md-4">
-            <div>
-                <input asp-for="TemplateProjectId" class="form-control" />
-                <span asp-validation-for="TemplateProjectId" class="text-danger"></span>
-            </div>
             <div>
                 <input asp-for="TemplateProjectName" class="form-control" />
                 <span asp-validation-for="TemplateProjectName" class="text-danger"></span>
@@ -50,9 +50,7 @@
             <span asp-validation-for="TemplateProjectDescription" class="text-danger"></span>
         </div>
 
-        <div class="col-md-4">
-            <input type="submit" value="Create" class="btn btn-primary" />
-        </div>
+        
 
     </div>
 </form>
@@ -65,9 +63,9 @@
 
     $(document).ready(function () {
 
-            tinymce.init({
-                selector: '.mytextarea'
-            });
+        tinymce.init({
+            selector: '.mytextarea'
+        });
 
         $('#templateTechniqueTitle').html('@Model.TemplateProjectTitle');
         $('#TemplateTechniqueDescription').html('@Model.TemplateProjectDescription');

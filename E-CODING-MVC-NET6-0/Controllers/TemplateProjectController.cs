@@ -59,7 +59,7 @@ namespace E_CODING_MVC_NET6_0
         [Route("Details/{id}")]
         public async Task<IActionResult> Details(int id)
         {
-            TemplateProjectVM? templateProjectVM = await _projectApiClient.GetTemplateProject(_clientProjectName,"api/TemplateProject/Details?id=" + id);
+            TemplateProjectVM? templateProjectVM = await _projectApiClient.GetTemplateProject(_clientProjectName, "api/TemplateProject/ProjectDetails/" + id);
             return View(templateProjectVM);
         }
 
@@ -68,8 +68,8 @@ namespace E_CODING_MVC_NET6_0
         [Produces(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> DetailsTechnique(int id)
         {
-            TemplateProjectVM? templateProjectVM = await _projectApiClient.GetTemplateProject(_clientProjectName,"api/TemplateProject/ProjectDetails?id=" + id);
-            List<TemplateTechniqueVM> TemplateTechniquesVM = await _techniqueApiClient.GetAllTemplateTechnique(_clientProjectName,"api/TemplateProject/TechniqueDetails?id=" + id);
+            List<TemplateTechniqueVM> resultTemplateTechniquesVM = new List<TemplateTechniqueVM>();
+            List<TemplateTechniqueVM> TemplateTechniquesVM = await _techniqueApiClient.GetAllTemplateTechnique(_clientTechniqueName, "api/TemplateTechnique/ProjectAllTechniques/" + id);
             return Json(TemplateTechniquesVM, new JsonSerializerOptions { WriteIndented = true });
         }
 
@@ -97,7 +97,7 @@ namespace E_CODING_MVC_NET6_0
         [Route("Edit")]
         public async Task<IActionResult> Edit(int id)
         {
-            TemplateProjectVM? templateProjectVM = await _projectApiClient.GetTemplateProject(_clientProjectName,"api/TemplateProject/ProjectDetails?id=" + id);
+            TemplateProjectVM? templateProjectVM = await _projectApiClient.GetTemplateProject(_clientProjectName,"api/TemplateProject/ProjectDetails/" + id);
             return View(templateProjectVM);
         }
 

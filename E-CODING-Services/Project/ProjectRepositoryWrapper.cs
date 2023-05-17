@@ -16,6 +16,7 @@ namespace E_CODING_Services.Project
         private TemplateProjectDbContext _projectDbContext;
         private ITemplateProjectRepository _projectRepository;
         private ITemplateTechniqueRepository _techniqueRepository;
+        private ITemplateTechniqueItemRepository _techniqueItemRepository;
         private ITemplateResultRepository _resultRepository;
         public ITemplateProjectRepository ProjectRepository
         {
@@ -38,6 +39,18 @@ namespace E_CODING_Services.Project
                     _techniqueRepository = new TemplateTechniqueRepository(_projectDbContext);
                 }
                 return _techniqueRepository;
+            }
+        }
+
+        public ITemplateTechniqueItemRepository TechniqueItemRepository
+        {
+            get
+            {
+                if (_techniqueItemRepository == null)
+                {
+                    _techniqueItemRepository = new TemplateTechniqueItemRepository(_projectDbContext);
+                }
+                return _techniqueItemRepository;
             }
         }
 

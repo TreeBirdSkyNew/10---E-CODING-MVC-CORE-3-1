@@ -8,8 +8,11 @@ namespace _4___E_CODING_DAL.Models
     {
         public TemplateTechnique()
         {
+            ProjectTechnique = new HashSet<ProjectTechnique>();
             TemplateTechniqueItem = new HashSet<TemplateTechniqueItem>();
+            TechniqueParameter = new HashSet<TechniqueParameter>();
         }
+
         public int TemplateTechniqueId { get; set; }
         public string TemplateTechniqueName { get; set; } = string.Empty;
         public string TemplateTechniqueVersion { get; set; } = string.Empty;
@@ -19,5 +22,6 @@ namespace _4___E_CODING_DAL.Models
         public int TemplateProjectId { get; set; }
         public ICollection<ProjectTechnique> ProjectTechnique { get; set; }
         public ICollection<TemplateTechniqueItem> TemplateTechniqueItem { get; set; }
+        public ICollection<TechniqueParameter> TechniqueParameter { get; set; }
     }
 }
