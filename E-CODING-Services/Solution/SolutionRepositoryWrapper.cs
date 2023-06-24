@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace E_CODING_Services.Solution
 {
-    internal class SolutionRepositoryWrapper
+    public class SolutionRepositoryWrapper : ISolutionRepositoryWrapper
     {
         private TemplateProjectDbContext _projectDbContext;
         private ITemplateProjectRepository _projectRepository;

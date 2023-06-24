@@ -19,6 +19,9 @@ namespace TemplateTechnique_WebApi
             CreateMap<TemplateProjectVMForCreation, TemplateProject>();
             CreateMap<TemplateProjectVMForUpdate, TemplateProject>();
 
+            CreateMap<TemplateSolution, TemplateSolutionVM>();
+            CreateMap<TemplateSolutionVM, TemplateSolution>();
+
             CreateMap<TemplateFonctionnel, TemplateFonctionnelVM>();
             CreateMap<TemplateFonctionnelVM, TemplateFonctionnel>();
 

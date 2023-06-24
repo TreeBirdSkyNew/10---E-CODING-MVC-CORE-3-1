@@ -3,6 +3,7 @@ using AutoMapper;
 using E_CODING_MVC_NET6_0;
 using E_CODING_MVC_NET6_0.InfraStructure.ApiClient;
 using E_CODING_MVC_NET6_0.InfraStructure.Project;
+using E_CODING_MVC_NET6_0.InfraStructure.Solution;
 using E_CODING_MVC_NET6_0.InfraStructure.TemplateFonctionnel;
 using E_CODING_Service_Abstraction.ApiClient;
 using E_CODING_Service_Abstraction.Project;
@@ -13,14 +14,14 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<IApiClientService, ApiClientService>();
-builder.Services.AddScoped<ITemplateSolutionApiClient, TemplateProjectApiClient>();
+builder.Services.AddScoped<ITemplateSolutionApiClient, TemplateSolutionApiClient>();
 builder.Services.AddScoped<ITemplateProjectApiClient, TemplateProjectApiClient>();
 builder.Services.AddScoped<ITemplateTechniqueApiClient, TemplateTechniqueApiClient>();
 builder.Services.AddScoped<ITemplateFonctionnelApiClient, TemplateFonctionnelApiClient>();
 builder.Services.AddScoped<ITemplateResultApiClient, TemplateResultApiClient>();
 
 builder.Services.AddDbContext<TemplateProjectDbContext>(
-                    item => item.UseSqlServer("Server=SQLEXPRESS; Database=ECODING; Integrated Security=SSPI;"));
+                    item => item.UseSqlServer("Server=SQLEXPRESS; Database=ECODING; Integrated Security=true;"));
 
 var mapperConfig = new MapperConfiguration(mc =>
 {
@@ -58,10 +59,16 @@ builder.Services.AddHttpClient("ClientApiProject", httpClient =>
     httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
 });
 
+builder.Services.AddHttpClient("ClientApiSolution", httpClient =>
+{
+    httpClient.BaseAddress = new Uri("https://localhost:7043");
+    httpClient.DefaultRequestHeaders.Clear();
+    httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+});
+
 builder.Services.AddMvc();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-
 
 var app = builder.Build();
 
@@ -79,6 +86,10 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "TemplateSolution",
+    pattern: "{controller=TemplateSolution}/{action=Index}/{id?}").WithMetadata(new AllowAnonymousAttribute());
 
 app.MapControllerRoute(
     name: "TemplateProject",

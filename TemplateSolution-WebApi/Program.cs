@@ -1,20 +1,23 @@
 using AutoMapper;
 using E_CODING_MVC_NET6_0;
+using E_CODING_Service_Abstraction.Solution;
 using E_CODING_Service_Abstraction.Technique;
+using E_CODING_Services.Solution;
 using E_CODING_Services.Technique;
 using Microsoft.AspNetCore.HttpOverrides;
 using NLog;
+using TemplateSolution_WebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
-LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
+//LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
 
 builder.Services.ConfigureCors();
 builder.Services.ConfigureIISIntegration();
 builder.Services.ConfigureLoggerService();
 builder.Services.ConfigureSqlServerContext();
 
-builder.Services.AddScoped<ITemplateTechniqueRepository, TemplateTechniqueRepository>();
-builder.Services.AddScoped<ITechniqueRepositoryWrapper, TechniqueRepositoryWrapper>();
+builder.Services.AddScoped<ITemplateSolutionRepository, TemplateSolutionRepository>();
+builder.Services.AddScoped<ISolutionRepositoryWrapper, SolutionRepositoryWrapper>();
 
 var mapperConfig = new MapperConfiguration(mc =>
 {

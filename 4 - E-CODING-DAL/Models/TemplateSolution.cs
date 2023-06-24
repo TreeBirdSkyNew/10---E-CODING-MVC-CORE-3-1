@@ -15,7 +15,7 @@ namespace _4___E_CODING_DAL.Models
         public string TemplateSolutionDescription { get; set; } = string.Empty;
         public string TemplateSolutionVersion { get; set; } = string.Empty;
         public string TemplateSolutionVersionNet { get; set; } = string.Empty;
-        public Category? Category { get; set; } 
+        //public Category? Category { get; set; } 
         public ICollection<SolutionProject> SolutionProject { get; set; }
     }
 }

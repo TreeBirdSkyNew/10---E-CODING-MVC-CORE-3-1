@@ -34,18 +34,6 @@ namespace _4___E_CODING_DAL.Migrations
                     b.HasIndex("TemplateResultId");
 
                     b.ToTable("ProjectResult");
-
-                    b.HasData(
-                        new
-                        {
-                            TemplateProjectId = 1,
-                            TemplateResultId = 1
-                        },
-                        new
-                        {
-                            TemplateProjectId = 1,
-                            TemplateResultId = 2
-                        });
                 });
 
             modelBuilder.Entity("_4___E_CODING_DAL.Models.ProjectTechnique", b =>
@@ -61,18 +49,45 @@ namespace _4___E_CODING_DAL.Migrations
                     b.HasIndex("TemplateTechniqueId");
 
                     b.ToTable("ProjectTechnique");
+                });
 
-                    b.HasData(
-                        new
-                        {
-                            TemplateProjectId = 1,
-                            TemplateTechniqueId = 1
-                        },
-                        new
-                        {
-                            TemplateProjectId = 1,
-                            TemplateTechniqueId = 2
-                        });
+            modelBuilder.Entity("_4___E_CODING_DAL.Models.SolutionProject", b =>
+                {
+                    b.Property<int>("TemplateSolutionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TemplateProjectId")
+                        .HasColumnType("int");
+
+                    b.HasKey("TemplateSolutionId", "TemplateProjectId");
+
+                    b.HasIndex("TemplateProjectId");
+
+                    b.ToTable("SolutionProject");
+                });
+
+            modelBuilder.Entity("_4___E_CODING_DAL.Models.TechniqueParameter", b =>
+                {
+                    b.Property<int>("TechniqueParameterId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TechniqueParameterId"), 1L, 1);
+
+                    b.Property<string>("TechniqueParameterName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TechniqueParameterValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TemplateTechniqueId")
+                        .HasColumnType("int");
+
+                    b.HasKey("TechniqueParameterId");
+
+                    b.HasIndex("TemplateTechniqueId");
+
+                    b.ToTable("TechniqueParameter");
                 });
 
             modelBuilder.Entity("_4___E_CODING_DAL.Models.TemplateFonctionnel", b =>
@@ -107,18 +122,6 @@ namespace _4___E_CODING_DAL.Migrations
                         .IsUnique();
 
                     b.ToTable("TemplateFonctionnel");
-
-                    b.HasData(
-                        new
-                        {
-                            TemplateFonctionnelId = 1,
-                            TemplateFonctionnelContent = "TemplateFonctionnelContent",
-                            TemplateFonctionnelDescription = "TemplateFonctionnelDescription",
-                            TemplateFonctionnelEFVersion = "TemplateFonctionnelEFVersion",
-                            TemplateFonctionnelName = "TemplateFonctionnelName",
-                            TemplateFonctionnelTitle = "TemplateFonctionnelTitle",
-                            TemplateProjectId = 1
-                        });
                 });
 
             modelBuilder.Entity("_4___E_CODING_DAL.Models.TemplateFonctionnelEntity", b =>
@@ -161,21 +164,6 @@ namespace _4___E_CODING_DAL.Migrations
                     b.HasIndex("TemplateFonctionnelId");
 
                     b.ToTable("TemplateFonctionnelEntity");
-
-                    b.HasData(
-                        new
-                        {
-                            TemplateFonctionnelEntityId = 1,
-                            TemplateFonctionnelEntityContent = "TemplateFonctionnelEntityContent",
-                            TemplateFonctionnelEntityDescription = "TemplateFonctionnelEntityDescription",
-                            TemplateFonctionnelEntityName = "TemplateFonctionnelEntityName",
-                            TemplateFonctionnelEntityTitle = "TemplateFonctionnelEntityTitle",
-                            TemplateFonctionnelEntityTypeNet = "TemplateFonctionnelEntityTypeNet",
-                            TemplateFonctionnelEntityTypeSQL = "TemplateFonctionnelEntityTypeSQL",
-                            TemplateFonctionnelEntityVersionEF = "TemplateFonctionnelEntityVersionEF",
-                            TemplateFonctionnelEntityVersionNET = "TemplateFonctionnelEntityVersionNET",
-                            TemplateFonctionnelId = 1
-                        });
                 });
 
             modelBuilder.Entity("_4___E_CODING_DAL.Models.TemplateFonctionnelProperty", b =>
@@ -212,30 +200,6 @@ namespace _4___E_CODING_DAL.Migrations
                     b.HasIndex("TemplateFonctionnelEntityId");
 
                     b.ToTable("TemplateFonctionnelProperty");
-
-                    b.HasData(
-                        new
-                        {
-                            TemplateFonctionnelPropertyId = 1,
-                            TemplateFonctionnelEntityId = 1,
-                            TemplateFonctionnelId = 1,
-                            TemplateFonctionnelPropertyDescription = "TemplateFonctionnelPropertyDescription",
-                            TemplateFonctionnelPropertyName = "TemplateFonctionnelPropertyName",
-                            TemplateFonctionnelPropertyTitle = "TemplateFonctionnelPropertyTitle",
-                            TemplateFonctionnelPropertyVersionEF = "TemplateFonctionnelPropertyVersionEF",
-                            TemplateFonctionnelPropertyVersionNET = "TemplateFonctionnelPropertyVersionNET"
-                        },
-                        new
-                        {
-                            TemplateFonctionnelPropertyId = 2,
-                            TemplateFonctionnelEntityId = 1,
-                            TemplateFonctionnelId = 1,
-                            TemplateFonctionnelPropertyDescription = "TemplateFonctionnelPropertyDescription",
-                            TemplateFonctionnelPropertyName = "TemplateFonctionnelPropertyName",
-                            TemplateFonctionnelPropertyTitle = "TemplateFonctionnelPropertyTitle",
-                            TemplateFonctionnelPropertyVersionEF = "TemplateFonctionnelPropertyVersionEF",
-                            TemplateFonctionnelPropertyVersionNET = "TemplateFonctionnelPropertyVersionNET"
-                        });
                 });
 
             modelBuilder.Entity("_4___E_CODING_DAL.Models.TemplateProject", b =>
@@ -264,26 +228,6 @@ namespace _4___E_CODING_DAL.Migrations
                     b.HasKey("TemplateProjectId");
 
                     b.ToTable("TemplateProject");
-
-                    b.HasData(
-                        new
-                        {
-                            TemplateProjectId = 1,
-                            TemplateProjectDescription = "TemplateProjectDescription1",
-                            TemplateProjectName = "TemplateProjectName1",
-                            TemplateProjectTitle = "TemplateProjectTitle1",
-                            TemplateProjectVersion = "TemplateProjectVersion1",
-                            TemplateProjectVersionNet = "TemplateProjectVersionNet1"
-                        },
-                        new
-                        {
-                            TemplateProjectId = 2,
-                            TemplateProjectDescription = "TemplateProjectDescription2",
-                            TemplateProjectName = "TemplateProjectName2",
-                            TemplateProjectTitle = "TemplateProjectTitle2",
-                            TemplateProjectVersion = "TemplateProjectVersion2",
-                            TemplateProjectVersionNet = "TemplateProjectVersionNet2"
-                        });
                 });
 
             modelBuilder.Entity("_4___E_CODING_DAL.Models.TemplateResult", b =>
@@ -315,28 +259,6 @@ namespace _4___E_CODING_DAL.Migrations
                     b.HasKey("TemplateResultId");
 
                     b.ToTable("TemplateResult");
-
-                    b.HasData(
-                        new
-                        {
-                            TemplateResultId = 1,
-                            TemplateProjectId = 1,
-                            TemplateResultDescription = "TemplateResultDescription",
-                            TemplateResultName = "TemplateResultName",
-                            TemplateResultTitle = "TemplateResultTitle",
-                            TemplateResultVersion = "TemplateResultVersion",
-                            TemplateResultVersionNET = "TemplateResultVersionNET"
-                        },
-                        new
-                        {
-                            TemplateResultId = 2,
-                            TemplateProjectId = 1,
-                            TemplateResultDescription = "TemplateResultDescription",
-                            TemplateResultName = "TemplateResultName",
-                            TemplateResultTitle = "TemplateResultTitle",
-                            TemplateResultVersion = "TemplateResultVersion",
-                            TemplateResultVersionNET = "TemplateResultVersionNET"
-                        });
                 });
 
             modelBuilder.Entity("_4___E_CODING_DAL.Models.TemplateResultItem", b =>
@@ -382,36 +304,37 @@ namespace _4___E_CODING_DAL.Migrations
                     b.HasIndex("TemplateResultId");
 
                     b.ToTable("TemplateResultItem");
+                });
 
-                    b.HasData(
-                        new
-                        {
-                            TemplateResultItemId = 1,
-                            TemplateFonctionnelId = 1,
-                            TemplateResultFinalContent = "TemplateResultFinalContent",
-                            TemplateResultId = 1,
-                            TemplateResultInitialContent = "TemplateResultInitialContent",
-                            TemplateResultItemDescription = "TemplateResultItemDescription",
-                            TemplateResultItemName = "TemplateResultItemName",
-                            TemplateResultItemTitle = "TemplateResultItemTitle",
-                            TemplateResultItemVersion = "TemplateResultItemVersion",
-                            TemplateResultItemVersionNET = "TemplateResultItemVersionNET",
-                            TemplateTechniqueId = 1
-                        },
-                        new
-                        {
-                            TemplateResultItemId = 2,
-                            TemplateFonctionnelId = 1,
-                            TemplateResultFinalContent = "TemplateResultFinalContent",
-                            TemplateResultId = 2,
-                            TemplateResultInitialContent = "TemplateResultInitialContent",
-                            TemplateResultItemDescription = "TemplateResultItemDescription",
-                            TemplateResultItemName = "TemplateResultItemName",
-                            TemplateResultItemTitle = "TemplateResultItemTitle",
-                            TemplateResultItemVersion = "TemplateResultItemVersion",
-                            TemplateResultItemVersionNET = "TemplateResultItemVersionNET",
-                            TemplateTechniqueId = 1
-                        });
+            modelBuilder.Entity("_4___E_CODING_DAL.Models.TemplateSolution", b =>
+                {
+                    b.Property<int>("TemplateSolutionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TemplateSolutionId"), 1L, 1);
+
+                    b.Property<int>("TemplateProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TemplateSolutionDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TemplateSolutionName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TemplateSolutionTitle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TemplateSolutionVersion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TemplateSolutionVersionNet")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TemplateSolutionId");
+
+                    b.ToTable("TemplateSolution");
                 });
 
             modelBuilder.Entity("_4___E_CODING_DAL.Models.TemplateTechnique", b =>
@@ -443,28 +366,6 @@ namespace _4___E_CODING_DAL.Migrations
                     b.HasKey("TemplateTechniqueId");
 
                     b.ToTable("TemplateTechnique");
-
-                    b.HasData(
-                        new
-                        {
-                            TemplateTechniqueId = 1,
-                            TemplateProjectId = 1,
-                            TemplateTechniqueDescription = "TemplateTechniqueDescription1",
-                            TemplateTechniqueName = "TemplateTechniqueName1",
-                            TemplateTechniqueTitle = "TemplateTechniqueTitle1",
-                            TemplateTechniqueVersion = "TemplateTechniqueVersion1",
-                            TemplateTechniqueVersionNET = "TemplateTechniqueVersionNET1"
-                        },
-                        new
-                        {
-                            TemplateTechniqueId = 2,
-                            TemplateProjectId = 1,
-                            TemplateTechniqueDescription = "TemplateTechniqueDescription2",
-                            TemplateTechniqueName = "TemplateTechniqueName2",
-                            TemplateTechniqueTitle = "TemplateTechniqueTitle2",
-                            TemplateTechniqueVersion = "TemplateTechniqueVersion2",
-                            TemplateTechniqueVersionNET = "TemplateTechniqueVersionNET2"
-                        });
                 });
 
             modelBuilder.Entity("_4___E_CODING_DAL.Models.TemplateTechniqueItem", b =>
@@ -504,20 +405,6 @@ namespace _4___E_CODING_DAL.Migrations
                     b.HasIndex("TemplateTechniqueId");
 
                     b.ToTable("TemplateTechniqueItem");
-
-                    b.HasData(
-                        new
-                        {
-                            TemplateTechniqueItemId = 1,
-                            TemplateTechniqueFinalContent = "",
-                            TemplateTechniqueId = 1,
-                            TemplateTechniqueInitialFile = "",
-                            TemplateTechniqueItemDescription = "TemplateTechniqueItemDescription1",
-                            TemplateTechniqueItemName = "TemplateTechniqueItemName1",
-                            TemplateTechniqueItemTitle = "TemplateTechniqueItemTitle1",
-                            TemplateTechniqueItemVersion = "TemplateTechniqueItemVersion1",
-                            TemplateTechniqueItemVersionNET = "TemplateTechniqueItemVersionNET1"
-                        });
                 });
 
             modelBuilder.Entity("_4___E_CODING_DAL.Models.ProjectResult", b =>
@@ -554,6 +441,36 @@ namespace _4___E_CODING_DAL.Migrations
                         .IsRequired();
 
                     b.Navigation("TemplateProject");
+
+                    b.Navigation("TemplateTechnique");
+                });
+
+            modelBuilder.Entity("_4___E_CODING_DAL.Models.SolutionProject", b =>
+                {
+                    b.HasOne("_4___E_CODING_DAL.Models.TemplateProject", "TemplateProject")
+                        .WithMany("SolutionProject")
+                        .HasForeignKey("TemplateProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("_4___E_CODING_DAL.Models.TemplateSolution", "TemplateSolution")
+                        .WithMany("SolutionProject")
+                        .HasForeignKey("TemplateSolutionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TemplateProject");
+
+                    b.Navigation("TemplateSolution");
+                });
+
+            modelBuilder.Entity("_4___E_CODING_DAL.Models.TechniqueParameter", b =>
+                {
+                    b.HasOne("_4___E_CODING_DAL.Models.TemplateTechnique", "TemplateTechnique")
+                        .WithMany("TechniqueParameter")
+                        .HasForeignKey("TemplateTechniqueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("TemplateTechnique");
                 });
@@ -629,6 +546,8 @@ namespace _4___E_CODING_DAL.Migrations
 
                     b.Navigation("ProjectTechnique");
 
+                    b.Navigation("SolutionProject");
+
                     b.Navigation("TemplateFonctionnel");
                 });
 
@@ -639,9 +558,16 @@ namespace _4___E_CODING_DAL.Migrations
                     b.Navigation("TemplateResultItem");
                 });
 
+            modelBuilder.Entity("_4___E_CODING_DAL.Models.TemplateSolution", b =>
+                {
+                    b.Navigation("SolutionProject");
+                });
+
             modelBuilder.Entity("_4___E_CODING_DAL.Models.TemplateTechnique", b =>
                 {
                     b.Navigation("ProjectTechnique");
+
+                    b.Navigation("TechniqueParameter");
 
                     b.Navigation("TemplateTechniqueItem");
                 });

@@ -41,9 +41,58 @@ namespace E_CODING_MVC_NET6_0.Controllers
         [Route("Index")]
         public async Task<IActionResult> Index()
         {
-            List<TemplateSolutionVM?> templateProjectVMs = await _solutionApiClient.GetAllTemplateSolution(_clientSolutionName, "api/TemplateSolution/Index");
-            return View(templateProjectVMs);
+            List<TemplateSolutionVM?> templateSolutionVMs = await _solutionApiClient.GetAllTemplateSolution(_clientSolutionName, "api/TemplateSolution/Index");
+            return View(templateSolutionVMs);
         }
 
+        [HttpGet]
+        [Route("Details/{id}")]
+        public async Task<IActionResult> Details(int id)
+        {
+            TemplateSolutionVM? templateSolutionVM = await _solutionApiClient.GetTemplateSolution(_clientSolutionName, "api/TemplateSolution/SolutionDetails/" + id);
+            return View(templateSolutionVM);
+        }
+
+        [HttpGet]
+        [Route("Edit")]
+        public async Task<IActionResult> Edit(int id)
+        {
+            TemplateSolutionVM? templateSolutionVM = await _solutionApiClient.GetTemplateSolution(_clientSolutionName, "api/TemplateSolution/SolutionDetails/" + id);
+            return View(templateSolutionVM);
+        }
+
+        [HttpPost]
+        [Route("Edit")]
+        public async Task<IActionResult> Edit(TemplateProjectVM templateProjectVM)
+        {
+            StringContent content = new StringContent(JsonConvert.SerializeObject(templateProjectVM), Encoding.UTF8, "application/json");
+            await this._projectApiClient.PostTemplateProject(_clientProjectName, "api/TemplateProject/Edit", content);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        [Route("Create")]
+        public async Task<IActionResult> CreateTemplateProject()
+        {
+            TemplateProjectVM templateProjectVM = new TemplateProjectVM();
+            return View(templateProjectVM);
+        }
+
+        [HttpPost]
+        [Route("Create")]
+        public async Task<IActionResult> CreateTemplateProject(TemplateProjectVM templateProjectVM)
+        {
+            StringContent content = new StringContent(JsonConvert.SerializeObject(templateProjectVM), Encoding.UTF8, "application/json");
+            await this._projectApiClient.PostTemplateProject(_clientProjectName, "api/TemplateProject/Create", content);
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost("{id}")]
+        [Route("Delete")]
+        public async Task<IActionResult> DeleteTemplateProject(int id)
+        {
+            await this._projectApiClient.DeleteTemplateProject(_clientProjectName, $"api/TemplateProject/Delete/{id}");
+            return RedirectToAction("Index");
+        }
     }
 }

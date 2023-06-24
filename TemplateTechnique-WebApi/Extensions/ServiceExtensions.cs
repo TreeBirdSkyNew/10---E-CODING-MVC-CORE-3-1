@@ -39,7 +39,7 @@ namespace TemplateTechnique_WebApi.Extensions
         public static void ConfigureSqlServerContext(this IServiceCollection services)
         {
             services.AddDbContext<TemplateProjectDbContext>(
-                    item => item.UseSqlServer("Server=DESKTOP-2TG0VPH\\SQLEXPRESS; Database=ECODING; Integrated Security=SSPI; "));
+                    item => item.UseSqlServer("Server=DESKTOP-2TG0VPH\\SQLEXPRESS; Database=ECODING; Integrated Security=SSPI;"));
         }
 
         public static void ConfigureRepositoryWrapper(this IServiceCollection services)

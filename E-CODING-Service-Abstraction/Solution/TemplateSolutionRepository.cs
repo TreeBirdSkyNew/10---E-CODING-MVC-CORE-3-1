@@ -41,7 +41,5 @@ namespace E_CODING_Service_Abstraction.Solution
         {
             Delete(templateSolution);
         }
-    {
-
     }
 }

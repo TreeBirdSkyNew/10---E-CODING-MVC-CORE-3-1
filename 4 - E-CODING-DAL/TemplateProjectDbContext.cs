@@ -28,7 +28,7 @@ namespace _4___E_CODING_DAL
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=DESKTOP-2TG0VPH\\SQLEXPRESS;database=ECODING;Trusted_Connection=true;");
+                optionsBuilder.UseSqlServer("Server=DESKTOP-2TG0VPH\\SQLEXPRESS;database=ECODING;Trusted_Connection=SSPI;");
             }
         }
 

@@ -21,6 +21,9 @@ namespace _4___E_CODING_DAL
                 return;   // DB has been seeded
             }
 
+            /*******************TemplateSolution*************************/
+            InitializeTemplateSolution(context);
+
             /*******************TemplateProject*************************/
             InitializeTemplateProject(context);
 
