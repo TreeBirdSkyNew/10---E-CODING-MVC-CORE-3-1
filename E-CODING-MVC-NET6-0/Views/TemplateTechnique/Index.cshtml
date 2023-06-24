@@ -23,7 +23,6 @@
                 <tr id="tr_@item.TemplateTechniqueId">
                     <td><img src="~/Images/software/soft2.jpg" /></td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.TemplateTechniqueTitle)
                         <div>
                             <a asp-controller="TemplateTechnique" asp-action="Details" asp-route-id="@item.TemplateTechniqueId">
                                 <input type="button" value="Details" class="btn btn-success" />
