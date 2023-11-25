@@ -39,7 +39,6 @@ namespace TemplateProject_WebApi.Controllers
 
         [HttpGet]
         [Route("Index")]
-        [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult Index()
