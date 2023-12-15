@@ -34,7 +34,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XUnitTestingFrontMVCTemplat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UITestSeleniumFrontMVC", "UITestSeleniumFrontMVC\UITestSeleniumFrontMVC.csproj", "{73B1B290-F0C6-434F-8896-832D944CE737}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TemplateSolution-WebApi", "TemplateSolution-WebApi\TemplateSolution-WebApi.csproj", "{3C856047-5F81-4A1E-88D0-8AC9526D874B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TemplateSolution-WebApi", "TemplateSolution-WebApi\TemplateSolution-WebApi.csproj", "{3C856047-5F81-4A1E-88D0-8AC9526D874B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XUnitTestingWebApiTemplateFonctionnel", "XUnitTestingWebApiTemplateFonctionnel\XUnitTestingWebApiTemplateFonctionnel.csproj", "{11F9A166-F03D-498C-9CDC-5ADEAE65F196}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -98,6 +100,10 @@ Global
 		{3C856047-5F81-4A1E-88D0-8AC9526D874B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C856047-5F81-4A1E-88D0-8AC9526D874B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C856047-5F81-4A1E-88D0-8AC9526D874B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11F9A166-F03D-498C-9CDC-5ADEAE65F196}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11F9A166-F03D-498C-9CDC-5ADEAE65F196}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11F9A166-F03D-498C-9CDC-5ADEAE65F196}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11F9A166-F03D-498C-9CDC-5ADEAE65F196}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
