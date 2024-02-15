@@ -21,25 +21,24 @@ namespace __WEB_API__TemplateResult_WebApi
                     .AllowAnyHeader());
             });
         }
+
         public static void ConfigureIISIntegration(this IServiceCollection services)
         {
             services.Configure<IISOptions>(options =>
             {
             });
         }
+
         public static void ConfigureLoggerService(this IServiceCollection services)
         {
             services.AddSingleton<ILoggerManager, LoggerManager>();
-        }        
+        }
+
         public static void ConfigureSqlServerContext(this IServiceCollection services)
         {
             services.AddDbContext<TemplateProjectDbContext>(
-                    item => item.UseSqlServer("Server=DESKTOP-2TG0VPH\\SQLEXPRESS; Database=ECODING; Integrated Security=SSPI; "));
+                    item => item.UseSqlServer("Server=DESKTOP-2TG0VPH\\SQLEXPRESS; Database=ECODING; Integrated Security=SSPI;"));
         }
-        public static void ConfigureRepositoryWrapper(this IServiceCollection services)
-        {
-            services.AddScoped<ITemplateProjectRepository, TemplateProjectRepository>();
-            services.AddScoped<IProjectRepositoryWrapper, ProjectRepositoryWrapper>();
-        }
+
     }
 }

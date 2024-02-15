@@ -44,7 +44,6 @@ namespace _4___E_CODING_DAL
                 new TemplateSolution()
                 {
                     TemplateSolutionId=1,
-                    TemplateProjectId = 1,
                     TemplateSolutionDescription = "TemplateSolutionDescription1",
                     TemplateSolutionName = "TemplateSolutionName1",
                     TemplateSolutionTitle = "TemplateSolutionTitle1",

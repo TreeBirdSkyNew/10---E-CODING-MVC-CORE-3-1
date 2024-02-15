@@ -104,13 +104,13 @@ namespace UnitTestingWebApiTemplateTechnique.XUnit
             var mapper = GetMapper();
             var logger = new LoggerManager();
             var TemplateTechniqueController = new TemplateTechniqueController(logger, mapper, repositoryWrapperMock.Object);
-            var templateTechnique = new TemplateTechniqueVM()
+            var templateTechnique = new TemplateTechniqueVMForCreation()
             {
                 TemplateTechniqueName = "TemplateTechniqueName1",
                 TemplateTechniqueVersion = "TemplateTechniqueVersion1",
                 TemplateTechniqueTitle = "TemplateTechniqueTitle1",
                 TemplateTechniqueDescription = "TemplateTechniqueDescription1",
-                TemplateTechniqueVersionNET = "TemplateTechniqueVersionNET1",
+                TemplateTechniqueVersionNet = "TemplateTechniqueVersionNET1",
                 TemplateProjectId = 1
             };
             var result = TemplateTechniqueController.TemplateTechniqueCreate(templateTechnique) as ObjectResult;

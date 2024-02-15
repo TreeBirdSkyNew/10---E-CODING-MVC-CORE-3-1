@@ -160,7 +160,7 @@ namespace TemplateProject_WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("Create")]
         //[ValidateAntiForgeryToken]
-        public IActionResult TemplateProjectCreate([FromBody] TemplateProjectVM templateProjectVM)
+        public IActionResult TemplateProjectCreate([FromBody] TemplateProjectVMForCreation templateProjectVM)
         {
             try
             {
@@ -191,7 +191,7 @@ namespace TemplateProject_WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpPut("{id}")]
-        [Route("Edit")]
+        [Route("Edit/{id}")]
         public IActionResult TemplateProjectEdit(int id, [FromBody] TemplateProjectVM templateProjectVM)
         {
             try

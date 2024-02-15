@@ -1,12 +1,13 @@
 ﻿using _4___E_CODING_DAL.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace _4___E_CODING_DAL
 {
-
+    //Add-Migration AddingEFExtensions -Context TemplateProjectDbContext -Project E-CODING-DAL -StartupProject E-CODING-MVC-NET6-0
     public class TemplateProjectDbContext : DbContext
     {
 

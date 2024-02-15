@@ -29,17 +29,17 @@ namespace E_CODING_Service_Abstraction.Result
 
         public void CreateTemplateResult(TemplateResult templateResult)
         {
-            CreateTemplateResult(templateResult);
+            Create(templateResult);
         }
 
         public void UpdateTemplateResult(TemplateResult templateResult)
         {
-            UpdateTemplateResult(templateResult);
+            Update(templateResult);
         }       
 
         public void DeleteTemplateResult(TemplateResult templateResult)
         {
-            DeleteTemplateResult(templateResult);
+            Delete(templateResult);
         }        
 
     }

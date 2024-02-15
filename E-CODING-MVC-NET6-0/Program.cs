@@ -21,7 +21,7 @@ builder.Services.AddScoped<ITemplateFonctionnelApiClient, TemplateFonctionnelApi
 builder.Services.AddScoped<ITemplateResultApiClient, TemplateResultApiClient>();
 
 builder.Services.AddDbContext<TemplateProjectDbContext>(
-                    item => item.UseSqlServer("Server=SQLEXPRESS; Database=ECODING; Integrated Security=true;"));
+                    item => item.UseSqlServer("Server=DESKTOP-2TG0VPH\\SQLEXPRESS; Database=ECODING; Integrated Security=true;"));
 
 var mapperConfig = new MapperConfiguration(mc =>
 {
