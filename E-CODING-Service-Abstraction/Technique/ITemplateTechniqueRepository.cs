@@ -10,7 +10,7 @@ namespace E_CODING_Service_Abstraction.Technique
     {
         IEnumerable<TemplateTechnique> GetAllTemplateTechnique();
         IEnumerable<TemplateTechnique> GetProjectAllTemplateTechnique(int projectId);
-        TemplateTechnique FindByCondition(int id);
+                TemplateTechnique FindByCondition(int id);
         void CreateTemplateTechnique(TemplateTechnique TemplateTechnique);
         void UpdateTemplateTechnique(TemplateTechnique TemplateTechnique);
         void DeleteTemplateTechnique(TemplateTechnique TemplateTechnique);

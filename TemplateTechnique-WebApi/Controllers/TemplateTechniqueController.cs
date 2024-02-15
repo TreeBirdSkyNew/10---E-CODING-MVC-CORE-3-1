@@ -57,8 +57,6 @@ namespace TemplateTechnique_WebApi.Controllers
             }
         }
 
-        
-
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -155,7 +153,7 @@ namespace TemplateTechnique_WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("CreateTechnique")]
         //[ValidateAntiForgeryToken]
-        public IActionResult TemplateTechniqueCreate([FromBody] TemplateTechniqueVM templateTechniqueVM)
+        public IActionResult TemplateTechniqueCreate([FromBody] TemplateTechniqueVMForCreation templateTechniqueVM)
         {
             try
             {
@@ -220,7 +218,7 @@ namespace TemplateTechnique_WebApi.Controllers
         }
 
         [Route("DeleteTechnique/{id}")]
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public void DeleteTemplateTechnique(int id)
         {
             try

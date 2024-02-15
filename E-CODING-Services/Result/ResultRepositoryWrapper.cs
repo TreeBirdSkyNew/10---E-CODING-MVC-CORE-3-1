@@ -28,7 +28,7 @@ namespace E_CODING_Services.Result
             }
         }
 
-        public E_CODING_Service_Abstraction.Result.ITemplateResultItemRepository ResultItemRepository
+        public ITemplateResultItemRepository ResultItemRepository
         {
             get
             {

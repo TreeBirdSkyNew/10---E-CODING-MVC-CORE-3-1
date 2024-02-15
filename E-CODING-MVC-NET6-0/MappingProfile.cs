@@ -13,8 +13,7 @@ namespace E_CODING_MVC_NET6_0
         public MappingProfile()
         {
             // Add as many of these lines as you need to map your objects
-            CreateMap<TemplateProject, TemplateProjectVM>();
-            CreateMap<TemplateProjectVM, TemplateProject>();
+           
 
             CreateMap<TemplateFonctionnel, TemplateFonctionnelVM>();
             CreateMap<TemplateFonctionnelVM, TemplateFonctionnel>();
@@ -37,10 +36,14 @@ namespace E_CODING_MVC_NET6_0
             CreateMap<TemplateResultItem, TemplateResultItemVM>();
             CreateMap<TemplateResultItemVM, TemplateResultItem>();
 
+            CreateMap<ProjectTechnique, ProjectTechniqueVM>();
+            CreateMap<ProjectTechniqueVM, ProjectTechnique>();
 
+            CreateMap<ProjectResult, ProjectResultVM>();
+            CreateMap<ProjectResultVM, ProjectResult>();
 
-
-
+            CreateMap<TemplateProject, TemplateProjectVM>()
+               .ForMember(dest => dest.TemplateTechniques, opt => opt.MapFrom(src => src.ProjectTechnique.Select(pt => pt.TemplateTechnique)));
 
             
         }

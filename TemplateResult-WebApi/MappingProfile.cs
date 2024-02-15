@@ -38,12 +38,15 @@ namespace __WEB_API__TemplateResult_WebApi
             CreateMap<TemplateResultItem, TemplateResultItemVM>();
             CreateMap<TemplateResultItemVM, TemplateResultItem>();
 
+            CreateMap<TemplateResultVMForCreation, TemplateResult>();
+            //CreateMap<TemplateResultVMForUpdate, TemplateResult>();
 
 
 
 
 
-            
+
+
         }
     }
 }

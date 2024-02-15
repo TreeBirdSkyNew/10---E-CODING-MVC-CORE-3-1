@@ -36,7 +36,7 @@ namespace TemplateSolution_WebApi.Controllers
             {
                 IEnumerable<TemplateSolution> templateProjects = _solutionRepositoryWrapper.SolutionRepository.GetAllTemplateSolution();
                 _logger.LogInfo($"Returned all templateProjects from database.");
-                IEnumerable<TemplateSolutionVM> templateProjectsVM = _mapper.Map<IEnumerable<TemplateSolutionVM>>(templateProjects);
+                List<TemplateSolutionVM> templateProjectsVM = _mapper.Map<List<TemplateSolutionVM>>(templateProjects.ToList());
                 return Ok(templateProjectsVM);
             }
             catch (Exception ex)
@@ -78,7 +78,7 @@ namespace TemplateSolution_WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("Create")]
-        public IActionResult TemplateSolutionCreate([FromBody] TemplateSolutionVM templateSolutionVM)
+        public IActionResult TemplateSolutionCreate([FromBody] TemplateSolutionVMForCreation templateSolutionVM)
         {
             try
             {

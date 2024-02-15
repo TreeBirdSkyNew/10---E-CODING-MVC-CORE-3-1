@@ -314,9 +314,6 @@ namespace _4___E_CODING_DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TemplateSolutionId"), 1L, 1);
 
-                    b.Property<int>("TemplateProjectId")
-                        .HasColumnType("int");
-
                     b.Property<string>("TemplateSolutionDescription")
                         .HasColumnType("nvarchar(max)");
 

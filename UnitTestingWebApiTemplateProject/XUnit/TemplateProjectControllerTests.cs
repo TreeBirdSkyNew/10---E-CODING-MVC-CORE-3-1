@@ -76,7 +76,7 @@ namespace UnitTestingWebApiTemplateProject.XUnit
             var mapper = GetMapper();
             var logger = new LoggerManager();
             var TemplateProjectController = new TemplateProjectController(repositoryWrapperMock.Object, mapper, logger);
-            var templateProject = new TemplateProjectVM()
+            var templateProject = new TemplateProjectVMForCreation()
             {
                 TemplateProjectName = "TemplateProjectName1",
                 TemplateProjectTitle = "TemplateProjectTitle1",

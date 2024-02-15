@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 
 namespace E_CODING_Service_Abstraction.Solution
 {
-    public class TemplateSolutionRepository : RepositoryBase<TemplateSolution>, ITemplateSolutionRepository
+    public class TemplateSolutionRepository 
+        : RepositoryBase<TemplateSolution>, ITemplateSolutionRepository
     {
 
         public TemplateSolutionRepository(TemplateProjectDbContext templateProjectDbContext) : base(templateProjectDbContext)

@@ -18,7 +18,7 @@ namespace E_CODING_Service_Abstraction.Project
         {
         }
 
-        public IEnumerable<TemplateProject> GetAllTemplateProject()
+        public List<TemplateProject> GetAllTemplateProject()
         {
             return FindAll().ToList();
         }
@@ -26,7 +26,7 @@ namespace E_CODING_Service_Abstraction.Project
         public TemplateProject FindByCondition(int id)
         {
             return FindByCondition(TemplateProject => TemplateProject.TemplateProjectId.Equals(id))
-                    .FirstOrDefault();
+                    .Include(p => p.ProjectTechnique).FirstOrDefault();
         }
 
         public void CreateTemplateProject(TemplateProject templateProject)

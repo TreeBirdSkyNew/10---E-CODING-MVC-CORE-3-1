@@ -59,6 +59,35 @@ namespace __WEB_API__TemplateResult_WebApi
             }
         }
 
+        [HttpGet("{id}", Name = "TemplateResultById")]
+        [Route("ResultDetails/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TemplateResult))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult TemplateResultDetails(int id)
+        {
+            try
+            {
+                TemplateResult templateResult = _resultRepositoryWrapper.ResultRepository.FindByCondition(id);
+                if (templateResult is null)
+                {
+                    _logger.LogError($"Returned TemplateResult for TemplateResultId={id} from database.");
+                    return NotFound();
+                }
+                else
+                {
+                    _logger.LogInfo($"Returned TemplateResult with TemplateResultIdId: {id}");
+                    TemplateResultVM templateResultVM = _mapper.Map<TemplateResultVM>(templateResult);
+                    return Ok(templateResultVM);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside TemplateResultDetails for TemplateResultId={id} action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+
         [HttpGet]
         [Route("TemplateResultItems")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -122,8 +151,7 @@ namespace __WEB_API__TemplateResult_WebApi
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("Create")]
-        [ValidateAntiForgeryToken]
-        public IActionResult TemplateResultCreate([FromBody] TemplateResultVM templateResultVM)
+        public IActionResult TemplateResultCreate([FromBody] TemplateResultVMForCreation templateResultVM)
         {
             try
             {
@@ -142,7 +170,7 @@ namespace __WEB_API__TemplateResult_WebApi
                 _resultRepositoryWrapper.Save();
                 var templateResult = _mapper.Map<TemplateResultVM>(templateResultEntity);
 
-                return CreatedAtAction("templateResultVM", new { id = templateResult.TemplateResultId }, templateResult);
+                return CreatedAtAction("TemplateResultById", new { id = templateResult.TemplateResultId }, templateResult);
             }
             catch (Exception ex)
             {
@@ -302,7 +330,7 @@ namespace __WEB_API__TemplateResult_WebApi
             }
         }
 
-        [Route("Delete")]
+        [Route("DeleteItem")]
         [HttpDelete("{id}")]
         public void DeleteTemplateResultItem(int id)
         {

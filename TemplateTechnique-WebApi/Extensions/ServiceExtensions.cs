@@ -41,13 +41,6 @@ namespace TemplateTechnique_WebApi.Extensions
             services.AddDbContext<TemplateProjectDbContext>(
                     item => item.UseSqlServer("Server=DESKTOP-2TG0VPH\\SQLEXPRESS; Database=ECODING; Integrated Security=SSPI;"));
         }
-
-        public static void ConfigureRepositoryWrapper(this IServiceCollection services)
-        {
-            services.AddScoped<ITemplateTechniqueRepository, TemplateTechniqueRepository>();
-            services.AddScoped<ITechniqueRepositoryWrapper, TechniqueRepositoryWrapper>();
-        }
-
         
     }
 

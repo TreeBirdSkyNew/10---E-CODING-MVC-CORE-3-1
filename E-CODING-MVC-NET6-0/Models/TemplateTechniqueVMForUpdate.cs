@@ -2,6 +2,7 @@
 {
     public class TemplateTechniqueVMForUpdate
     {
+        public int TemplateTechniqueId { get; set; } 
         public string TemplateTechniqueName { get; set; } = string.Empty;
         public string TemplateTechniqueVersion { get; set; } = string.Empty;
         public string TemplateTechniqueTitle { get; set; } = string.Empty;
