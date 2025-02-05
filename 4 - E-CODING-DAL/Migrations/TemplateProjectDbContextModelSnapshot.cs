@@ -21,75 +21,6 @@ namespace _4___E_CODING_DAL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("_4___E_CODING_DAL.Models.ProjectResult", b =>
-                {
-                    b.Property<int>("TemplateProjectId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TemplateResultId")
-                        .HasColumnType("int");
-
-                    b.HasKey("TemplateProjectId", "TemplateResultId");
-
-                    b.HasIndex("TemplateResultId");
-
-                    b.ToTable("ProjectResult");
-                });
-
-            modelBuilder.Entity("_4___E_CODING_DAL.Models.ProjectTechnique", b =>
-                {
-                    b.Property<int>("TemplateProjectId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TemplateTechniqueId")
-                        .HasColumnType("int");
-
-                    b.HasKey("TemplateProjectId", "TemplateTechniqueId");
-
-                    b.HasIndex("TemplateTechniqueId");
-
-                    b.ToTable("ProjectTechnique");
-                });
-
-            modelBuilder.Entity("_4___E_CODING_DAL.Models.SolutionProject", b =>
-                {
-                    b.Property<int>("TemplateSolutionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TemplateProjectId")
-                        .HasColumnType("int");
-
-                    b.HasKey("TemplateSolutionId", "TemplateProjectId");
-
-                    b.HasIndex("TemplateProjectId");
-
-                    b.ToTable("SolutionProject");
-                });
-
-            modelBuilder.Entity("_4___E_CODING_DAL.Models.TechniqueParameter", b =>
-                {
-                    b.Property<int>("TechniqueParameterId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TechniqueParameterId"), 1L, 1);
-
-                    b.Property<string>("TechniqueParameterName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TechniqueParameterValue")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TemplateTechniqueId")
-                        .HasColumnType("int");
-
-                    b.HasKey("TechniqueParameterId");
-
-                    b.HasIndex("TemplateTechniqueId");
-
-                    b.ToTable("TechniqueParameter");
-                });
-
             modelBuilder.Entity("_4___E_CODING_DAL.Models.TemplateFonctionnel", b =>
                 {
                     b.Property<int>("TemplateFonctionnelId")
@@ -306,34 +237,6 @@ namespace _4___E_CODING_DAL.Migrations
                     b.ToTable("TemplateResultItem");
                 });
 
-            modelBuilder.Entity("_4___E_CODING_DAL.Models.TemplateSolution", b =>
-                {
-                    b.Property<int>("TemplateSolutionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TemplateSolutionId"), 1L, 1);
-
-                    b.Property<string>("TemplateSolutionDescription")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TemplateSolutionName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TemplateSolutionTitle")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TemplateSolutionVersion")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TemplateSolutionVersionNet")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("TemplateSolutionId");
-
-                    b.ToTable("TemplateSolution");
-                });
-
             modelBuilder.Entity("_4___E_CODING_DAL.Models.TemplateTechnique", b =>
                 {
                     b.Property<int>("TemplateTechniqueId")
@@ -361,6 +264,8 @@ namespace _4___E_CODING_DAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("TemplateTechniqueId");
+
+                    b.HasIndex("TemplateProjectId");
 
                     b.ToTable("TemplateTechnique");
                 });
@@ -402,74 +307,6 @@ namespace _4___E_CODING_DAL.Migrations
                     b.HasIndex("TemplateTechniqueId");
 
                     b.ToTable("TemplateTechniqueItem");
-                });
-
-            modelBuilder.Entity("_4___E_CODING_DAL.Models.ProjectResult", b =>
-                {
-                    b.HasOne("_4___E_CODING_DAL.Models.TemplateProject", "TemplateProject")
-                        .WithMany("ProjectResult")
-                        .HasForeignKey("TemplateProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("_4___E_CODING_DAL.Models.TemplateResult", "TemplateResult")
-                        .WithMany("ProjectResult")
-                        .HasForeignKey("TemplateResultId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("TemplateProject");
-
-                    b.Navigation("TemplateResult");
-                });
-
-            modelBuilder.Entity("_4___E_CODING_DAL.Models.ProjectTechnique", b =>
-                {
-                    b.HasOne("_4___E_CODING_DAL.Models.TemplateProject", "TemplateProject")
-                        .WithMany("ProjectTechnique")
-                        .HasForeignKey("TemplateProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("_4___E_CODING_DAL.Models.TemplateTechnique", "TemplateTechnique")
-                        .WithMany("ProjectTechnique")
-                        .HasForeignKey("TemplateTechniqueId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("TemplateProject");
-
-                    b.Navigation("TemplateTechnique");
-                });
-
-            modelBuilder.Entity("_4___E_CODING_DAL.Models.SolutionProject", b =>
-                {
-                    b.HasOne("_4___E_CODING_DAL.Models.TemplateProject", "TemplateProject")
-                        .WithMany("SolutionProject")
-                        .HasForeignKey("TemplateProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("_4___E_CODING_DAL.Models.TemplateSolution", "TemplateSolution")
-                        .WithMany("SolutionProject")
-                        .HasForeignKey("TemplateSolutionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("TemplateProject");
-
-                    b.Navigation("TemplateSolution");
-                });
-
-            modelBuilder.Entity("_4___E_CODING_DAL.Models.TechniqueParameter", b =>
-                {
-                    b.HasOne("_4___E_CODING_DAL.Models.TemplateTechnique", "TemplateTechnique")
-                        .WithMany("TechniqueParameter")
-                        .HasForeignKey("TemplateTechniqueId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("TemplateTechnique");
                 });
 
             modelBuilder.Entity("_4___E_CODING_DAL.Models.TemplateFonctionnel", b =>
@@ -516,6 +353,17 @@ namespace _4___E_CODING_DAL.Migrations
                     b.Navigation("TemplateResult");
                 });
 
+            modelBuilder.Entity("_4___E_CODING_DAL.Models.TemplateTechnique", b =>
+                {
+                    b.HasOne("_4___E_CODING_DAL.Models.TemplateProject", "TemplateProject")
+                        .WithMany("TemplateTechnique")
+                        .HasForeignKey("TemplateProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TemplateProject");
+                });
+
             modelBuilder.Entity("_4___E_CODING_DAL.Models.TemplateTechniqueItem", b =>
                 {
                     b.HasOne("_4___E_CODING_DAL.Models.TemplateTechnique", "TemplateTechnique")
@@ -539,33 +387,18 @@ namespace _4___E_CODING_DAL.Migrations
 
             modelBuilder.Entity("_4___E_CODING_DAL.Models.TemplateProject", b =>
                 {
-                    b.Navigation("ProjectResult");
-
-                    b.Navigation("ProjectTechnique");
-
-                    b.Navigation("SolutionProject");
-
                     b.Navigation("TemplateFonctionnel");
+
+                    b.Navigation("TemplateTechnique");
                 });
 
             modelBuilder.Entity("_4___E_CODING_DAL.Models.TemplateResult", b =>
                 {
-                    b.Navigation("ProjectResult");
-
                     b.Navigation("TemplateResultItem");
-                });
-
-            modelBuilder.Entity("_4___E_CODING_DAL.Models.TemplateSolution", b =>
-                {
-                    b.Navigation("SolutionProject");
                 });
 
             modelBuilder.Entity("_4___E_CODING_DAL.Models.TemplateTechnique", b =>
                 {
-                    b.Navigation("ProjectTechnique");
-
-                    b.Navigation("TechniqueParameter");
-
                     b.Navigation("TemplateTechniqueItem");
                 });
 #pragma warning restore 612, 618

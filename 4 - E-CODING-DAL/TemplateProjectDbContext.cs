@@ -15,7 +15,6 @@ namespace _4___E_CODING_DAL
             : base(options)
         {}
 
-        public virtual DbSet<TemplateSolution> TemplateSolution { get; set; }
         public virtual DbSet<TemplateProject> TemplateProject { get; set; }        
         public virtual DbSet<TemplateFonctionnel> TemplateFonctionnel { get; set; }
         public virtual DbSet<TemplateFonctionnelEntity> TemplateFonctionnelEntity { get; set; }
@@ -41,11 +40,8 @@ namespace _4___E_CODING_DAL
             {
                 entity.HasKey(z => z.TemplateProjectId);
                 entity.Property(p => p.TemplateProjectId)
-                .ValueGeneratedOnAdd();
-
-                
+                .ValueGeneratedOnAdd(); 
             });
-
             
             modelBuilder.Entity<TemplateTechnique>(entity =>
             {
@@ -55,7 +51,7 @@ namespace _4___E_CODING_DAL
 
                 entity.HasOne(d => d.TemplateProject)
                     .WithMany(p => p.TemplateTechnique)
-                    .HasForeignKey(d => d.TemplateTechniqueId);
+                    .HasForeignKey(d => d.TemplateProjectId);
             });
 
             modelBuilder.Entity<TemplateTechniqueItem>(entity =>
@@ -69,85 +65,40 @@ namespace _4___E_CODING_DAL
                     .HasForeignKey(d => d.TemplateTechniqueId);
             });
 
-            modelBuilder.Entity<TemplateFonctionnel>(entity =>
-            {
-                entity.HasKey(e => e.TemplateFonctionnelId);
-                entity.Property(p => p.TemplateFonctionnelId)
-                .ValueGeneratedOnAdd();
 
-                entity.HasOne<TemplateProject>(ad => ad.TemplateProject)
-                .WithOne(s => s.TemplateFonctionnel)
-                .HasForeignKey<TemplateFonctionnel>(ad => ad.TemplateProjectId);
-            });
+            /*
+             
+    entity.Property(p => p.TemplateFonctionnelId)
+    .ValueGeneratedOnAdd();
 
-            modelBuilder.Entity<TemplateFonctionnelEntity>(entity =>
-            {
-                entity.HasKey(e => e.TemplateFonctionnelEntityId);
-                entity.Property(p => p.TemplateFonctionnelEntityId)
-                .ValueGeneratedOnAdd();
+    entity.HasOne<TemplateProject>(ad => ad.TemplateProject)
+    .WithOne(s => s.TemplateFonctionnel)
+    .HasForeignKey<TemplateFonctionnel>(ad => ad.TemplateProjectId);
+});
 
-                entity.HasOne(d => d.TemplateFonctionnel)
-                    .WithMany(p => p.TemplateFonctionnelEntity)
-                    .HasForeignKey(d => d.TemplateFonctionnelId);
-            });
+modelBuilder.Entity<TemplateFonctionnelEntity>(entity =>
+{
+    entity.HasKey(e => e.TemplateFonctionnelEntityId);
+    entity.Property(p => p.TemplateFonctionnelEntityId)
+    .ValueGeneratedOnAdd();
 
+    entity.HasOne(d => d.TemplateFonctionnel)
+        .WithMany(p => p.TemplateFonctionnelEntity)
+        .HasForeignKey(d => d.TemplateFonctionnelId);
+});
 
-            modelBuilder.Entity<TemplateFonctionnelProperty>(entity =>
-            {
-                entity.HasKey(e => e.TemplateFonctionnelPropertyId);
-                entity.Property(p => p.TemplateFonctionnelPropertyId)
-                .ValueGeneratedOnAdd();
+modelBuilder.Entity<TemplateFonctionnelProperty>(entity =>
+{
+    entity.HasKey(e => e.TemplateFonctionnelPropertyId);
+    entity.Property(p => p.TemplateFonctionnelPropertyId)
+    .ValueGeneratedOnAdd();
 
-                entity.HasOne(d => d.TemplateFonctionnelEntity)
-                    .WithMany(p => p.TemplateFonctionnelProperty)
-                    .HasForeignKey(d => d.TemplateFonctionnelEntityId);
-            });
+    entity.HasOne(d => d.TemplateFonctionnelEntity)
+        .WithMany(p => p.TemplateFonctionnelProperty)
+        .HasForeignKey(d => d.TemplateFonctionnelEntityId);
+});
+             */
 
-            
-
-            modelBuilder.Entity<TechniqueParameter>(entity =>
-            {
-                entity.HasKey(e => e.TechniqueParameterId);
-                entity.Property(p => p.TechniqueParameterId)
-                .ValueGeneratedOnAdd();
-
-                entity.HasOne(d => d.TemplateTechnique)
-                    .WithMany(p => p.TechniqueParameter)
-                    .HasForeignKey(d => d.TemplateTechniqueId);
-            });
-
-            
-            
-            modelBuilder.Entity<TemplateResult>(entity =>
-            {
-                entity.HasKey(e => e.TemplateResultId);
-                entity.Property(p => p.TemplateResultId)
-                .ValueGeneratedOnAdd();
-            });
-
-            modelBuilder.Entity<ProjectResult>()
-                .HasKey(sc => new { sc.TemplateProjectId, sc.TemplateResultId });
-
-            modelBuilder.Entity<ProjectResult>()
-                .HasOne<TemplateProject>(sc => sc.TemplateProject)
-                .WithMany(s => s.ProjectResult)
-                .HasForeignKey(sc => sc.TemplateProjectId);
-
-            modelBuilder.Entity<ProjectResult>()
-                .HasOne<TemplateResult>(sc => sc.TemplateResult)
-                .WithMany(s => s.ProjectResult)
-                .HasForeignKey(sc => sc.TemplateResultId);           
-
-            modelBuilder.Entity<TemplateResultItem>(entity =>
-            {
-                entity.HasKey(e => e.TemplateResultItemId);
-                entity.Property(p => p.TemplateResultItemId)
-                .ValueGeneratedOnAdd();
-
-                entity.HasOne(d => d.TemplateResult)
-                    .WithMany(p => p.TemplateResultItem)
-                    .HasForeignKey(d => d.TemplateResultId);
-            });
         }
-     }
+    }
 }

@@ -17,7 +17,6 @@ namespace _4___E_CODING_DAL.Models
         public string TemplateResultTitle { get; set; } = string.Empty;
         public string TemplateResultDescription { get; set; } = string.Empty;
         public int TemplateProjectId { get; set; }
-        public ICollection<ProjectResult>? ProjectResult { get; set; }
         public ICollection<TemplateResultItem>? TemplateResultItem { get; set; }
     }
 }

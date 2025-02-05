@@ -11,7 +11,7 @@ namespace _4___E_CODING_DAL.Models
         public string TemplateProjectDescription { get; set; } = string.Empty;
         public string TemplateProjectVersion { get; set; } = string.Empty;
         public string TemplateProjectVersionNet { get; set; } = string.Empty;
-         public ICollection<TemplateTechnique> TemplateTechnique { get; set; }
+        public ICollection<TemplateTechnique>? TemplateTechnique { get; set; }
 
     }
 }

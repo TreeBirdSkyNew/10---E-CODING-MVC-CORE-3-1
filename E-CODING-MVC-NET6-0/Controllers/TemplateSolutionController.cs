@@ -72,7 +72,7 @@ namespace E_CODING_MVC_NET6_0.Controllers
 
         [HttpGet]
         [Route("Create")]
-        public async Task<IActionResult> CreateTemplateProject()
+        public ActionResult CreateTemplateProject()
         {
             TemplateProjectVM templateProjectVM = new TemplateProjectVM();
             return View(templateProjectVM);

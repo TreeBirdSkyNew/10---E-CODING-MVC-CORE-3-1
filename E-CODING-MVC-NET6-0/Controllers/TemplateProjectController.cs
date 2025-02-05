@@ -60,6 +60,9 @@ namespace E_CODING_MVC_NET6_0
         public async Task<IActionResult> Details(int id)
         {
             TemplateProjectVM? templateProjectVM = await _projectApiClient.GetTemplateProject(_clientProjectName, "api/TemplateProject/ProjectDetails/" + id);
+            ICollection<TemplateTechniqueVM> templateTechniques =  _techniqueApiClient.GetAllTemplateTechnique(_clientTechniqueName, "api/TemplateTechnique/ProjectAllTechniques/" + id).Result;
+            if(templateTechniques!=null) 
+                templateProjectVM.TemplateTechnique = templateTechniques;
             return View(templateProjectVM);
         }
 
@@ -112,10 +115,10 @@ namespace E_CODING_MVC_NET6_0
 
         [HttpGet]
         [Route("Create")]
-        public async Task<IActionResult> CreateTemplateProject()
+        public IActionResult CreateTemplateProject()
         {
             TemplateProjectVM templateProjectVM = new TemplateProjectVM();
-            return View(templateProjectVM);
+            return  View(templateProjectVM);
         }
 
         [HttpPost]

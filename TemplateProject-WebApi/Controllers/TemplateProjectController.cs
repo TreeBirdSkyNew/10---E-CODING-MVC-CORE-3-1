@@ -59,7 +59,7 @@ namespace TemplateProject_WebApi.Controllers
 
         [HttpGet(Name = "TemplateProjectById")]
         [Route("ProjectDetails/{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TemplateProject))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult TemplateProjectDetails(int id)
         {

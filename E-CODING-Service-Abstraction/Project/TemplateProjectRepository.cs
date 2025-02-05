@@ -26,7 +26,7 @@ namespace E_CODING_Service_Abstraction.Project
         public TemplateProject FindByCondition(int id)
         {
             return FindByCondition(TemplateProject => TemplateProject.TemplateProjectId.Equals(id))
-                    .Include(p => p.ProjectTechnique).FirstOrDefault();
+                    .FirstOrDefault();
         }
 
         public void CreateTemplateProject(TemplateProject templateProject)

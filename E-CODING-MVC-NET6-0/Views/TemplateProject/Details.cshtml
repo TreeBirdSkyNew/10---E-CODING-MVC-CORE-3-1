@@ -42,18 +42,20 @@
 
         <hr/><hr/>
 
-       
-        @foreach (var item in Model.TemplateTechniques.ToList())
+        @foreach (var item in Model.TemplateTechnique)
         {
 
             <div class="col-md-12">
-                <a asp-controller="TemplateTechnique" asp-action="EditTechniqueItem" asp-route-id="@item.TemplateTechniqueId">
-                    <h1>@item.TemplateTechniqueTitle</h1>
-                </a>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label asp-for="TemplateProjectDescription" class="control-label"></label>
+                        <textarea asp-for="TemplateProjectDescription" id="textareDescription" class="mytextarea"></textarea>
+                        <span asp-validation-for="TemplateProjectDescription" class="text-danger"></span>
+                    </div>
+                </div>
             </div>
-            <br />
         }
-       
+               
 
         <hr/><hr/>
 
@@ -67,3 +69,25 @@
 
 </form>
 
+
+@section scripts {
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            tinymce.init({
+                selector: '.mytextarea'
+            });
+
+            $('#textareDescription').html('@Model.TemplateProjectDescription');
+
+        });
+
+    </script>
+
+}

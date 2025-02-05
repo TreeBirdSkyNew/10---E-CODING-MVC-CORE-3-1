@@ -36,16 +36,10 @@ namespace E_CODING_MVC_NET6_0
             CreateMap<TemplateResultItem, TemplateResultItemVM>();
             CreateMap<TemplateResultItemVM, TemplateResultItem>();
 
-            CreateMap<ProjectTechnique, ProjectTechniqueVM>();
-            CreateMap<ProjectTechniqueVM, ProjectTechnique>();
-
-            CreateMap<ProjectResult, ProjectResultVM>();
-            CreateMap<ProjectResultVM, ProjectResult>();
-
             CreateMap<TemplateProject, TemplateProjectVM>()
-               .ForMember(dest => dest.TemplateTechniques, opt => opt.MapFrom(src => src.ProjectTechnique.Select(pt => pt.TemplateTechnique)));
+            .ForMember(dest => dest.TemplateTechnique, opt => opt.MapFrom(src => src.TemplateTechnique.Select(pt => pt.TemplateProject).ToList()));
 
-            
+
         }
     }
 }

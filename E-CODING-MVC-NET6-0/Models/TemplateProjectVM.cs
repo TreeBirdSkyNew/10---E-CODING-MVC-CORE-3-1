@@ -1,4 +1,5 @@
-﻿using System;
+﻿using _4___E_CODING_DAL.Models;
+using System;
 using System.Collections.Generic;
 
 namespace E_CODING_MVC_NET6_0.Models
@@ -11,8 +12,7 @@ namespace E_CODING_MVC_NET6_0.Models
         public string TemplateProjectDescription { get; set; } = string.Empty;
         public string TemplateProjectVersion { get; set; } = string.Empty;
         public string TemplateProjectVersionNet { get; set; } = string.Empty;
-        
-        public ICollection<TemplateTechniqueVM> TemplateTechnique { get; set; }
+        public ICollection<TemplateTechniqueVM>? TemplateTechnique { get; set; }
 
     }
 }
