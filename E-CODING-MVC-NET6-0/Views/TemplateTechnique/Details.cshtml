@@ -1,74 +1,102 @@
 ﻿@model E_CODING_MVC_NET6_0.Models.TemplateProjectVM
 
-<form asp-action="Edit">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-md-4">
-                    <img src="~/Images/software/soft3.jpg" />
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-4">
+                <img src="~/Images/software/soft3.jpg" />
+            </div>
+            <div class="col-md-3" style="margin-top: 50px;">
+                <div>
+                    <strong>@Html.DisplayNameFor(model => model.TemplateProjectId)</strong>
                 </div>
-                <div class="col-md-3" style="margin-top: 50px;">
-                    <div>
-                        <strong>@Html.DisplayNameFor(model => model.TemplateProjectId)</strong>
-                    </div>
-                    <div>
-                        <strong>@Html.DisplayNameFor(model => model.TemplateProjectName)</strong>
-                    </div>
-                    <div>
-                        <strong>@Html.DisplayNameFor(model => model.TemplateProjectVersion)</strong>
-                    </div>
-                    <div>
-                        <strong>@Html.DisplayNameFor(model => model.TemplateProjectVersionNet)</strong>
-                    </div>
+                <div>
+                    <strong>@Html.DisplayNameFor(model => model.TemplateProjectName)</strong>
                 </div>
-                <div class="col-md-5" style="margin-top: 50px;">
-
-                    <div>
-                        @Html.DisplayFor(model => model.TemplateProjectId)
-                    </div>
-                    <div>
-                        @Html.DisplayFor(model => model.TemplateProjectName)
-                    </div>
-                    <div>
-                        @Html.DisplayFor(model => model.TemplateProjectVersion)
-                    </div>
-                    <div>
-                        @Html.DisplayFor(model => model.TemplateProjectVersionNet)
-                    </div>
+                <div>
+                    <strong>@Html.DisplayNameFor(model => model.TemplateProjectVersion)</strong>
+                </div>
+                <div>
+                    <strong>@Html.DisplayNameFor(model => model.TemplateProjectVersionNet)</strong>
                 </div>
             </div>
-        </div>
-
-        <hr /><hr />
-
-        @foreach (var item in Model.TemplateTechnique)
-        {
-
-            <div class="col-md-12">
-                <a asp-controller="TemplateTechnique" asp-action="TechniqueItems" asp-route-id='@item.TemplateTechniqueId'>Items</a>
-                <div class="row">
-                    <div class="col-md-6">
-                        <label asp-for="@item.TemplateTechniqueDescription" class="control-label"></label>
-                        <textarea asp-for="@item.TemplateTechniqueDescription" id="textareDescription" class="mytextarea"></textarea>
-                        <span asp-validation-for="@item.TemplateTechniqueDescription" class="text-danger"></span>
-                    </div>
+            <div class="col-md-5" style="margin-top: 50px;">
+                <div>
+                    <input asp-for="TemplateProjectId" class="form-control" />
+                    <span asp-validation-for="TemplateProjectId" class="text-danger"></span>
                 </div>
+                <div>
+                    <input asp-for="TemplateProjectName" class="form-control" />
+                    <span asp-validation-for="TemplateProjectName" class="text-danger"></span>
+                </div>
+                <div>
+                    <input asp-for="TemplateProjectTitle" class="form-control" />
+                    <span asp-validation-for="TemplateProjectTitle" class="text-danger"></span>
+                </div>
+                <div>
+                    <input asp-for="TemplateProjectDescription" class="form-control" />
+                    <span asp-validation-for="TemplateProjectDescription" class="text-danger"></span>
+                </div>
+                <div>
+                    <input asp-for="TemplateProjectVersion" class="form-control" />
+                    <span asp-validation-for="TemplateProjectVersion" class="text-danger"></span>
+                </div>
+                <div>
+                    <input asp-for="TemplateProjectVersionNet" class="form-control" />
+                    <span asp-validation-for="TemplateProjectVersionNet" class="text-danger"></span>
+                </div>
+                
             </div>
-        }
-
-
-        <hr /><hr />
-
-        
-
-        <div class="col-md-12">
-            <input type="submit" value="Save" class="btn btn-primary" />
         </div>
-
     </div>
 
-</form>
+    <div class="col-md-12">
+        <div class="row">
+            <a asp-controller="TemplateTechnique" asp-action="CreateTechnique"
+                asp-route-id='@Model.TemplateProjectId'>
+                <input type="button" value="Create TemplateTechnique" class="btn btn-primary" />
+            </a>
+        </div>
+    </div>
+    
+    @foreach (var item in Model.TemplateTechnique)
+    {
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-6">
+                    <h2>TemplateResult @item.TemplateTechniqueName</h2>
+                </div>
+                <div class="col-md-6">
+                    <a asp-controller="TemplateTechnique" asp-action="CreateTechniqueItem"
+                       asp-route-id='@item.TemplateTechniqueId'>
+                        <input type="button" value="Create TemplateTechniqueItem" class="btn btn-primary" />
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <a asp-controller="TemplateTechnique" asp-action="TechniqueItems" asp-route-id='@item.TemplateTechniqueId'>Items</a>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="@item.TemplateTechniqueDescription" class="control-label"></label>
+                    <textarea asp-for="@item.TemplateTechniqueDescription" id="textareDescription" class="mytextarea"></textarea>
+                    <span asp-validation-for="@item.TemplateTechniqueDescription" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    }
+
+
+    <hr /><hr />
+
+</div>
+
+
 
 
 @section scripts {

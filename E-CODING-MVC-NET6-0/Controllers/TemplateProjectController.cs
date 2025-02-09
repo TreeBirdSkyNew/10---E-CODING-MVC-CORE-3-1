@@ -17,6 +17,8 @@ using E_CODING_Services;
 using E_CODING_MVC_NET6_0.Models;
 using E_CODING_MVC_NET6_0.InfraStructure.TemplateFonctionnel;
 using E_CODING_MVC_NET6_0.InfraStructure.Project;
+using Ganss.Xss;
+using Microsoft.CodeAnalysis;
 
 
 namespace E_CODING_MVC_NET6_0
@@ -110,6 +112,17 @@ namespace E_CODING_MVC_NET6_0
         {
             StringContent content = new StringContent(JsonConvert.SerializeObject(templateProjectVM), Encoding.UTF8, "application/json");
             await this._projectApiClient.PostTemplateProject(_clientProjectName,"api/TemplateProject/Edit", content);
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [Route("EditDescription")]
+        public async Task<IActionResult> EditDescription(int id , string description)
+        {
+            TemplateProjectVM? templateProjectVM = await _projectApiClient.GetTemplateProject(_clientProjectName, "api/TemplateProject/ProjectDetails/" + id);
+            templateProjectVM.TemplateProjectDescription=description;
+            StringContent content = new StringContent(JsonConvert.SerializeObject(templateProjectVM), Encoding.UTF8, "application/json");
+            await this._projectApiClient.PostTemplateProject(_clientProjectName, "api/TemplateProject/Edit", content);
             return RedirectToAction("Index");
         }
 

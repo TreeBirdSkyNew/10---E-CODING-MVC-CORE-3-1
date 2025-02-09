@@ -69,15 +69,16 @@ namespace E_CODING_MVC_NET6_0
         }
 
         [HttpGet]
-        [Route("CreateTechnique")]
-        public IActionResult CreateTemplateTechnique()
+        [Route("CreateTechnique/{id}")]
+        public IActionResult CreateTemplateTechnique(int id)
         {
             TemplateTechniqueVM templateTechniqueVM = new TemplateTechniqueVM();
+            templateTechniqueVM.TemplateProjectId = id;
             return View(templateTechniqueVM);
         }
 
         [HttpPost]
-        [Route("CreateTechnique")]
+        [Route("CreateTechnique/{id}")]
         public async Task<IActionResult> CreateTemplateTechnique(TemplateTechniqueVM templateTechniqueVM)
         {
             StringContent content = new StringContent(JsonConvert.SerializeObject(templateTechniqueVM), Encoding.UTF8, "application/json");

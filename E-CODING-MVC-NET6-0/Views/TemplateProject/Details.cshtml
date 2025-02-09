@@ -1,73 +1,80 @@
 ﻿@model E_CODING_MVC_NET6_0.Models.TemplateProjectVM
 
-<form asp-action="Edit">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-md-4">
-                    <img src="~/Images/software/soft3.jpg" />
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6">
+                <h2>TemplateResult @Model.TemplateProjectName</h2>
+            </div>
+            <div class="col-md-6">
+                <a asp-controller="TemplateProject" asp-action="Edit" asp-route-id='@Model.TemplateProjectId'>
+                    <input type="button" value="Edit TemplateProject" class="btn btn-primary" />
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-4">
+                <img src="~/Images/software/soft3.jpg" />
+            </div>
+            <div class="col-md-3" style="margin-top: 50px;">
+                <div>
+                    <strong>@Html.DisplayNameFor(model => model.TemplateProjectId)</strong>
                 </div>
-                <div class="col-md-3" style="margin-top: 50px;">
-                    <div>
-                        <strong>@Html.DisplayNameFor(model => model.TemplateProjectId)</strong>
-                    </div>
-                    <div>
-                        <strong>@Html.DisplayNameFor(model => model.TemplateProjectName)</strong>
-                    </div>
-                    <div>
-                        <strong>@Html.DisplayNameFor(model => model.TemplateProjectVersion)</strong>
-                    </div>
-                    <div>
-                        <strong>@Html.DisplayNameFor(model => model.TemplateProjectVersionNet)</strong>
-                    </div>
+                <div>
+                    <strong>@Html.DisplayNameFor(model => model.TemplateProjectName)</strong>
                 </div>
-                <div class="col-md-5" style="margin-top: 50px;">
+                <div>
+                    <strong>@Html.DisplayNameFor(model => model.TemplateProjectVersion)</strong>
+                </div>
+                <div>
+                    <strong>@Html.DisplayNameFor(model => model.TemplateProjectVersionNet)</strong>
+                </div>
+            </div>
+            <div class="col-md-5" style="margin-top: 50px;">
                     
-                    <div>
-                        @Html.DisplayFor(model => model.TemplateProjectId)
-                    </div>
-                    <div>
-                        @Html.DisplayFor(model => model.TemplateProjectName)
-                    </div>
-                    <div>
-                        @Html.DisplayFor(model => model.TemplateProjectVersion)
-                    </div>
-                    <div>
-                        @Html.DisplayFor(model => model.TemplateProjectVersionNet)
-                    </div>
+                <div>
+                    @Html.DisplayFor(model => model.TemplateProjectId)
+                </div>
+                <div>
+                    @Html.DisplayFor(model => model.TemplateProjectName)
+                </div>
+                <div>
+                    @Html.DisplayFor(model => model.TemplateProjectVersion)
+                </div>
+                <div>
+                    @Html.DisplayFor(model => model.TemplateProjectVersionNet)
                 </div>
             </div>
         </div>
-
-        <hr/><hr/>
-
-        @foreach (var item in Model.TemplateTechnique)
-        {
-
-            <div class="col-md-12">
-                <div class="row">
-                    <div class="col-md-6">
-                        <label asp-for="@item.TemplateTechniqueDescription" class="control-label"></label>
-                        <textarea asp-for="@item.TemplateTechniqueDescription" id="textareDescription" class="mytextarea"></textarea>
-                        <span asp-validation-for="@item.TemplateTechniqueDescription" class="text-danger"></span>
-                    </div>
-                </div>
-            </div>
-        }
-               
-
-        <hr/><hr/>
-
-        
-
-        <div class="col-md-12">
-            <input type="submit" value="Save" class="btn btn-primary" />
-        </div>
-
     </div>
 
-</form>
+    <hr/><hr/>
+
+    @foreach (var item in Model.TemplateTechnique)
+    {
+
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-6">
+                    <label asp-for="@item.TemplateTechniqueDescription" class="control-label"></label>
+                    <textarea asp-for="@item.TemplateTechniqueDescription" id="textareDescription" class="mytextarea"></textarea>
+                    <span asp-validation-for="@item.TemplateTechniqueDescription" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    }
+               
+
+    <hr/><hr/>
+
+</div>
+
+
 
 
 @section scripts {
