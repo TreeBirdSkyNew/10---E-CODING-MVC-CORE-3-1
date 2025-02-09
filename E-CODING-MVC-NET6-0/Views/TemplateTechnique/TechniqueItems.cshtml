@@ -1,4 +1,4 @@
-﻿@model E_CODING_MVC_NET6_0.Models.TemplateProjectVM
+﻿@model E_CODING_MVC_NET6_0.Models.TemplateTechniqueVM
 
 <form asp-action="Edit">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -13,53 +13,53 @@
                         <strong>@Html.DisplayNameFor(model => model.TemplateProjectId)</strong>
                     </div>
                     <div>
-                        <strong>@Html.DisplayNameFor(model => model.TemplateProjectName)</strong>
+                        <strong>@Html.DisplayNameFor(model => model.TemplateTechniqueName)</strong>
                     </div>
                     <div>
-                        <strong>@Html.DisplayNameFor(model => model.TemplateProjectVersion)</strong>
+                        <strong>@Html.DisplayNameFor(model => model.TemplateTechniqueVersion)</strong>
                     </div>
                     <div>
-                        <strong>@Html.DisplayNameFor(model => model.TemplateProjectVersionNet)</strong>
+                        <strong>@Html.DisplayNameFor(model => model.TemplateTechniqueVersionNET)</strong>
                     </div>
                 </div>
                 <div class="col-md-5" style="margin-top: 50px;">
-                    
+
                     <div>
                         @Html.DisplayFor(model => model.TemplateProjectId)
                     </div>
                     <div>
-                        @Html.DisplayFor(model => model.TemplateProjectName)
+                        @Html.DisplayFor(model => model.TemplateTechniqueName)
                     </div>
                     <div>
-                        @Html.DisplayFor(model => model.TemplateProjectVersion)
+                        @Html.DisplayFor(model => model.TemplateTechniqueVersion)
                     </div>
                     <div>
-                        @Html.DisplayFor(model => model.TemplateProjectVersionNet)
+                        @Html.DisplayFor(model => model.TemplateTechniqueVersionNET)
                     </div>
                 </div>
             </div>
         </div>
 
-        <hr/><hr/>
+        <hr /><hr />
 
-        @foreach (var item in Model.TemplateTechnique)
+        @foreach (var item in Model.TemplateTechniqueItem)
         {
 
             <div class="col-md-12">
                 <div class="row">
                     <div class="col-md-6">
-                        <label asp-for="@item.TemplateTechniqueDescription" class="control-label"></label>
-                        <textarea asp-for="@item.TemplateTechniqueDescription" id="textareDescription" class="mytextarea"></textarea>
-                        <span asp-validation-for="@item.TemplateTechniqueDescription" class="text-danger"></span>
+                        <label asp-for="@item.TemplateTechniqueItemDescription" class="control-label"></label>
+                        <textarea asp-for="@item.TemplateTechniqueItemDescription" id="textareDescription" class="mytextarea"></textarea>
+                        <span asp-validation-for="@item.TemplateTechniqueItemDescription" class="text-danger"></span>
                     </div>
                 </div>
             </div>
         }
-               
 
-        <hr/><hr/>
 
-        
+        <hr /><hr />
+
+
 
         <div class="col-md-12">
             <input type="submit" value="Save" class="btn btn-primary" />
@@ -84,7 +84,7 @@
                 selector: '.mytextarea'
             });
 
-            
+
 
         });
 

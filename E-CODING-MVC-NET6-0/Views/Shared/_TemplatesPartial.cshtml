@@ -1,0 +1,110 @@
+﻿@model E_CODING_MVC_NET6_0.Models.TemplateProjectVM
+    
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-4">
+                <img src="~/Images/software/soft3.jpg" />
+            </div>
+            <div class="col-md-3" style="margin-top: 50px;">
+                <div>
+                    <strong>@Html.DisplayNameFor(model => model.TemplateProjectId)</strong>
+                </div>
+                <div>
+                    <strong>@Html.DisplayNameFor(model => model.TemplateProjectName)</strong>
+                </div>
+                <div>
+                    <strong>@Html.DisplayNameFor(model => model.TemplateProjectVersion)</strong>
+                </div>
+                <div>
+                    <strong>@Html.DisplayNameFor(model => model.TemplateProjectVersionNet)</strong>
+                </div>
+            </div>
+            <div class="col-md-5" style="margin-top: 50px;">
+
+                <div>
+                    @Html.DisplayFor(model => model.TemplateProjectId)
+                </div>
+                <div>
+                    @Html.DisplayFor(model => model.TemplateProjectName)
+                </div>
+                <div>
+                    @Html.DisplayFor(model => model.TemplateProjectVersion)
+                </div>
+                <div>
+                    @Html.DisplayFor(model => model.TemplateProjectVersionNet)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr /><hr />
+        
+
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6">
+                <textarea class="mytextarea" id="textareDescription"></textarea>
+            </div>
+        </div>
+    </div>        
+
+
+    <hr /><hr />
+
+
+
+</div>
+
+
+
+
+@section scripts {
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script type="text/javascript">
+
+
+            // Appeler la fonction dès que la page est prête
+            $(document).ready(function() {
+
+                alert("1");
+
+                tinymce.init({
+                    selector: '.mytextarea'
+                    plugins: 'lists', // Plugins pour les listes à puces et numérotées
+                    toolbar: 'undo redo | bullist numlist | bold italic',
+                });
+
+                alert("2");
+                
+                var projectId=@Model.TemplateProjectId;
+                $.ajax({
+                    url: 'TemplateTechnique/ProjectTechniqueDetails', // Remplacez cette URL par votre API
+                    type: 'GET',
+                    data: { "id":  projectId},
+                    dataType: 'json',
+                    success: function(data) {
+                        // Créer une liste HTML à partir des données reçues
+                        var listContent = '<ul>';
+                        $.each(data, function(index, project) {
+                            listContent += '<li>' + project.TemplateTechniqueName + '</li>';
+                        });
+                        listContent += '</ul>';
+
+                        // Insérer le contenu dans TinyMCE
+                            tinymce.get('.mytextarea').setContent(listContent);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Erreur lors de la récupération des données:', error);
+                    }
+                });
+            });
+            
+
+    </script>
+
+}

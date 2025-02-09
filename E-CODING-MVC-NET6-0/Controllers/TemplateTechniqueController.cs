@@ -3,10 +3,12 @@ using _4___E_CODING_DAL.Models;
 using AutoMapper;
 using E_CODING_MVC_NET6_0.InfraStructure.Project;
 using E_CODING_MVC_NET6_0.Models;
+using E_CODING_MVC_NET6_0.Models.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
@@ -38,22 +40,33 @@ namespace E_CODING_MVC_NET6_0
 
         [HttpGet]
         [Route("Index")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? selectedProjectId)
         {
-            List<TemplateTechniqueVM> templateTechniqueVMs = await _techniqueApiClient.GetAllTemplateTechnique(_clientName, "api/TemplateTechnique/Index");
-            await Task.Delay(1);
-            return View(templateTechniqueVMs);
+            List<TemplateProjectVM> projects = await _projectApiClient.GetAllTemplateProject(_clientProjectName, "api/TemplateProject/Index");
+            var viewModel = new ProjectViewModel
+            {
+                Projects = projects,
+                SelectedProjectId = selectedProjectId ?? 0
+            };
+            return View(viewModel);        
         }
 
-        [HttpGet]
-        [Route("TechniqueDetails/{id}")]
+        [Route("Details")]
         public async Task<IActionResult> Details(int id)
         {
-            TemplateTechniqueVM templateTechniqueVM = 
-                await _techniqueApiClient.GetTemplateTechnique(_clientName, $"api/TemplateTechnique/TechniqueDetails/{id}");
-            return View(templateTechniqueVM);
+            TemplateProjectVM projects = await _projectApiClient.GetTemplateProject(_clientProjectName, "api/TemplateProject/ProjectDetails/" + id);
+            ICollection<TemplateTechniqueVM> templates = _techniqueApiClient.GetAllTemplateTechnique(_clientName, "api/TemplateTechnique/ProjectAllTechniques/" + id.ToString()).Result;
+            projects.TemplateTechnique = templates;
+            return View(projects);  // Vue partielle qui affiche les templates
         }
 
+        [Route("TechniqueItems/{id}")]
+        [HttpGet]
+        public async Task<IActionResult> TechniqueItems(int id)
+        {
+            TemplateTechniqueVM template = await _techniqueApiClient.GetTemplateTechnique(_clientName, "api/TemplateTechnique/TechniqueDetails/" + id.ToString());
+            return View(template);
+        }
 
         [HttpGet]
         [Route("CreateTechnique")]

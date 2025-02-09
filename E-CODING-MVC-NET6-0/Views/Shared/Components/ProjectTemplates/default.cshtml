@@ -1,0 +1,16 @@
+﻿@model IEnumerable<E_CODING_MVC_NET6_0.Models.TemplateTechniqueVM>
+
+<h3>Templates Techniques</h3>
+@if (Model.Any())
+{
+    <ul>
+        @foreach (var template in Model)
+        {
+            <li>@template.TemplateTechniqueName</li>
+        }
+    </ul>
+}
+else
+{
+    <p>Aucun template disponible pour ce projet.</p>
+}
