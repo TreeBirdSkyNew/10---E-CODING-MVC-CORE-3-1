@@ -19,6 +19,8 @@ using E_CODING_MVC_NET6_0.InfraStructure.TemplateFonctionnel;
 using E_CODING_MVC_NET6_0.InfraStructure.Project;
 using Ganss.Xss;
 using Microsoft.CodeAnalysis;
+using E_CODING_MVC_NET6_0.InfraStructure.Solution;
+using _4___E_CODING_DAL.Models;
 
 
 namespace E_CODING_MVC_NET6_0
@@ -27,22 +29,26 @@ namespace E_CODING_MVC_NET6_0
     [Route("TemplateProject")]
     public class TemplateProjectController : Controller
     {
+        private ITemplateSolutionApiClient _solutionApiClient;
         private ITemplateProjectApiClient _projectApiClient;
         private ITemplateTechniqueApiClient _techniqueApiClient;
         private ITemplateResultApiClient _resultApiClient;
         private ITemplateFonctionnelApiClient _fonctionnelApiClient;
 
+        private const string _clientSolutionName = "ClientApiSolution";
         private const string _clientProjectName = "ClientApiProject";
         private const string _clientTechniqueName = "ClientApiTechnique";
         private const string _clientFonctionnelName = "ClientApiFonctionnel";
         private const string _clientResultName = "ClientApiResult";
 
         public TemplateProjectController(
+                        ITemplateSolutionApiClient solutionApiClient,
                         ITemplateProjectApiClient projectApiClient,
                         ITemplateTechniqueApiClient techniqueApiClient,
                         ITemplateResultApiClient resultApiClient,
                         ITemplateFonctionnelApiClient fonctionnelApiClient)
         {
+            _solutionApiClient= solutionApiClient;
             _projectApiClient = projectApiClient;
             _techniqueApiClient = techniqueApiClient;
             _resultApiClient = resultApiClient;
@@ -53,8 +59,37 @@ namespace E_CODING_MVC_NET6_0
         [Route("Index")]
         public async Task<IActionResult> Index()
         {
-            List<TemplateProjectVM?> templateProjectVMs = await _projectApiClient.GetAllTemplateProject(_clientProjectName,"api/TemplateProject/Index");
-            return View(templateProjectVMs);
+            List<TemplateSolutionVM> solutions = await _solutionApiClient.GetAllTemplateSolution(_clientSolutionName, "api/TemplateSolution/Index");
+            ViewData["Solutions"] = new SelectList(solutions, "TemplateSolutionId", "TemplateSolutionName");
+            return View();
+        }
+
+        [HttpGet]
+        [Route("ProjetsBySolution")]
+        [Produces(MediaTypeNames.Application.Json)]
+        public async Task<JsonResult> ProjetsBySolution(int id)
+        {
+            List<TemplateProjectVM?> projets = await _projectApiClient.GetAllTemplateProject(_clientProjectName, "api/TemplateProject/ProjectBySolution/" + id);
+            return Json(projets, new JsonSerializerOptions { WriteIndented = true });
+        }
+
+        [HttpGet]
+        [Route("TemplatesByProject")]
+        [Produces(MediaTypeNames.Application.Json)]
+        public async Task<JsonResult> TemplatesByProject(int id)
+        {
+            ICollection<TemplateTechniqueVM> templates = await _techniqueApiClient.GetAllTemplateTechnique(_clientTechniqueName, "api/TemplateTechnique/ProjectAllTechniques/" + id.ToString());
+            return Json(templates, new JsonSerializerOptions { WriteIndented = true });
+        }
+
+        [HttpGet]
+        [Route("DetailsTechnique/{id}")]
+        public async Task<IActionResult> DetailsTechnique(int id)
+        {
+            TemplateProjectVM projects = await _projectApiClient.GetTemplateProject(_clientProjectName, "api/TemplateProject/ProjectDetails/" + id);
+            ICollection<TemplateTechniqueVM> templates = _techniqueApiClient.GetAllTemplateTechnique(_clientProjectName, "api/TemplateTechnique/ProjectAllTechniques/" + id.ToString()).Result;
+            projects.TemplateTechnique = templates;
+            return View(projects);  
         }
 
         [HttpGet]
@@ -66,16 +101,6 @@ namespace E_CODING_MVC_NET6_0
             if(templateTechniques!=null) 
                 templateProjectVM.TemplateTechnique = templateTechniques;
             return View(templateProjectVM);
-        }
-
-        [HttpGet]
-        [Route("DetailsTechnique")]
-        [Produces(MediaTypeNames.Application.Json)]
-        public async Task<IActionResult> DetailsTechnique(int id)
-        {
-            List<TemplateTechniqueVM> resultTemplateTechniquesVM = new List<TemplateTechniqueVM>();
-            List<TemplateTechniqueVM> TemplateTechniquesVM = await _techniqueApiClient.GetAllTemplateTechnique(_clientTechniqueName, "api/TemplateTechnique/ProjectAllTechniques/" + id);
-            return Json(TemplateTechniquesVM, new JsonSerializerOptions { WriteIndented = true });
         }
 
         [HttpGet]
@@ -99,7 +124,7 @@ namespace E_CODING_MVC_NET6_0
         }
 
         [HttpGet]
-        [Route("Edit")]
+        [Route("Edit/{id}")]
         public async Task<IActionResult> Edit(int id)
         {
             TemplateProjectVM? templateProjectVM = await _projectApiClient.GetTemplateProject(_clientProjectName,"api/TemplateProject/ProjectDetails/" + id);
@@ -107,11 +132,11 @@ namespace E_CODING_MVC_NET6_0
         }
 
         [HttpPost]
-        [Route("Edit")]
-        public async Task<IActionResult> Edit(TemplateProjectVM templateProjectVM)
+        [Route("Edit/{id}")]
+        public async Task<IActionResult> Edit(int id, TemplateProjectVM templateProjectVM)
         {
             StringContent content = new StringContent(JsonConvert.SerializeObject(templateProjectVM), Encoding.UTF8, "application/json");
-            await this._projectApiClient.PostTemplateProject(_clientProjectName,"api/TemplateProject/Edit", content);
+            await this._projectApiClient.PostTemplateProject(_clientProjectName, "api/TemplateProject/Edit/"+id, content);
             return RedirectToAction("Index");
         }
 

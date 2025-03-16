@@ -46,7 +46,6 @@ namespace TemplateSolution_WebApi.Controllers
             }
         }
 
-        [HttpGet(Name = "TemplateSolutionById")]
         [Route("SolutionDetails/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TemplateSolution))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -54,7 +53,7 @@ namespace TemplateSolution_WebApi.Controllers
         {
             try
             {
-                TemplateSolution templateSolution = _solutionRepositoryWrapper.SolutionRepository.FindByCondition(id);
+                TemplateSolution templateSolution = _solutionRepositoryWrapper.SolutionRepository.GetTemplateSolution(id);
                 if (templateSolution is null)
                 {
                     _logger.LogError($"Returned TemplateProjectDetails TemplateSolution={id} from database.");
@@ -73,6 +72,63 @@ namespace TemplateSolution_WebApi.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+        
+        [Route("SolutionChilds/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TemplateSolution))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult SolutionChilds(int id)
+        {
+            try
+            {
+                List<TemplateSolution> templateSolution = _solutionRepositoryWrapper.SolutionRepository.GetAllTemplateSolution(id);
+                if (templateSolution is null)
+                {
+                    _logger.LogError($"Returned TemplateProjectDetails TemplateSolution={id} from database.");
+                    return NotFound();
+                }
+                else
+                {
+                    _logger.LogInfo($"Returned TemplateSolutionDetails TemplateSolution: {id}");
+                    List<TemplateSolutionVM> templateSolutionVM = _mapper.Map<List<TemplateSolutionVM>>(templateSolution);
+                    return Ok(templateSolutionVM);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside TemplateSolutionDetails action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [Route("ProjectBySolution/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TemplateSolution))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult ProjectBySolution(int id)
+        {
+            try
+            {
+                List<TemplateProject> templateSolution = _solutionRepositoryWrapper.SolutionRepository.GetAllTemplateProject(id);
+                if (templateSolution is null)
+                {
+                    _logger.LogError($"Returned TemplateProjectDetails TemplateSolution={id} from database.");
+                    return NotFound();
+                }
+                else
+                {
+                    _logger.LogInfo($"Returned TemplateSolutionDetails TemplateSolution: {id}");
+                    List<TemplateProjectVM> templateSolutionVM = _mapper.Map<List<TemplateProjectVM>>(templateSolution);
+                    return Ok(templateSolutionVM);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside TemplateSolutionDetails action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+
+
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -136,24 +192,6 @@ namespace TemplateSolution_WebApi.Controllers
             }
         }
 
-        [Route("Delete/{id}")]
-        [HttpPost("{id}")]
-        public void DeleteTemplateSolution(int id)
-        {
-            try
-            {
-                var templateSolution = _solutionRepositoryWrapper.SolutionRepository.FindByCondition(id);
-                if (templateSolution == null)
-                {
-                    _logger.LogError($"TemplateResult with id: {id}, hasn't been found in db.");
-                }
-                _solutionRepositoryWrapper.SolutionRepository.DeleteTemplateSolution(templateSolution);
-                _solutionRepositoryWrapper.Save();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Something went wrong inside templateSolution action: {ex.Message}");
-            }
-        }
+        
     }
 }

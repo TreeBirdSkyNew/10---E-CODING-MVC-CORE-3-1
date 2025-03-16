@@ -44,10 +44,21 @@
 
         @foreach (var item in Model.TemplateTechniqueItem)
         {
+            
 
             <div class="col-md-12">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
+                        <a asp-controller="TemplateTechnique" asp-action="EditTechniqueItem" asp-route-id='@item.TemplateTechniqueItemId'>
+                            <input type="button" value="Edit TemplateTechniqueItem" class="btn btn-primary" />
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-12">
                         <label asp-for="@item.TemplateTechniqueItemDescription" class="control-label"></label>
                         <textarea asp-for="@item.TemplateTechniqueItemDescription" id="textareDescription" class="mytextarea"></textarea>
                         <span asp-validation-for="@item.TemplateTechniqueItemDescription" class="text-danger"></span>

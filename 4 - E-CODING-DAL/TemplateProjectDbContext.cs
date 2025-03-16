@@ -15,6 +15,7 @@ namespace _4___E_CODING_DAL
             : base(options)
         {}
 
+        public virtual DbSet<TemplateSolution> TemplateSolution { get; set; }
         public virtual DbSet<TemplateProject> TemplateProject { get; set; }        
         public virtual DbSet<TemplateFonctionnel> TemplateFonctionnel { get; set; }
         public virtual DbSet<TemplateFonctionnelEntity> TemplateFonctionnelEntity { get; set; }
@@ -34,13 +35,23 @@ namespace _4___E_CODING_DAL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
+
+            modelBuilder.Entity<TemplateSolution>()
+              .HasMany(s => s.ChildSolutions)
+              .WithOne(s => s.ParentSolution)
+              .HasForeignKey(s => s.ParentSolutionId);
+
 
             modelBuilder.Entity<TemplateProject>(entity =>
             {
                 entity.HasKey(z => z.TemplateProjectId);
                 entity.Property(p => p.TemplateProjectId)
-                .ValueGeneratedOnAdd(); 
+                .ValueGeneratedOnAdd();
+
+                entity.HasOne(d => d.TemplateSolution)
+                    .WithMany(p => p.TemplateProject)
+                    .HasForeignKey(d => d.TemplateSolutionId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
             
             modelBuilder.Entity<TemplateTechnique>(entity =>
@@ -51,7 +62,8 @@ namespace _4___E_CODING_DAL
 
                 entity.HasOne(d => d.TemplateProject)
                     .WithMany(p => p.TemplateTechnique)
-                    .HasForeignKey(d => d.TemplateProjectId);
+                    .HasForeignKey(d => d.TemplateProjectId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<TemplateTechniqueItem>(entity =>

@@ -85,16 +85,14 @@ namespace TemplateProject_WebApi.Controllers
             }
         }
 
-        /*
-        [HttpGet(Name = "TemplateProjectById")]
-        [Route("ProjectDetails/{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TemplateProject))]
+        [Route("ProjectBySolution/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult TemplateProjectDetails(int id)
+        public IActionResult TemplateProjectBySolution(int id)
         {
             try
             {
-                TemplateProject templateProject = _projectRepositoryWrapper.ProjectRepository.FindByCondition(id);
+                List<TemplateProject> templateProject = _projectRepositoryWrapper.ProjectRepository.GetAllTemplateProjectBySolution(id);
                 if (templateProject is null)
                 {
                     _logger.LogError($"Returned TemplateProjectDetails TemplateProject={id} from database.");
@@ -103,36 +101,7 @@ namespace TemplateProject_WebApi.Controllers
                 else
                 {
                     _logger.LogInfo($"Returned TemplateProjectDetails TemplateProject: {id}");
-                    List<ProjectTechniqueVM> resultProjectTechnique = new List<ProjectTechniqueVM>();
-                    TemplateProjectVM templateProjectVM = _mapper.Map<TemplateProjectVM>(templateProject);
-                    List<TemplateTechnique> templateTechniques = _projectRepositoryWrapper.TechniqueRepository.GetProjectAllTemplateTechnique(id).ToList();
-                    List<TemplateTechnique> resultTechniques = new List<TemplateTechnique>();
-                    List<TemplateTechniqueVM> resultTechniqueVMs = new List<TemplateTechniqueVM>();
-                    if (templateTechniques != null && templateTechniques.Count > 0)
-                    {
-                        foreach (TemplateTechnique templateTechnique in templateTechniques)
-                        {
-                            TemplateTechniqueVM templateTechniqueVM = new TemplateTechniqueVM();
-                            List<TemplateTechniqueItem> templateTechniqueItems = _projectRepositoryWrapper.TechniqueItemRepository.GetAllTemplateTechniqueItem(templateTechnique.TemplateTechniqueId).ToList();
-                            List<TemplateTechniqueItem> resultTechniqueItems = new List<TemplateTechniqueItem>();
-                            List<TemplateTechniqueItemVM> resultTechniqueItemVMs = new List<TemplateTechniqueItemVM>();
-                            if (templateTechniqueItems != null && templateTechniqueItems.Count > 0)
-                            {
-                                foreach (TemplateTechniqueItem templateTechniqueItem in templateTechniqueItems)
-                                {
-                                    resultTechniqueItems.Add(templateTechniqueItem);
-                                }
-                                templateTechniqueVM = _mapper.Map<TemplateTechniqueVM>(templateTechnique);
-                                resultTechniqueItemVMs = _mapper.Map<List<TemplateTechniqueItemVM>>(resultTechniqueItems);
-                                templateTechniqueVM.TemplateTechniqueItem = resultTechniqueItemVMs;
-                                ProjectTechniqueVM projectTechnique = ConstructProjectTechnique(templateProjectVM, templateTechniqueVM);
-                                resultProjectTechnique.Add(projectTechnique);
-                            }
-                            resultTechniqueVMs.Add(templateTechniqueVM);
-                        }
-                        if (resultProjectTechnique != null)
-                            templateProjectVM.ProjectTechnique = resultProjectTechnique;
-                    }
+                    List<TemplateProject> templateProjectVM = _mapper.Map<List<TemplateProject>>(templateProject);
                     return Ok(templateProjectVM);
                 }
             }
@@ -142,17 +111,6 @@ namespace TemplateProject_WebApi.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
-
-        private ProjectTechniqueVM ConstructProjectTechnique(TemplateProjectVM project,TemplateTechniqueVM technique)
-        {
-            return  new ProjectTechniqueVM(){ 
-                TemplateProjectId=project.TemplateProjectId,
-                TemplateProject=project,
-                TemplateTechnique=technique,
-                TemplateTechniqueId=technique.TemplateTechniqueId,
-            };
-        }
-        */
 
 
         [HttpPost]
@@ -192,7 +150,7 @@ namespace TemplateProject_WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpPut("{id}")]
         [Route("Edit/{id}")]
-        public IActionResult TemplateProjectEdit(int id, [FromBody] TemplateProjectVM templateProjectVM)
+        public IActionResult Edit(int id, [FromBody] TemplateProjectVM templateProjectVM)
         {
             try
             {
@@ -201,11 +159,7 @@ namespace TemplateProject_WebApi.Controllers
                     _logger.LogError("TemplateResult object sent from client is null.");
                     return BadRequest("TemplateResult object is null");
                 }
-                if (!ModelState.IsValid)
-                {
-                    _logger.LogError("Invalid TemplateResult object sent from client.");
-                    return BadRequest("Invalid model object");
-                }
+                
                 var templateProjectEntity=_mapper.Map<TemplateProject>(templateProjectVM);
                 _projectRepositoryWrapper.ProjectRepository.UpdateTemplateProject(templateProjectEntity);
                 _projectRepositoryWrapper.Save();

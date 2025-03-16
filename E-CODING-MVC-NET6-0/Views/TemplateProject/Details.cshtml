@@ -55,20 +55,29 @@
 
     <hr/><hr/>
 
-    @foreach (var item in Model.TemplateTechnique)
+    @if (Model.TemplateTechnique.Any())
     {
+        @foreach (var item in Model.TemplateTechnique)
+        {
 
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-md-6">
-                    <label asp-for="@item.TemplateTechniqueDescription" class="control-label"></label>
-                    <textarea asp-for="@item.TemplateTechniqueDescription" id="textareDescription" class="mytextarea"></textarea>
-                    <span asp-validation-for="@item.TemplateTechniqueDescription" class="text-danger"></span>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label asp-for="@item.TemplateTechniqueTitle" class="control-label"></label>
+                        <textarea asp-for="@item.TemplateTechniqueTitle" id="textareDescription" class="mytextarea"></textarea>
+                        <span asp-validation-for="@item.TemplateTechniqueTitle" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label asp-for="@item.TemplateTechniqueDescription" class="control-label"></label>
+                        <textarea asp-for="@item.TemplateTechniqueDescription" id="textareDescription" class="mytextarea"></textarea>
+                        <span asp-validation-for="@item.TemplateTechniqueDescription" class="text-danger"></span>
+                    </div>
                 </div>
             </div>
-        </div>
+        }
     }
-               
 
     <hr/><hr/>
 

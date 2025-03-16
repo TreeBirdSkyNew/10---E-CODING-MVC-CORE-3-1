@@ -46,7 +46,7 @@
                     <input asp-for="TemplateProjectVersionNet" class="form-control" />
                     <span asp-validation-for="TemplateProjectVersionNet" class="text-danger"></span>
                 </div>
-                
+
             </div>
         </div>
     </div>
@@ -54,13 +54,13 @@
     <div class="col-md-12">
         <div class="row">
             <a asp-controller="TemplateTechnique" asp-action="CreateTechnique"
-                asp-route-id='@Model.TemplateProjectId'>
+               asp-route-id='@Model.TemplateProjectId'>
                 <input type="button" value="Create TemplateTechnique" class="btn btn-primary" />
             </a>
         </div>
     </div>
 
-    @if(Model.TemplateTechnique.Any())
+    @if (Model.TemplateTechnique.Any())
     {
         @foreach (var item in Model.TemplateTechnique)
         {
@@ -101,7 +101,7 @@
                     </div>
                 </div>
             </div>
-            
+
         }
     }
 

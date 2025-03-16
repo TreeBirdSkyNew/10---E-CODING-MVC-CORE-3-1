@@ -65,7 +65,7 @@ namespace TemplateTechnique_WebApi.Controllers
         {
             try
             {
-                IEnumerable<TemplateTechnique> ProjectTemplateTechniques = _techniqueRepositoryWrapper.TechniqueRepository.GetProjectAllTemplateTechnique(id);
+                IEnumerable<TemplateTechnique> ProjectTemplateTechniques = _techniqueRepositoryWrapper.TechniqueRepository.GetAllTemplateTechniqueByProject(id);
                 if (ProjectTemplateTechniques.ToList().Count == 0)
                 {
                     _logger.LogError($"Returned GetProjectAllTemplateTechnique for TemplateProject={id} from database.");
@@ -194,11 +194,7 @@ namespace TemplateTechnique_WebApi.Controllers
                     _logger.LogError("templateTechnique object sent from client is null.");
                     return BadRequest("templateTechnique object is null");
                 }
-                if (!ModelState.IsValid)
-                {
-                    _logger.LogError("Invalid templateTechnique object sent from client.");
-                    return BadRequest("Invalid model object");
-                }
+
                 var templateTechniqueEntity = _techniqueRepositoryWrapper.TechniqueRepository.FindByCondition(id);
                 if (templateTechniqueEntity is null)
                 {
@@ -316,11 +312,7 @@ namespace TemplateTechnique_WebApi.Controllers
                     _logger.LogError("templateTechniqueItem object sent from client is null.");
                     return BadRequest("templateTechniqueItem object is null");
                 }
-                if (!ModelState.IsValid)
-                {
-                    _logger.LogError("Invalid templateTechniqueItem object sent from client.");
-                    return BadRequest("Invalid model object");
-                }
+                
                 var templateTechniqueItem = _mapper.Map<TemplateTechniqueItem>(templateTechniqueItemVM);
                 _techniqueRepositoryWrapper.TechniqueItemRepository.UpdateTemplateTechniqueItem(templateTechniqueItem);
                 _techniqueRepositoryWrapper.Save();

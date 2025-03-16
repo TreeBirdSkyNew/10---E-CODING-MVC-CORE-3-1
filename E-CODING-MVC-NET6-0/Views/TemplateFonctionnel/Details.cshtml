@@ -78,33 +78,33 @@
 
     <script type="text/javascript">
 
-    $(document).ready(function () {
+        $(document).ready(function () {
 
-        var detailsBtn = '<input type="button" value="Details" class="btn btn-primary" />';
-        var editBtn = '<input type="button" value="Edit" class="btn btn-success" />';
+            var detailsBtn = '<input type="button" value="Details" class="btn btn-primary" />';
+            var editBtn = '<input type="button" value="Edit" class="btn btn-success" />';
 
 
-        var TemplateFonctionnelId = @Model.TemplateFonctionnelId.ToString();
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            url: "@Url.Action("TemplateFonctionnelEntities")",
-            data: { "id": TemplateFonctionnelId },
-            success: function (result) {
-                var client = '';
-                for (var i = 0; i < result.length; i++) {
-                    client += '<tr>';
-                    client += '<td><a href="TemplateFonctionnelEntity?id=' + result[i].TemplateFonctionnelEntityId + '">' + detailsBtn + '</a></td>';
-                    client += '<td><a href="EditTemplateFonctionnelEntity?id=' + result[i].TemplateFonctionnelEntityId + '">' + editBtn + '</a></td>';
-                    client += '<td>' + result[i].TemplateFonctionnelEntityName + '</td>';
-                    client += '<td>' + result[i].TemplateFonctionnelEntityDescription + '</td>';
-                    client += '</tr>';
+            var TemplateFonctionnelId = @Model.TemplateFonctionnelId.ToString();
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: "@Url.Action("TemplateFonctionnelEntities")",
+                data: { "id": TemplateFonctionnelId },
+                success: function (result) {
+                    var client = '';
+                    for (var i = 0; i < result.length; i++) {
+                        client += '<tr>';
+                        client += '<td><a href="TemplateFonctionnelEntity?id=' + result[i].TemplateFonctionnelEntityId + '">' + detailsBtn + '</a></td>';
+                        client += '<td><a href="EditTemplateFonctionnelEntity?id=' + result[i].TemplateFonctionnelEntityId + '">' + editBtn + '</a></td>';
+                        client += '<td>' + result[i].TemplateFonctionnelEntityName + '</td>';
+                        client += '<td>' + result[i].TemplateFonctionnelEntityDescription + '</td>';
+                        client += '</tr>';
+                    }
+                    $('#TableTemplateFonctionnelEntity').append(client);
                 }
-                $('#TableTemplateFonctionnelEntity').append(client);
-            }
 
+            });
         });
-});
 
     </script>
 

@@ -10,6 +10,7 @@ namespace E_CODING_Service_Abstraction.Project
     {
         TemplateProject FindByCondition(int id);
         List<TemplateProject> GetAllTemplateProject();
+        List<TemplateProject> GetAllTemplateProjectBySolution(int solutionId);
         void CreateTemplateProject(TemplateProject templateProject);
         void UpdateTemplateProject(TemplateProject templateProject);
         void DeleteTemplateProject(TemplateProject templateProject);

@@ -9,23 +9,6 @@ namespace _4___E_CODING_DAL.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "TemplateProject",
-                columns: table => new
-                {
-                    TemplateProjectId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TemplateProjectName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TemplateProjectTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TemplateProjectDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TemplateProjectVersion = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TemplateProjectVersionNet = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TemplateProject", x => x.TemplateProjectId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "TemplateResult",
                 columns: table => new
                 {
@@ -41,6 +24,81 @@ namespace _4___E_CODING_DAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TemplateResult", x => x.TemplateResultId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TemplateSolution",
+                columns: table => new
+                {
+                    TemplateSolutionId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TemplateSolutionName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TemplateSolutionTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TemplateSolutionDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TemplateSolutionVersion = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TemplateSolutionVersionNet = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ParentSolutionId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TemplateSolution", x => x.TemplateSolutionId);
+                    table.ForeignKey(
+                        name: "FK_TemplateSolution_TemplateSolution_ParentSolutionId",
+                        column: x => x.ParentSolutionId,
+                        principalTable: "TemplateSolution",
+                        principalColumn: "TemplateSolutionId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TemplateResultItem",
+                columns: table => new
+                {
+                    TemplateResultItemId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TemplateResultId = table.Column<int>(type: "int", nullable: false),
+                    TemplateTechniqueId = table.Column<int>(type: "int", nullable: false),
+                    TemplateFonctionnelId = table.Column<int>(type: "int", nullable: false),
+                    TemplateResultItemName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TemplateResultItemTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TemplateResultItemDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TemplateResultItemVersion = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TemplateResultItemVersionNET = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TemplateResultInitialContent = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TemplateResultFinalContent = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TemplateResultItem", x => x.TemplateResultItemId);
+                    table.ForeignKey(
+                        name: "FK_TemplateResultItem_TemplateResult_TemplateResultId",
+                        column: x => x.TemplateResultId,
+                        principalTable: "TemplateResult",
+                        principalColumn: "TemplateResultId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TemplateProject",
+                columns: table => new
+                {
+                    TemplateProjectId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TemplateProjectName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TemplateProjectTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TemplateProjectDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TemplateProjectVersion = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TemplateProjectVersionNet = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TemplateSolutionId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TemplateProject", x => x.TemplateProjectId);
+                    table.ForeignKey(
+                        name: "FK_TemplateProject_TemplateSolution_TemplateSolutionId",
+                        column: x => x.TemplateSolutionId,
+                        principalTable: "TemplateSolution",
+                        principalColumn: "TemplateSolutionId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -88,34 +146,6 @@ namespace _4___E_CODING_DAL.Migrations
                         column: x => x.TemplateProjectId,
                         principalTable: "TemplateProject",
                         principalColumn: "TemplateProjectId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TemplateResultItem",
-                columns: table => new
-                {
-                    TemplateResultItemId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TemplateResultId = table.Column<int>(type: "int", nullable: false),
-                    TemplateTechniqueId = table.Column<int>(type: "int", nullable: false),
-                    TemplateFonctionnelId = table.Column<int>(type: "int", nullable: false),
-                    TemplateResultItemName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TemplateResultItemTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TemplateResultItemDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TemplateResultItemVersion = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TemplateResultItemVersionNET = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TemplateResultInitialContent = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TemplateResultFinalContent = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TemplateResultItem", x => x.TemplateResultItemId);
-                    table.ForeignKey(
-                        name: "FK_TemplateResultItem_TemplateResult_TemplateResultId",
-                        column: x => x.TemplateResultId,
-                        principalTable: "TemplateResult",
-                        principalColumn: "TemplateResultId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -200,8 +230,7 @@ namespace _4___E_CODING_DAL.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_TemplateFonctionnel_TemplateProjectId",
                 table: "TemplateFonctionnel",
-                column: "TemplateProjectId",
-                unique: true);
+                column: "TemplateProjectId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TemplateFonctionnelEntity_TemplateFonctionnelId",
@@ -214,9 +243,19 @@ namespace _4___E_CODING_DAL.Migrations
                 column: "TemplateFonctionnelEntityId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_TemplateProject_TemplateSolutionId",
+                table: "TemplateProject",
+                column: "TemplateSolutionId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TemplateResultItem_TemplateResultId",
                 table: "TemplateResultItem",
                 column: "TemplateResultId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TemplateSolution_ParentSolutionId",
+                table: "TemplateSolution",
+                column: "ParentSolutionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TemplateTechnique_TemplateProjectId",
@@ -254,6 +293,9 @@ namespace _4___E_CODING_DAL.Migrations
 
             migrationBuilder.DropTable(
                 name: "TemplateProject");
+
+            migrationBuilder.DropTable(
+                name: "TemplateSolution");
         }
     }
 }

@@ -1,0 +1,27 @@
+﻿@model E_CODING_MVC_NET6_0.Models.TemplateSolutionVM
+
+<li>
+    <strong>@Model.TemplateSolutionName</strong>
+
+    @* Afficher les projets de la solution *@
+    @if (Model.TemplateProject != null && Model.TemplateProject.Any())
+    {
+        <ul>
+            @foreach (var project in Model.TemplateProject)
+            {
+                <li>@project.TemplateProjectName</li>
+            }
+        </ul>
+    }
+
+    @* Appeler récursivement la vue partielle pour afficher les sous-solutions *@
+    @if (Model.ChildSolutions != null && Model.ChildSolutions.Any())
+    {
+        <ul>
+            @foreach (var childSolution in Model.ChildSolutions)
+            {
+                @Html.Partial("_SolutionTree", childSolution)
+            }
+        </ul>
+    }
+</li>

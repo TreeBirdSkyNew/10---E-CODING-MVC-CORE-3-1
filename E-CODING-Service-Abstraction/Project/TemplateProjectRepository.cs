@@ -23,6 +23,12 @@ namespace E_CODING_Service_Abstraction.Project
             return FindAll().ToList();
         }
 
+        public List<TemplateProject> GetAllTemplateProjectBySolution(int solutionId)
+        {
+            return FindByCondition(TemplateProject => TemplateProject.TemplateSolutionId.Equals(solutionId))
+                    .ToList();
+        }
+
         public TemplateProject FindByCondition(int id)
         {
             return FindByCondition(TemplateProject => TemplateProject.TemplateProjectId.Equals(id))
@@ -43,5 +49,7 @@ namespace E_CODING_Service_Abstraction.Project
         {
             Delete(templateProject);
         }
+
+        
     }
 }

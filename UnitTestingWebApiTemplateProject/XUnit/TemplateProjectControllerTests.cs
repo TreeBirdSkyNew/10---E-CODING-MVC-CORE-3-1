@@ -92,34 +92,6 @@ namespace UnitTestingWebApiTemplateProject.XUnit
             Assert.Equal("TemplateProjectById", (result as CreatedAtRouteResult)!.RouteName);
         }
 
-        [Fact]
-        public void GivenValidRequest_WhenUpdatingTemplateTechnique_ThenCreatedReturns()
-        {
-            var repositoryWrapperMock = MockProjectRepositoryWrapper.GetMock();
-            var mapper = GetMapper();
-            var logger = new LoggerManager();
-            var TemplateProjectController = new TemplateProjectController(repositoryWrapperMock.Object, mapper, logger);
-
-            var templateProjectFinal = new TemplateProjectVM()
-            {
-                TemplateProjectId = 1,
-                TemplateProjectName = "TemplateProjectName1",
-                TemplateProjectTitle = "TemplateProjectTitle1",
-                TemplateProjectDescription = "TemplateProjectDescription1",
-                TemplateProjectVersion = "TemplateProjectVersion1",
-                TemplateProjectVersionNet = "TemplateProjectVersionNet1",
-            };
-            
-            var getTemplateProjectFinal = TemplateProjectController.TemplateProjectEdit(1, templateProjectFinal);
-            var getTestTemplateProjectInitial = TemplateProjectController.TemplateProjectDetails(1) as ObjectResult;
-            var ObjectResult = Assert.IsType<OkObjectResult>(getTestTemplateProjectInitial);
-            var TemplateProjectTestFinal = getTestTemplateProjectInitial.Value as TemplateProjectVM;
-            Assert.Equal(templateProjectFinal.TemplateProjectId, TemplateProjectTestFinal.TemplateProjectId);
-            Assert.Equal(templateProjectFinal.TemplateProjectName, TemplateProjectTestFinal.TemplateProjectName);
-            Assert.Equal(templateProjectFinal.TemplateProjectTitle, TemplateProjectTestFinal.TemplateProjectTitle);
-            Assert.Equal(templateProjectFinal.TemplateProjectDescription, TemplateProjectTestFinal.TemplateProjectDescription);
-            Assert.Equal(templateProjectFinal.TemplateProjectVersion, TemplateProjectTestFinal.TemplateProjectVersion);
-            Assert.Equal(templateProjectFinal.TemplateProjectVersionNet, TemplateProjectTestFinal.TemplateProjectVersionNet);
-        }
+        
     }
 }

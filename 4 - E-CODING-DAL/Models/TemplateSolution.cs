@@ -1,13 +1,12 @@
-﻿using _4___E_CODING_DAL.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace E_CODING_MVC_NET6_0.Models
+namespace _4___E_CODING_DAL.Models
 {
-    public class TemplateSolutionVM
+    public class TemplateSolution
     {
         public int TemplateSolutionId { get; set; }
         public string TemplateSolutionName { get; set; }
@@ -17,8 +16,8 @@ namespace E_CODING_MVC_NET6_0.Models
         public string TemplateSolutionVersionNet { get; set; }
 
         public int? ParentSolutionId { get; set; }
-        public TemplateSolutionVM ParentSolution { get; set; }
-        public ICollection<TemplateSolutionVM> ChildSolutions { get; set; }
-        public ICollection<TemplateProjectVM> TemplateProject { get; set; }
+        public TemplateSolution ParentSolution { get; set; }
+        public ICollection<TemplateSolution> ChildSolutions { get; set; }
+        public ICollection<TemplateProject> TemplateProject { get; set; }
     }
 }

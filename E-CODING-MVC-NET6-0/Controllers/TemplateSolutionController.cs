@@ -17,32 +17,60 @@ using E_CODING_Services;
 using E_CODING_MVC_NET6_0.Models;
 using E_CODING_MVC_NET6_0.InfraStructure.Solution;
 using E_CODING_MVC_NET6_0.InfraStructure.Project;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.CodeAnalysis;
+using E_CODING_MVC_NET6_0.Models.ViewModel;
 
 namespace E_CODING_MVC_NET6_0.Controllers
 {
     [Route("TemplateSolution")]
     public class TemplateSolutionController : Controller
     {
-        private ITemplateProjectApiClient _projectApiClient;
-        private ITemplateSolutionApiClient _solutionApiClient;
         
+        private ITemplateSolutionApiClient _solutionApiClient;
+        private ITemplateProjectApiClient _projectApiClient;
+        private ITemplateTechniqueApiClient _techniqueApiClient;
+
         private const string _clientProjectName = "ClientApiProject";
         private const string _clientSolutionName = "ClientApiSolution";
+        private const string _clientTechniqueName = "ClientApiTechnique";
+
 
         public TemplateSolutionController(
                         ITemplateProjectApiClient projectApiClient,
-                        ITemplateSolutionApiClient solutionApiClient)
+                        ITemplateSolutionApiClient solutionApiClient,
+                        ITemplateTechniqueApiClient techniqueApiClient)
         {
             _projectApiClient = projectApiClient;
             _solutionApiClient = solutionApiClient;
+            _techniqueApiClient= techniqueApiClient;
         }
 
         [HttpGet]
         [Route("Index")]
         public async Task<IActionResult> Index()
         {
-            List<TemplateSolutionVM?> templateSolutionVMs = await _solutionApiClient.GetAllTemplateSolution(_clientSolutionName, "api/TemplateSolution/Index");
-            return View(templateSolutionVMs);
+            List<TemplateSolutionVM> solutions = await _solutionApiClient.GetAllTemplateSolution(_clientSolutionName, "api/TemplateSolution/Index");
+            ViewData["Solutions"] = new SelectList(solutions, "TemplateSolutionId", "TemplateSolutionName");
+            return View();
+        }
+
+        [HttpGet]
+        [Route("ProjetsBySolution")]
+        [Produces(MediaTypeNames.Application.Json)]
+        public async Task<JsonResult> ProjetsBySolution(int id)
+        {
+            List<TemplateProjectVM?> projets = await _projectApiClient.GetAllTemplateProject(_clientProjectName, "api/TemplateProject/ProjectBySolution/" + id);
+            return Json(projets, new JsonSerializerOptions { WriteIndented = true });
+        }
+
+        [HttpGet]
+        [Route("TemplatesByProject")]
+        [Produces(MediaTypeNames.Application.Json)]
+        public async Task<JsonResult> TemplatesByProject(int id)
+        {
+            ICollection<TemplateTechniqueVM> templates = await _techniqueApiClient.GetAllTemplateTechnique(_clientTechniqueName, "api/TemplateTechnique/ProjectAllTechniques/" + id.ToString());
+            return Json(templates, new JsonSerializerOptions { WriteIndented = true });
         }
 
         [HttpGet]
@@ -50,6 +78,9 @@ namespace E_CODING_MVC_NET6_0.Controllers
         public async Task<IActionResult> Details(int id)
         {
             TemplateSolutionVM? templateSolutionVM = await _solutionApiClient.GetTemplateSolution(_clientSolutionName, "api/TemplateSolution/SolutionDetails/" + id);
+            List<TemplateSolutionVM> childSolutions = await _solutionApiClient.GetAllTemplateSolution(_clientSolutionName, "api/TemplateSolution/SolutionChilds/" + id);
+            
+            templateSolutionVM.ChildSolutions = childSolutions;
             return View(templateSolutionVM);
         }
 

@@ -3,6 +3,7 @@ using E_CODING_MVC_NET6_0;
 using E_CODING_Service_Abstraction.Solution;
 using E_CODING_Services.Solution;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.OpenApi.Models;
 using NLog;
 using TemplateSolution_WebApi.Extensions;
 
